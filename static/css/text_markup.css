@@ -1,0 +1,226 @@
+
+.menu {
+    display: flex;
+    width: 100%;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    padding: 1%;
+}
+
+.text-header {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    padding: 1%;
+}
+
+.text-title {
+    color: #0d6efd;
+    font-size: 28px;
+    margin: 5px;
+}
+
+.text-info {
+    padding: 1%;
+    transition: all 0.3s ease;
+}
+
+.show-text-info {
+    border: 1px solid #0d6efd;
+    background-color: white;
+    border-radius: 15px;
+    padding: 5px;
+    margin: 5px;
+    width: 5%;
+    cursor: pointer;
+}
+
+.show-text-info:hover {
+    border: 1px solid #0d6efd;
+    background-color: #0d6efd;
+    color: white;
+    border-radius: 15px;
+    padding: 5px;
+    margin: 5px;
+    width: 5%;
+    cursor: pointer;
+    outline: none;
+}
+
+.watch-text {
+    margin: 1%;
+}
+
+.sentence-number {
+    display: inline-block;
+    position: relative;
+    padding: 5px;
+    margin-right: 10px;
+    flex-shrink: 0;
+    color: gray;
+}
+
+.sentence {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+}
+
+.sentence-number {
+    margin-right: 10px;
+    flex-shrink: 0; /* Не позволяет номеру сжиматься */
+}
+
+.tokens-container {
+    display: flex; 
+    flex-grow: 1; /* Позволяет контейнеру занимать все доступное пространство */
+    flex-wrap: wrap; /* Позволяет токенам переноситься по строчке */
+}
+
+.token {
+    display: flex;               
+    flex-direction: column;   
+    align-items: stretch;  
+    justify-content: center; 
+    /* flex-wrap: wrap; */
+    padding: 5px;                
+    margin-right: 4px;            
+    font-size: 14px;             
+    position: relative;
+    white-space: nowrap; /* Запрещает перенос на новую строку */
+}
+
+.abbr {  
+    display: none;             
+    margin: 2px;              
+    white-space: nowrap; /* Запрещает перенос на новую строку */
+    text-align: center;
+    /* -webkit-box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15); */
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    padding: 5px;
+    display: flex;
+    flex-grow: 1;
+    justify-content: center;
+    width: 100%;
+}
+
+.no-abbr {    
+    /* display: none;         */
+    margin: 2px;              
+    padding: 5px;
+}
+
+.no-err {
+    margin: 2px; 
+    padding: 5px;
+    width: 100%;
+}
+
+.word {
+    margin: 2px; 
+    padding: 5px;              
+    white-space: nowrap;
+    text-align: center;
+    /* -webkit-box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15); */
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+
+    display: flex;
+    flex-grow: 1;
+    justify-content: center;
+    width: 100%;
+}
+
+#markup {
+    margin: 2px; 
+    padding: 8px; 
+    /* -webkit-box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15); */
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    border: 1px solid #0d6efd;
+    cursor: pointer;
+    /* -webkit-appearance: none;
+    -moz-appearance: none; */
+    /* appearance: none;   */
+    border-radius: 1px; 
+}
+
+#markup:focus {
+    outline: none;
+    border-color: #0056b3;
+    box-shadow:  0 0.125rem 0.25rem rgba(0, 123, 255, 0.5);
+}
+
+.error-tag {
+    /* display: inline-block;
+    padding: 0.2em;
+    border-radius: 4px;
+    color: white;
+    font-weight: bold; */
+    /* color: white; */
+    display: none;
+    margin: 2px;              
+    white-space: nowrap; /* Запрещает перенос на новую строку */
+    text-align: center;
+    /* -webkit-box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15); */
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    padding: 5px;
+    display: flex;
+    flex-grow: 1;
+    justify-content: center;
+    width: 100%;
+}
+
+/* Стили для модального окна с информацией об ошибке */
+
+/* .error-popup {
+    display: none;
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.825);
+    color: white;
+    font-size: 14px;
+    padding: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+}
+.error-popup .close-btn {
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    cursor: pointer;
+} */
+
+.error-popup {
+    display: none; /* По умолчанию скрыто */
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.825);
+    color: white;
+    font-size: 14px;
+    padding: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+
+    display: flex;
+    flex-direction: column;
+
+    /* Для плавного появления и исчезновения */
+    opacity: 0; /* Начальная непрозрачность */
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    transform: translateY(-10px); /* Начальное смещение вверх */
+}
+
+.error-popup.show {
+    display: flex; /* Делаем видимым для переходов */
+    opacity: 1; /* Конечная непрозрачность */
+    transform: translateY(0); /* Сбрасываем смещение */
+}
+
+.error-popup .close-btn {
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    cursor: pointer;
+}

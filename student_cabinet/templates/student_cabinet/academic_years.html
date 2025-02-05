@@ -1,0 +1,14 @@
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Учебные годы</title>
+</head>
+<body>
+    <h1>Учебные годы</h1>
+    <ul>
+        {% for year in years %}
+            <li>{{ year.title }}</li>  
+        {% endfor %}
+    </ul>
+</body>
+</html>

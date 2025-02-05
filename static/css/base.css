@@ -1,0 +1,37 @@
+/* Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Rubik:wght@400;500;700&display=swap');
+
+:root {
+	font-size: 16px;
+}
+
+@media screen and (max-width: 575.98px) {
+	:root {
+		font-size: 12px;
+	}
+}
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+body {
+	font-size: 16px;
+	font-family: 'Roboto', sans-serif;
+}
+
+.card-rounded {
+	border-radius: 12px;
+	overflow: hidden;
+}
+
+.card-rounded .card-header {
+	border-top-left-radius: 12px;
+	border-top-right-radius: 12px;
+}
+
+.table thead th {
+	border-bottom: 1px solid rgb(222, 226, 230) !important;
+}

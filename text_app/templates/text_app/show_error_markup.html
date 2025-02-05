@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Разметка ошибок</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/base.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/text_markup.css' %}" />
+</head>
+<body>
+
+    <!-- Всплывающее окно -->
+    <div class="error-popup" id="error-popup">
+        <span class="close-btn" id="close-popup">X</span>
+        <h3>
+            <span id="error-tag"></span>
+            <span id="error-tag-abbrev"></span>
+        </h3>
+        <p><strong>Степень грубости:</strong> <span id="error-level"></span></p>
+        <p><strong>Исправление:</strong> <span id="error-correct"></span></p>
+        <p><strong>Комментарий:</strong> <span id="error-comment"></span></p>
+    </div>
+
+    <div class="menu">
+        <form method="get" action="">
+            <label for="markup">Вид:</label>
+            <select name="markup" id="markup" onchange="this.form.submit();">
+                <option value="tagtext" {% if selected_markup == 'tagtext' %}selected{% endif %}>Ошибки (Основная)</option>
+                <option value="tagtextrussian" {% if selected_markup == 'tagtextrussian' %}selected{% endif %}>Ошибки (На русском)</option>
+                <option value="tagtextabbrev" {% if selected_markup == 'tagtextabbrev' %}selected{% endif %}>Аббревиатуры ошибок</option>
+                <option value="plain" {% if selected_markup == 'plain' %}selected{% endif %}>Без разметки</option>
+            </select>
+        </form>
+    </div>
+    
+    <div class="text-header">
+        <h1 class="text-title">{{ text.header }}</h1>
+    </div>
+
+    <div class="watch-text">
+        {% for sentence in text.sentence_set.all %}
+            <div class="sentence">
+                <p class="sentence-number">{{ forloop.counter }}:</p>
+                <div class="tokens-container">
+                    {% for token in token_data %}
+                        <span class="token" 
+                            {% if token.error_tag %}
+                                data-error-tag="{{ token.error_tag }}" 
+                                data-error-tag-abbrev="{{ token.error_tag_abbrev }}" 
+                                data-error-level="{{ token.error_level }}" 
+                                data-error-correct="{{ token.error_correct }}" 
+                                data-error-comment="{{ token.error_comment }}" 
+                                data-error-color="{{ token.error_color }}"
+                            {% endif %}
+                        >
+                            {% if token.error_tag %}
+                                <span class="error-tag" style="background-color: {{ token.error_color }};">
+                                    {{ token.error_tag }}
+                                </span>
+                            {% else %}
+                                <span class="no-abbr">&nbsp;</span>
+                            {% endif %}
+                            <span class="word">{{ token.token }}</span>
+                        </span>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const markupSelect = document.getElementById('markup');
+            const popup = document.getElementById('error-popup');
+            const closePopupBtn = document.getElementById('close-popup');
+    
+            // Функция для отображения всплывающего окна с информацией об ошибке
+            function showPopup(tokenElement) {
+                const errorTag = tokenElement.dataset.errorTag;
+                const errorTagAbbrev = tokenElement.dataset.errorTagAbbrev;
+                const errorLevel = tokenElement.dataset.errorLevel;
+                const errorCorrect = tokenElement.dataset.errorCorrect;
+                const errorComment = tokenElement.dataset.errorComment;
+    
+                // Проверяем, есть ли ошибка у токена
+                if (!errorTag) {
+                    return; // Если ошибки нет, ничего не делаем
+                }
+    
+                document.getElementById('error-tag').textContent = errorTag || 'Не указано';
+                document.getElementById('error-tag-abbrev').textContent = errorTagAbbrev ? `(${errorTagAbbrev})` : '';
+                document.getElementById('error-level').textContent = errorLevel || 'Не указано';
+                document.getElementById('error-correct').textContent = errorCorrect || 'Не указано';
+                document.getElementById('error-comment').textContent = errorComment || 'Не указано';
+    
+                // Получаем позицию токена на странице
+                const tokenRect = tokenElement.getBoundingClientRect();
+
+                var rect = tokenElement.getBoundingClientRect();
+                var offsetLeft = rect.left + window.scrollX;
+                var offsetTop = rect.top + window.scrollY;
+                var height = rect.height;
+                var width = rect.width;
+                var left = offsetLeft ;
+                var top = offsetTop - height - 6;
+               // Устанавливаем ширину всплывающего окна равной ширине токена
+                popup.style.width = `${tokenRect.width}px`;
+                popup.style.left = left + 'px';
+                popup.style.top = top + 'px';
+
+                // const tokenRect = tokenElement.getBoundingClientRect();
+                // const popup = document.getElementById('error-popup');
+
+                // // Устанавливаем ширину всплывающего окна равной ширине токена
+                // popup.style.width = `${tokenRect.width}px`;
+
+                // const viewportHeight = window.innerHeight; // Высота окна просмотра
+                // let top = tokenRect.top - popup.offsetHeight - 6; // Позиция над токеном
+
+                // // Проверяем, вмещается ли всплывающее окно над токеном
+                // if (top < 0 || (tokenRect.top - popup.offsetHeight) < 0) {
+                //     top = tokenRect.bottom + 6; // Если нет, позиционируем под токеном
+                // }
+
+                // popup.style.left = `${tokenRect.left}px`;
+                // popup.style.top = `${top}px`;
+
+                
+    
+                // Позиционируем всплывающее окно над токеном
+               // popup.style.left = `${tokenRect.left}px`;
+               // popup.style.top = `${tokenRect.top - popup.offsetHeight - 10}px`; // Сдвигаем окно вверх
+    
+                popup.style.display = 'block';
+                popup.classList.add('show'); // Добавляем класс для анимации
+            }
+
+            // Закрытие окна с анимацией
+            closePopupBtn.addEventListener('click', function() {
+                const popup = document.getElementById('error-popup');
+                popup.classList.remove('show'); // Убираем класс для анимации исчезновения
+                setTimeout(() => {
+                    popup.style.display = 'none'; // Скрываем окно после анимации
+                }, 300); // Задержка, соответствующая длительности перехода
+            });
+    
+            // Закрыть всплывающее окно
+            closePopupBtn.addEventListener('click', function() {
+                popup.style.display = 'none';
+            });
+    
+            // Слушаем клик по токенам
+            document.querySelectorAll('.token').forEach(function(tokenElement) {
+                tokenElement.addEventListener('click', function() {
+                    // Показываем всплывающее окно с информацией об ошибке, если она есть
+                    showPopup(tokenElement);
+                });
+            });
+    
+            // Функция для переключения видимости тегов ошибок
+            function toggleErrorTagVisibility() {
+                const errorTagElements = document.querySelectorAll('.error-tag');
+                if (markupSelect.value === 'plain') {
+                    errorTagElements.forEach(el => el.style.display = 'none');
+                } else {
+                    errorTagElements.forEach(el => el.style.display = 'flex');
+                }
+            }
+    
+            // Вызвать функцию при загрузке страницы
+            toggleErrorTagVisibility();
+    
+            // Добавить слушатель для изменения значения в селекте
+            markupSelect.addEventListener('change', toggleErrorTagVisibility);
+        });
+    </script>
+
+</body>
+</html>
