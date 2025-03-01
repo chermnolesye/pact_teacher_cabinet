@@ -1,0 +1,6 @@
+<svg class="bi" xmlns="http://www.w3.org/2000/svg" height="32" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-width="1.5" d="M4 18V6M20 12v6"></path>
+							<path stroke-width="1.5" d="M12 10c4.42 0 8-1.8 8-4s-3.58-4-8-4-8 1.8-8 4 3.58 4 8 4Z"></path>
+							<path stroke-linecap="round" stroke-width="1.5" d="M20 12c0 2.2-3.58 4-8 4s-8-1.8-8-4"></path>
+							<path stroke-width="1.5" d="M20 18c0 2.2-3.58 4-8 4s-8-1.8-8-4"></path>
+						</svg>
