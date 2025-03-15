@@ -1,5 +1,5 @@
 from django import forms
-from db_editor.models import User, Student, Group, Rights
+from core_app.models import User, Student, Group, Rights
 
 class StudentRegistrationForm(forms.ModelForm):
     login = forms.CharField(max_length=100, required=True, label='Логин')

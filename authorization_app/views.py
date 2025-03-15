@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import login
 from .forms import StudentRegistrationForm, TeacherRegistrationForm, StudentLoginForm, TeacherLoginForm
-from db_editor.models import User, Student, Rights
+from core_app.models import User, Student, Rights
 
 def register_student(request):
     if request.method == 'POST':

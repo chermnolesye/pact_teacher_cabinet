@@ -37,14 +37,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'main',
-    'db_editor',
-    'authorization',
-    'student_cabinet',
-    'text_app'
+    'core_app',
+    'authorization_app',
+    'text_app',
+    'students_app',
+    'years_and_groups_app',
+    'statistics_app'
 ]
 
-AUTH_USER_MODEL = 'db_editor.User'
+AUTH_USER_MODEL = 'core_app.User'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

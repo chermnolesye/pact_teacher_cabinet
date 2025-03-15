@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class StudentCabinetConfig(AppConfig):
+class WorkWithYearsAndGroupsAppConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'student_cabinet'
+    name = 'years_and_groups_app'
