@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from django.contrib.auth import login
-from .forms import StudentRegistrationForm, TeacherRegistrationForm, StudentLoginForm, TeacherLoginForm
+from django.contrib.auth import authenticate, login
+from .forms import StudentRegistrationForm, TeacherRegistrationForm, StudentLoginForm, TeacherLoginForm, LoginForm
 from core_app.models import User, Student, Rights
 
 def register_student(request):
@@ -40,7 +40,7 @@ def register_student(request):
     else:
         form = StudentRegistrationForm()
 
-    return render(request, 'authorization/register_student.html', {'form': form})
+    return render(request, 'authorization_app/register_student.html', {'form': form})
 
 
 def register_teacher(request):
@@ -73,7 +73,7 @@ def register_teacher(request):
     else:
         form = TeacherRegistrationForm()
 
-    return render(request, 'authorization/register_teacher.html', {'form': form})
+    return render(request, 'authorization_app/register_teacher.html', {'form': form})
 
 def login_student(request):
     if request.method == 'POST':
@@ -98,7 +98,7 @@ def login_student(request):
     else:
         form = StudentLoginForm()
     
-    return render(request, 'authorization/login_student.html', {'form': form})
+    return render(request, 'authorization_app/login_student.html', {'form': form})
 
 def login_teacher(request):
     if request.method == 'POST':
@@ -123,4 +123,29 @@ def login_teacher(request):
     else:
         form = TeacherLoginForm()
     
-    return render(request, 'authorization/login_teacher.html', {'form': form})
+    return render(request, 'authorization_app/login_teacher.html', {'form': form})
+
+
+
+# --------------
+def user_login(request):
+    if request.method == "POST":
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            login_value = form.cleaned_data["login"]
+            password_value = form.cleaned_data["password"]
+            user = authenticate(request, login=login_value, password=password_value)
+
+            if user is not None:
+                login(request, user)
+                if user.idrights.idrights == 2: 
+                    return redirect("text_app:show_text_markup") #Поменять!
+                elif user.idrights.idrights == 1:  
+                    return redirect("show_text_markup")  #Поменять!
+            else:
+                messages.error(request, "Неверный логин или пароль.")
+    else:
+        form = LoginForm()
+
+    return render(request, "authorization_app/login.html", {"form": form})
+

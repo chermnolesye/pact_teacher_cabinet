@@ -57,3 +57,9 @@ class StudentLoginForm(forms.Form):
 class TeacherLoginForm(forms.Form):
     login = forms.CharField(max_length=100, required=True, label='Логин')
     password = forms.CharField(widget=forms.PasswordInput, required=True, label='Пароль')
+
+# ----------------
+
+class LoginForm(forms.Form):
+    login = forms.CharField(max_length=100, required=True)
+    password = forms.CharField(widget=forms.PasswordInput, required=True)
