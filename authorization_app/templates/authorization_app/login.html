@@ -3,20 +3,104 @@
 <head>
     <meta charset="UTF-8">
     <title>Авторизация</title>
+
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/base.css' %}" />
+
 </head>
+
 <body>
-    <h2>Авторизация</h2>
-    {% if messages %}
-        <ul>
-            {% for message in messages %}
-                <li>{{ message }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Войти</button>
-    </form>
+
+    <div class="container">
+
+        <div class="highlighted-header">
+            <svg xmlns="http://www.w3.org/2000/svg"  height="2em" fill="none" viewBox="0 0 202 47">
+                <path fill="currentColor" d="M.26 46.23V.2h38.4c1.4 0 2.69.36 3.84 1.09a7.39 7.39 0 0 1 3.84 6.6v13.5c0 1.4-.34 2.68-1.03 3.84a8.09 8.09 0 0 1-2.81 2.81 7.39 7.39 0 0 1-3.84 1.03H5.44v17.15H.26Zm7.68-22.4h30.72c.68 0 1.26-.24 1.73-.7.5-.47.76-1.05.76-1.73V7.9c0-.69-.25-1.27-.76-1.74a2.25 2.25 0 0 0-1.73-.76H7.94c-.68 0-1.28.25-1.8.76-.46.47-.7 1.05-.7 1.73v13.5c0 .69.24 1.27.7 1.73.52.47 1.12.7 1.8.7Zm43.7 22.4V7.83c0-1.41.34-2.69 1.02-3.84a7.58 7.58 0 0 1 2.75-2.82 7.73 7.73 0 0 1 3.9-1.02h30.73c1.4 0 2.68.34 3.84 1.02A7.44 7.44 0 0 1 96.69 4a7.39 7.39 0 0 1 1.03 3.84v38.4h-5.19V29.4h-35.7v16.83h-5.2Zm5.18-22.02h35.71V7.83c0-.68-.25-1.26-.77-1.73a2.25 2.25 0 0 0-1.72-.77H59.32c-.69 0-1.28.26-1.8.77-.46.47-.7 1.05-.7 1.73V24.2Zm55.87 22.02c-1.4 0-2.71-.34-3.9-1.03a7.73 7.73 0 0 1-2.76-2.75 7.73 7.73 0 0 1-1.02-3.9V7.83c0-1.41.34-2.69 1.02-3.84a7.58 7.58 0 0 1 2.75-2.82 7.73 7.73 0 0 1 3.9-1.02h38.28v5.18H112.7c-.68 0-1.28.26-1.8.77-.46.47-.7 1.05-.7 1.73v30.72c0 .68.24 1.28.7 1.79.52.47 1.12.7 1.8.7h38.27v5.19H112.7Zm63.12 0V5.33h-20.48V.15h46.08v5.18h-20.42v40.9h-5.18Z"></path>
+            </svg>
+
+            <h2>Авторизация</h2>
+        </div>
+
+        {% if messages %}
+            <ul>
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        <!-- <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Войти</button>
+        </form> -->
+
+        <form method="post" class="login-form">
+            {% csrf_token %}
+            <div class="input-group">
+                <span class="input-group-text">
+                    <svg class="bi" xmlns="http://www.w3.org/2000/svg" height="24" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+                        <circle cx="12" cy="9" r="2" stroke-width="1.5"></circle>
+                        <path stroke-width="1.5" d="M16 15c0 1.1 0 2-4 2s-4-.9-4-2 1.8-2 4-2 4 .9 4 2Z"></path>
+                        <path stroke-linecap="round" stroke-width="1.5" d="M3 10.42c0-3.2 0-4.8.38-5.34S5.26 4.03 8.26 3l.58-.2C10.4 2.27 11.19 2 12 2s1.6.27 3.16.8l.58.2c3 1.03 4.5 1.54 4.88 2.08.38.54.38 2.14.38 5.34v1.57a9.3 9.3 0 0 1-2 5.91M3.2 14c.85 4.3 4.38 6.51 6.7 7.53.72.31 1.08.47 2.1.47s1.38-.16 2.1-.47c.58-.26 1.23-.58 1.9-1"></path>
+                    </svg>
+                </span>
+                {{ form.login }}
+            </div>
+            <div class="input-group">
+                <span class="input-group-text">
+                    <svg class="bi" xmlns="http://www.w3.org/2000/svg" height="24" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+                        <path fill="#currentColor" d="M9 16a1 1 0 1 1-2 0 1 1 0 0 1 2 0ZM13 16a1 1 0 1 1-2 0 1 1 0 0 1 2 0ZM17 16a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path>
+                        <path stroke-linecap="round" stroke-width="1.5" d="M6 10V8c0-.34.03-.67.08-1M18 10V8A6 6 0 0 0 7.5 4.03M11 22H8c-2.83 0-4.24 0-5.12-.88C2 20.24 2 18.82 2 16c0-2.83 0-4.24.88-5.12C3.76 10 5.18 10 8 10h8c2.83 0 4.24 0 5.12.88.88.88.88 2.3.88 5.12 0 2.83 0 4.24-.88 5.12-.88.88-2.3.88-5.12.88h-1"></path>
+                    </svg>
+                </span>
+                {{ form.password }}
+                <button type="button" class="password-toggle" aria-label="Показать пароль">
+                    <svg class="eye-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                      </svg>
+                      <svg class="eye-slash-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/>
+                      </svg>
+                </button>
+            </div>
+            <button type="submit" class="button">Войти</button>
+        </form>
+
+        <p class="no-highlight horizontal-level">
+            <svg class="bi me-1" xmlns="http://www.w3.org/2000/svg" stroke="currentColor" height="1.6em" fill="none" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-width="1.5" d="M12 17v-6"></path>
+                <circle cx="1" cy="1" r="0.5" fill="currentColor" transform="matrix(1 0 0 -1 11 9)"></circle>
+                <path stroke-linecap="round" stroke-width="1.5" d="M7 3.34A10 10 0 1 1 3.34 7"></path>
+            </svg>
+            За помощью по восстановлению пароля обращайтесь к администрации.
+        </p>
+    </div>
+
+    <script> 
+        document.querySelectorAll('.password-toggle').forEach(button => {
+            const eyeSlashIcon = button.querySelector('.eye-slash-icon');
+            eyeSlashIcon.style.display = 'none';
+            
+            button.addEventListener('click', function() {
+                const input = this.closest('.input-group').querySelector('input[type="password"], input[type="text"]');
+                const eyeIcon = this.querySelector('.eye-icon');
+                const eyeSlashIcon = this.querySelector('.eye-slash-icon');
+                
+                if (input.type === 'password') {
+                    input.type = 'text';
+                    eyeIcon.style.display = 'none';
+                    eyeSlashIcon.style.display = 'block';
+                    this.setAttribute('aria-label', 'Скрыть пароль');
+                } else {
+                    input.type = 'password';
+                    eyeIcon.style.display = 'block';
+                    eyeSlashIcon.style.display = 'none';
+                    this.setAttribute('aria-label', 'Показать пароль');
+                }
+            });
+        });
+    </script>
 </body>
 </html>
