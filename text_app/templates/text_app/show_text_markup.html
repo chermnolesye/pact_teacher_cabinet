@@ -42,13 +42,17 @@
         <h1 class="text-title">{{ text.header }}</h1>
         <button class="show-text-info" data-visible="false">&plus;</button>
         <div class="text-info" style="display: none;">
-            <p><strong>Автор:</strong> {{ text.idstudent.iduser.lastname }} {{ text.idstudent.iduser.firstname }}</p>
-            <p><strong>Группа:</strong> {{ text.idstudent.idgroup.groupname }}</p>
-            <p><strong>Учебный год:</strong> {{ text.idstudent.idgroup.idayear.title }}</p>
-            <p><strong>Дата создания текста:</strong> {{ text.createdate }}</p>
-            <p><strong>Место написания текста:</strong> {{ text.idwriteplace.writeplacename }}</p>
-            <p><strong>Инструмент написания:</strong> {{ text.idwritetool.writetoolname }}</p>
-            <p><strong>Тип текста:</strong> {{ text.idtexttype.texttypename }}</p>
+            <p><strong>Автор:</strong> {{ author }}</p>
+            <p><strong>Группа:</strong> {{ group }}</p>
+            <p><strong>Учебный год:</strong> {{ academic_year }}</p>
+            <p><strong>Дата создания текста:</strong> {{ create_date }}</p>
+            <p><strong>Место написания текста:</strong> {{ write_place }}</p>
+            <p><strong>Инструмент написания:</strong> {{ write_tool }}</p>
+            <p><strong>Тип текста:</strong> {{ text_type }}</p>
+            <p><strong>Эмоционально-физиологическое состояние:</strong> {{ emotion }}</p>
+            <p><strong>Год изучения языка</strong>:</strong> {{ year_study_language }}</p>
+            <p><strong>Оценка задания студентом</strong>:</strong> {{ self_farting }}</p>
+            <p><strong>Самооценка</strong>:</strong> {{ self_assesment }}</p>
         </div>
     </div>
     
