@@ -59,17 +59,18 @@
     <div class="watch-text">
         {% for sentence in sentence_data %}
             <div class="sentence">
-                <p class="sentence-number">{{ forloop.counter }}:</p>
+                <p class="sentence-number">{{ sentence.sentence.ordernumber|add:1 }}:</p>
                 <div class="tokens-container">
                     {% for token in sentence.tokens %}
-                        <span class="token" 
+                        <span class="token"
                             {% if token.error_tag %}
-                                data-error-tag="{{ token.error_tag }}" 
-                                data-error-tag-abbrev="{{ token.error_tag_abbrev }}" 
-                                data-error-level="{{ token.error_level }}" 
-                                data-error-correct="{{ token.error_correct }}" 
-                                data-error-comment="{{ token.error_comment }}" 
+                                data-error-tag="{{ token.error_tag }}"
+                                data-error-tag-abbrev="{{ token.error_tag_abbrev }}"
+                                data-error-level="{{ token.error_level }}"
+                                data-error-correct="{{ token.error_correct }}"
+                                data-error-comment="{{ token.error_comment }}"
                                 data-error-color="{{ token.error_color }}"
+                                data-all-errors="{{ token.all_errors|safe|escapejs }}"
                             {% endif %}>
                             
                             {% if selected_markup == 'plain' %}
@@ -108,12 +109,17 @@
                                         <span class="no-err">&nbsp;</span>
                                     {% endif %}
                                 {% endif %}
-
+    
                                 {% if token.token == '-EMPTY-' %}
                                     <span class="word">&loz;</span>
                                 {% else %}
                                     <span class="word">{{ token.token }}</span>
                                 {% endif %}
+                            {% endif %}
+    
+                            {# КОЛИЧЕСТВО ОШИБОК #}
+                            {% if token.all_errors and token.all_errors|length > 1 %}
+                                <sup title="Количество ошибок" style="color: red;">{{ token.all_errors|length }}</sup>
                             {% endif %}
                         </span>
                     {% endfor %}

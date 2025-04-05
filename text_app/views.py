@@ -1,21 +1,17 @@
 from django.shortcuts import render, get_object_or_404
 from core_app.models import Text, Token, PosTag, Error, ErrorToken, ErrorTag
 
-def show_text_markup(request, text_id=None):
-    # Получаем текст по заданному ID или первый текст, если ID не указан
+def show_text_markup(request, text_id=2379):
     if text_id is not None:
         text = get_object_or_404(Text, idtext=text_id)
     else:
         text = Text.objects.first()
 
-    # Получаем предложения текста
     sentences = text.sentence_set.all()
     sentence_data = []
 
-    # Получаем значение разметки, выбранное пользователем
     selected_markup = request.GET.get("markup", "tagtext")
 
-    # Формируем данные для разметки по предложениям
     for sentence in sentences:
         tokens = Token.objects.filter(idsentence=sentence).select_related("idpostag")
 
@@ -32,33 +28,28 @@ def show_text_markup(request, text_id=None):
                 pos_tag_abbrev = token.idpostag.tagtextabbrev
                 pos_tag_color = token.idpostag.tagcolor
 
-            # Разметка для ошибок
-            error_tag = None
-            error_tag_russian = None
-            error_tag_abbrev = None
-            error_color = None
-            error_level = None
-            error_correct = None
-            error_comment = None
-            error_token = token.errortoken_set.first()
-            if error_token:
-                error = error_token.iderror
-                if error:
-                    error_tag_obj = error.iderrortag
-                    if error_tag_obj:
-                        error_tag = error_tag_obj.tagtext
-                        error_tag_russian = error_tag_obj.tagtextrussian
-                        error_tag_abbrev = error_tag_obj.tagtextabbrev
-                        error_color = error_tag_obj.tagcolor
-                        error_level = (
-                            error.iderrorlevel.errorlevelname
-                            if error.iderrorlevel
-                            else "Не указано"
-                        )
-                        error_correct = error.correct if error.correct else "Не указано"
-                        error_comment = error.comment if error.comment else "Не указано"
+            # Разметка для ошибок 
+            error_tokens = token.errortoken_set.select_related(
+                "iderror__iderrortag", "iderror__iderrorlevel"
+            ).all()
 
-            # Добавляем информацию
+            errors_list = []
+            for error_token in error_tokens:
+                error = error_token.iderror
+                if error and error.iderrortag:
+                    errors_list.append({
+                        "error_tag": error.iderrortag.tagtext,
+                        "error_tag_russian": error.iderrortag.tagtextrussian,
+                        "error_tag_abbrev": error.iderrortag.tagtextabbrev,
+                        "error_color": error.iderrortag.tagcolor,
+                        "error_level": error.iderrorlevel.errorlevelname if error.iderrorlevel else "Не указано",
+                        "error_correct": error.correct if error.correct else "Не указано",
+                        "error_comment": error.comment if error.comment else "Не указано",
+                    })
+
+            # Основная ошибка для отображения (первая)
+            main_error = errors_list[0] if errors_list else {}
+
             tokens_data.append(
                 {
                     "token": token.tokentext,
@@ -66,13 +57,14 @@ def show_text_markup(request, text_id=None):
                     "pos_tag_russian": pos_tag_russian,
                     "pos_tag_abbrev": pos_tag_abbrev,
                     "pos_tag_color": pos_tag_color,
-                    "error_tag": error_tag,
-                    "error_tag_russian": error_tag_russian,
-                    "error_tag_abbrev": error_tag_abbrev,
-                    "error_color": error_color,
-                    "error_level": error_level,
-                    "error_correct": error_correct,
-                    "error_comment": error_comment,
+                    "error_tag": main_error.get("error_tag"),
+                    "error_tag_russian": main_error.get("error_tag_russian"),
+                    "error_tag_abbrev": main_error.get("error_tag_abbrev"),
+                    "error_color": main_error.get("error_color"),
+                    "error_level": main_error.get("error_level"),
+                    "error_correct": main_error.get("error_correct"),
+                    "error_comment": main_error.get("error_comment"),
+                    "all_errors": errors_list,  # Все ошибки для токена
                 }
             )
 
@@ -83,7 +75,6 @@ def show_text_markup(request, text_id=None):
             }
         )
 
-    # Получаем дополнительную информацию о тексте
     student = text.idstudent
     user = student.iduser
     group = student.idgroup
@@ -96,7 +87,6 @@ def show_text_markup(request, text_id=None):
     self_farting = text.selfrating
     assesment = text.selfassesment
 
-    # Формируем данные для отображения
     context = {
         "text": text,
         "sentence_data": sentence_data,
@@ -109,9 +99,7 @@ def show_text_markup(request, text_id=None):
         "write_tool": write_tool.writetoolname if write_tool else "Не указано",
         "text_type": text_type.texttypename if text_type else "Не указано",
         "emotion": emotion.emotionname,
-        "year_study_language": year_study_language
-        if text_type == None
-        else "Не указано",
+        "year_study_language": year_study_language if text_type == None else "Не указано",
         "self_farting": self_farting,
         "self_assesment": assesment,
     }
@@ -121,3 +109,4 @@ def show_text_markup(request, text_id=None):
 
 def home_view(request):
     return render(request, "home.html")
+
