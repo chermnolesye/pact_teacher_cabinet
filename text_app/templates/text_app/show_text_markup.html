@@ -21,118 +21,170 @@
         <p><strong>Исправление:</strong> <span id="error-correct"></span></p>
         <p><strong>Комментарий:</strong> <span id="error-comment"></span></p>
     </div>
-    <div class="panel">
 
-        <div class="menu">
-            <!-- Форма для выбора разметки -->
-            <form method="get" action="" onchange="this.submit();">
-                <label for="markup">Вид:</label>
-                <select name="markup" id="markup">
-                    <option value="tagtext" {% if selected_markup == 'tagtext' %}selected{% endif %}>Части речи (Основная)</option>
-                    <option value="tagtextrussian" {% if selected_markup == 'tagtextrussian' %}selected{% endif %}>Части речи (На русском)</option>
-                    <option value="tagtextabbrev" {% if selected_markup == 'tagtextabbrev' %}selected{% endif %}>Аббревиатуры частей речи</option>
-                    <option value="error" {% if selected_markup == 'error' %}selected{% endif %}>Ошибки (Основная)</option>
-                    <option value="error_russian" {% if selected_markup == 'error_russian' %}selected{% endif %}>Ошибки (На русском)</option>
-                    <option value="error_abbrev" {% if selected_markup == 'error_abbrev' %}selected{% endif %}>Аббревиатуры ошибок</option>
-                    <option value="plain" {% if selected_markup == 'plain' %}selected{% endif %}>Без разметки</option>
-                </select>
-            </form>
-        </div>
-    
-        <div class="text-header">
-            <h1 class="text-title">{{ text.header }}</h1>
-            <button class="show-text-info" data-visible="false">&plus;</button>
-            <div class="text-info" style="display: none;">
-                <p><strong>Автор:</strong> {{ author }}</p>
-                <p><strong>Группа:</strong> {{ group }}</p>
-                <p><strong>Учебный год:</strong> {{ academic_year }}</p>
-                <p><strong>Дата создания текста:</strong> {{ create_date }}</p>
-                <p><strong>Место написания текста:</strong> {{ write_place }}</p>
-                <p><strong>Инструмент написания:</strong> {{ write_tool }}</p>
-                <p><strong>Тип текста:</strong> {{ text_type }}</p>
-                <p><strong>Эмоционально-физиологическое состояние:</strong> {{ emotion }}</p>
-                <p><strong>Год изучения языка</strong>:</strong> {{ year_study_language }}</p>
-                <p><strong>Оценка задания студентом</strong>:</strong> {{ self_farting }}</p>
-                <p><strong>Самооценка</strong>:</strong> {{ self_assesment }}</p>
+    <div class="text-app-container">
+
+        <div class="panel">
+            <div class="menu">
+                <!-- Форма для выбора разметки -->
+                <form method="get" action="" onchange="this.submit();">
+                    <label for="markup">Вид:</label>
+                    <select name="markup" id="markup">
+                        <option value="tagtext" {% if selected_markup == 'tagtext' %}selected{% endif %}>Части речи (Основная)</option>
+                        <option value="tagtextrussian" {% if selected_markup == 'tagtextrussian' %}selected{% endif %}>Части речи (На русском)</option>
+                        <option value="tagtextabbrev" {% if selected_markup == 'tagtextabbrev' %}selected{% endif %}>Аббревиатуры частей речи</option>
+                        <option value="error" {% if selected_markup == 'error' %}selected{% endif %}>Ошибки (Основная)</option>
+                        <option value="error_russian" {% if selected_markup == 'error_russian' %}selected{% endif %}>Ошибки (На русском)</option>
+                        <option value="error_abbrev" {% if selected_markup == 'error_abbrev' %}selected{% endif %}>Аббревиатуры ошибок</option>
+                        <option value="plain" {% if selected_markup == 'plain' %}selected{% endif %}>Без разметки</option>
+                    </select>
+                </form>
             </div>
         </div>
-    </div>
-    
-    <div class="watch-text">
-        {% for sentence in sentence_data %}
-            <div class="sentence">
-                <div class="tokens-container">
-                    <p class="sentence-number">{{ sentence.sentence.ordernumber|add:1 }}:</p>
-                    {% for token in sentence.tokens %}
-                        <span class="token"
-                            {% if token.error_tag %}
-                                data-error-tag="{{ token.error_tag }}"
-                                data-error-tag-abbrev="{{ token.error_tag_abbrev }}"
-                                data-error-level="{{ token.error_level }}"
-                                data-error-correct="{{ token.error_correct }}"
-                                data-error-comment="{{ token.error_comment }}"
-                                data-error-color="{{ token.error_color }}"
-                                data-all-errors="{{ token.all_errors|safe|escapejs }}"
-                            {% endif %}>
-                            
-                            {% if selected_markup == 'plain' %}
-                                {% if token.token == '-EMPTY-' %}
-                                    <span class="word">&loz;</span>
-                                {% else %}
-                                    <span class="word">{{ token.token }}</span>
-                                {% endif %}
-                            {% else %}
-                                {% if selected_markup == 'tagtext' or selected_markup == 'tagtextrussian' or selected_markup == 'tagtextabbrev' %}
-                                    {% if token.pos_tag %}
-                                        <span class="abbr" style="background-color: {{ token.pos_tag_color }};">
-                                            {% if selected_markup == 'tagtext' %}
-                                                {{ token.pos_tag }}
-                                            {% elif selected_markup == 'tagtextrussian' %}
-                                                {{ token.pos_tag_russian }}
-                                            {% elif selected_markup == 'tagtextabbrev' %}
-                                                {{ token.pos_tag_abbrev }}
-                                            {% endif %}
-                                        </span>
+
+        <div class="menu-container">
+            <!-- Блоки меню -->
+            <div class="menu-block" data-target="view-content">
+                <span>Вид</span>
+            </div>
+            <div class="menu-block" data-target="text-content">
+                <span>Текст</span>
+            </div>
+            <div class="menu-block" data-target="author-content">
+                <span>Автор</span>
+            </div>
+            <div class="menu-block" data-target="grade-content">
+                <span>Оценка</span>
+            </div>
+            <div class="menu-block" data-target="metadata-content">
+                <span>Метаданные</span>
+            </div>
+            <button class="rate-btn">Оценить</button>
+
+            <!-- Контентные блоки -->
+            <div class="menu-content" id="view-content">
+                <p>Выбор разметки</p>
+            </div>
+            <div class="menu-content" id="text-content">
+                <p>Информация о тексте</p>
+            </div>
+            <div class="menu-content" id="author-content">
+                <p>Информация об авторе работы</p>
+            </div>
+            <div class="menu-content" id="grade-content">
+                <p>Информация о виде работы</p>
+            </div>
+            <div class="menu-content" id="metadata-content">
+                <p>Информация о метаданных</p>
+            </div>  
+        </div>
+
+        <!-- Модальное окно (изначально скрыто) -->
+        <div class="modal-overlay" id="modal">
+            <div class="modal-content">
+              <button class="close-modal">&times;</button>
+              <h2>Оценить работу</h2>
+              <form>
+                <!-- Форма для оценки -->
+              </form>
+            </div>
+          </div>
+        
+        <div class="watch-text">
+
+            <div class="text-header">
+                <h1 class="text-title">{{ text.header }}</h1>
+                <!-- <button class="show-text-info" data-visible="false">&plus;</button>
+                <div class="text-info" style="display: none;">
+                    <p><strong>Автор:</strong> {{ author }}</p>
+                    <p><strong>Группа:</strong> {{ group }}</p>
+                    <p><strong>Учебный год:</strong> {{ academic_year }}</p>
+                    <p><strong>Дата создания текста:</strong> {{ create_date }}</p>
+                    <p><strong>Место написания текста:</strong> {{ write_place }}</p>
+                    <p><strong>Инструмент написания:</strong> {{ write_tool }}</p>
+                    <p><strong>Тип текста:</strong> {{ text_type }}</p>
+                    <p><strong>Эмоционально-физиологическое состояние:</strong> {{ emotion }}</p>
+                    <p><strong>Год изучения языка</strong>:</strong> {{ year_study_language }}</p>
+                    <p><strong>Оценка задания студентом</strong>:</strong> {{ self_farting }}</p>
+                    <p><strong>Самооценка</strong>:</strong> {{ self_assesment }}</p>
+                </div> -->
+            </div>
+
+            {% for sentence in sentence_data %}
+                <div class="sentence">
+                    <div class="tokens-container">
+                        <p class="sentence-number">{{ sentence.sentence.ordernumber|add:1 }}:</p>
+                        {% for token in sentence.tokens %}
+                            <span class="token"
+                                {% if token.error_tag %}
+                                    data-error-tag="{{ token.error_tag }}"
+                                    data-error-tag-abbrev="{{ token.error_tag_abbrev }}"
+                                    data-error-level="{{ token.error_level }}"
+                                    data-error-correct="{{ token.error_correct }}"
+                                    data-error-comment="{{ token.error_comment }}"
+                                    data-error-color="{{ token.error_color }}"
+                                    data-all-errors="{{ token.all_errors|safe|escapejs }}"
+                                {% endif %}>
+                                
+                                {% if selected_markup == 'plain' %}
+                                    {% if token.token == '-EMPTY-' %}
+                                        <span class="word">&loz;</span>
                                     {% else %}
-                                        <span class="no-abbr">&nbsp;</span>
+                                        <span class="word">{{ token.token }}</span>
                                     {% endif %}
-                                {% elif selected_markup == 'error' or selected_markup == 'error_russian' or selected_markup == 'error_abbrev' %}
-                                    
-                                    {% if token.all_errors %}
-                                        {% for error in token.all_errors %}
-                                            <span class="error-tag" style="background-color: {{ error.error_color }};">
-                                                {% if selected_markup == 'error' %}
-                                                    {{ error.error_tag }}  
-                                                {% elif selected_markup == 'error_russian' %}
-                                                    {{ error.error_tag_russian }}  
-                                                {% elif selected_markup == 'error_abbrev' %}
-                                                    {{ error.error_tag_abbrev }}  
+                                {% else %}
+                                    {% if selected_markup == 'tagtext' or selected_markup == 'tagtextrussian' or selected_markup == 'tagtextabbrev' %}
+                                        {% if token.pos_tag %}
+                                            <span class="abbr" style="background-color: {{ token.pos_tag_color }};">
+                                                {% if selected_markup == 'tagtext' %}
+                                                    {{ token.pos_tag }}
+                                                {% elif selected_markup == 'tagtextrussian' %}
+                                                    {{ token.pos_tag_russian }}
+                                                {% elif selected_markup == 'tagtextabbrev' %}
+                                                    {{ token.pos_tag_abbrev }}
                                                 {% endif %}
                                             </span>
-                                        {% endfor %}
-                                    {% else %}
-                                        <span class="no-err">&nbsp;</span>
-                                    {% endif %}
+                                        {% else %}
+                                            <span class="no-abbr">&nbsp;</span>
+                                        {% endif %}
+                                    {% elif selected_markup == 'error' or selected_markup == 'error_russian' or selected_markup == 'error_abbrev' %}
+                                        
+                                        {% if token.all_errors %}
+                                            {% for error in token.all_errors %}
+                                                <span class="error-tag" style="background-color: {{ error.error_color }};">
+                                                    {% if selected_markup == 'error' %}
+                                                        {{ error.error_tag }}  
+                                                    {% elif selected_markup == 'error_russian' %}
+                                                        {{ error.error_tag_russian }}  
+                                                    {% elif selected_markup == 'error_abbrev' %}
+                                                        {{ error.error_tag_abbrev }}  
+                                                    {% endif %}
+                                                </span>
+                                            {% endfor %}
+                                        {% else %}
+                                            <span class="no-err">&nbsp;</span>
+                                        {% endif %}
 
-                                    
+                                        
+                                    {% endif %}
+        
+                                    {% if token.token == '-EMPTY-' %}
+                                        <span class="word">&loz;</span>
+                                    {% else %}
+                                        <span class="word">{{ token.token }}</span>
+                                    {% endif %}
                                 {% endif %}
-    
-                                {% if token.token == '-EMPTY-' %}
-                                    <span class="word">&loz;</span>
-                                {% else %}
-                                    <span class="word">{{ token.token }}</span>
+        
+                                {# КОЛИЧЕСТВО ОШИБОК #}
+                                {% if token.all_errors and token.all_errors|length > 1 %}
+                                    <sup title="Количество ошибок" style="color: red;">{{ token.all_errors|length }}</sup>
                                 {% endif %}
-                            {% endif %}
-    
-                            {# КОЛИЧЕСТВО ОШИБОК #}
-                            {% if token.all_errors and token.all_errors|length > 1 %}
-                                <sup title="Количество ошибок" style="color: red;">{{ token.all_errors|length }}</sup>
-                            {% endif %}
-                        </span>
-                    {% endfor %}
+                            </span>
+                        {% endfor %}
+                    </div>
                 </div>
-            </div>
-        {% endfor %}
+            {% endfor %}
+        </div>
     </div>
 
     <script>
@@ -253,6 +305,70 @@
             // Добавить слушатель для изменения значения в селекте
             markupSelect.addEventListener('change', toggleErrorTagVisibility);
         });
+
+
+        // Скрипт для меню
+        document.addEventListener('DOMContentLoaded', function() {
+            const rateBtn = document.querySelector('.rate-btn');
+            const modal = document.getElementById('modal');
+            const closeModal = document.querySelector('.close-modal');
+            const menuBlocks = document.querySelectorAll('.menu-block');
+            
+            menuBlocks.forEach(block => {
+                block.addEventListener('click', function(e) {
+                e.stopPropagation();
+                
+                // Получаем привязанный контент
+                const contentId = this.getAttribute('data-target');
+                const content = document.getElementById(contentId);
+                if (!content) return;
+                
+                // Скрываем все другие контенты
+                document.querySelectorAll('.menu-content').forEach(c => {
+                    if (c !== content) c.style.display = 'none';
+                });
+                
+                // Позиционируем текущий контент
+                const rect = this.getBoundingClientRect();
+                content.style.display = 'block';
+                content.style.position = 'fixed';
+                content.style.left = `${rect.left + window.scrollX}px`;
+                content.style.top = `${rect.bottom + window.scrollY + 5}px`;
+                });
+            });
+            
+            // Закрытие при клике вне
+            document.addEventListener('click', function() {
+                document.querySelectorAll('.menu-content').forEach(c => {
+                c.style.display = 'none';
+                });
+            });
+
+                // Обработчики для модального окна
+            rateBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                modal.style.display = 'flex';
+            });
+            
+            closeModal.addEventListener('click', function() {
+                modal.style.display = 'none';
+            });
+            
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                modal.style.display = 'none';
+                }
+            });
+            
+            // Закрытие при ресайзе окна (перепозиционирование)
+            window.addEventListener('resize', function() {
+                document.querySelectorAll('.menu-content').forEach(content => {
+                content.style.display = 'none';
+                });
+            });
+
+            });
+
     </script>
 
 </body>

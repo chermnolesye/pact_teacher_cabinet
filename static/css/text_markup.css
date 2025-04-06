@@ -21,6 +21,13 @@ form {
     gap: 10px;
 }
 
+.text-app-container {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    font-size: 16px;
+}
+
 
 .watch-text {
     flex-grow: 1; 
@@ -253,3 +260,80 @@ form {
     right: 10px;
     cursor: pointer;
 }
+
+
+/* МЕНЮ ТЕКСТА */
+
+.menu-container {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    margin: 10px;
+    position: relative;
+  }
+
+  .menu-block {
+    display: inline-block;
+    padding: 10px 15px;
+    background-color: #ffffff;
+    border: 1px solid #1b1b1b;
+    cursor: pointer;
+    overflow: hidden;
+  }
+  
+  .menu-content {
+    display: none;
+    padding: 15px;
+    background-color: white;
+    border: 1px solid #2e2e2e;
+    border-radius: 4px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    z-index: 100;
+    min-width: 200px;
+  }
+  
+  .menu-content.active {
+    display: block;
+  }
+  
+  .rate-btn {
+    padding: 10px 15px;
+    cursor: pointer;
+  }
+  
+  .rate-btn:hover {
+    background-color: #45a049;
+  }
+  
+  /* Стили модального окна */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+    width: 80%;
+    max-width: 500px;
+    position: relative;
+  }
+  
+  .close-modal {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 20px;
+    cursor: pointer;
+    background: none;
+    border: none;
+  }
