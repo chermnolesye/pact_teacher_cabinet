@@ -21,38 +21,40 @@
         <p><strong>Исправление:</strong> <span id="error-correct"></span></p>
         <p><strong>Комментарий:</strong> <span id="error-comment"></span></p>
     </div>
+    <div class="panel">
 
-    <div class="menu">
-        <!-- Форма для выбора разметки -->
-        <form method="get" action="" onchange="this.submit();">
-            <label for="markup">Вид:</label>
-            <select name="markup" id="markup">
-                <option value="tagtext" {% if selected_markup == 'tagtext' %}selected{% endif %}>Части речи (Основная)</option>
-                <option value="tagtextrussian" {% if selected_markup == 'tagtextrussian' %}selected{% endif %}>Части речи (На русском)</option>
-                <option value="tagtextabbrev" {% if selected_markup == 'tagtextabbrev' %}selected{% endif %}>Аббревиатуры частей речи</option>
-                <option value="error" {% if selected_markup == 'error' %}selected{% endif %}>Ошибки (Основная)</option>
-                <option value="error_russian" {% if selected_markup == 'error_russian' %}selected{% endif %}>Ошибки (На русском)</option>
-                <option value="error_abbrev" {% if selected_markup == 'error_abbrev' %}selected{% endif %}>Аббревиатуры ошибок</option>
-                <option value="plain" {% if selected_markup == 'plain' %}selected{% endif %}>Без разметки</option>
-            </select>
-        </form>
-    </div>
-
-    <div class="text-header">
-        <h1 class="text-title">{{ text.header }}</h1>
-        <button class="show-text-info" data-visible="false">&plus;</button>
-        <div class="text-info" style="display: none;">
-            <p><strong>Автор:</strong> {{ author }}</p>
-            <p><strong>Группа:</strong> {{ group }}</p>
-            <p><strong>Учебный год:</strong> {{ academic_year }}</p>
-            <p><strong>Дата создания текста:</strong> {{ create_date }}</p>
-            <p><strong>Место написания текста:</strong> {{ write_place }}</p>
-            <p><strong>Инструмент написания:</strong> {{ write_tool }}</p>
-            <p><strong>Тип текста:</strong> {{ text_type }}</p>
-            <p><strong>Эмоционально-физиологическое состояние:</strong> {{ emotion }}</p>
-            <p><strong>Год изучения языка</strong>:</strong> {{ year_study_language }}</p>
-            <p><strong>Оценка задания студентом</strong>:</strong> {{ self_farting }}</p>
-            <p><strong>Самооценка</strong>:</strong> {{ self_assesment }}</p>
+        <div class="menu">
+            <!-- Форма для выбора разметки -->
+            <form method="get" action="" onchange="this.submit();">
+                <label for="markup">Вид:</label>
+                <select name="markup" id="markup">
+                    <option value="tagtext" {% if selected_markup == 'tagtext' %}selected{% endif %}>Части речи (Основная)</option>
+                    <option value="tagtextrussian" {% if selected_markup == 'tagtextrussian' %}selected{% endif %}>Части речи (На русском)</option>
+                    <option value="tagtextabbrev" {% if selected_markup == 'tagtextabbrev' %}selected{% endif %}>Аббревиатуры частей речи</option>
+                    <option value="error" {% if selected_markup == 'error' %}selected{% endif %}>Ошибки (Основная)</option>
+                    <option value="error_russian" {% if selected_markup == 'error_russian' %}selected{% endif %}>Ошибки (На русском)</option>
+                    <option value="error_abbrev" {% if selected_markup == 'error_abbrev' %}selected{% endif %}>Аббревиатуры ошибок</option>
+                    <option value="plain" {% if selected_markup == 'plain' %}selected{% endif %}>Без разметки</option>
+                </select>
+            </form>
+        </div>
+    
+        <div class="text-header">
+            <h1 class="text-title">{{ text.header }}</h1>
+            <button class="show-text-info" data-visible="false">&plus;</button>
+            <div class="text-info" style="display: none;">
+                <p><strong>Автор:</strong> {{ author }}</p>
+                <p><strong>Группа:</strong> {{ group }}</p>
+                <p><strong>Учебный год:</strong> {{ academic_year }}</p>
+                <p><strong>Дата создания текста:</strong> {{ create_date }}</p>
+                <p><strong>Место написания текста:</strong> {{ write_place }}</p>
+                <p><strong>Инструмент написания:</strong> {{ write_tool }}</p>
+                <p><strong>Тип текста:</strong> {{ text_type }}</p>
+                <p><strong>Эмоционально-физиологическое состояние:</strong> {{ emotion }}</p>
+                <p><strong>Год изучения языка</strong>:</strong> {{ year_study_language }}</p>
+                <p><strong>Оценка задания студентом</strong>:</strong> {{ self_farting }}</p>
+                <p><strong>Самооценка</strong>:</strong> {{ self_assesment }}</p>
+            </div>
         </div>
     </div>
     

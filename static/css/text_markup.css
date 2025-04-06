@@ -1,18 +1,33 @@
 
-.menu {
+.panel {
     display: flex;
+    flex-direction: row;
     width: 100%;
-    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-    padding: 1%;
 }
 
-.text-header {
+.menu, .text-header {
     display: flex;
-    flex-direction: column;
+    align-items: center;  
+    justify-content: space-between;  
     width: 100%;
-    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
     padding: 1%;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    gap: 15px;  
 }
+
+form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+
+.watch-text {
+    flex-grow: 1; 
+    margin: 1%;
+    overflow-y: auto;
+}
+
 
 .text-title {
     color: #0d6efd;
@@ -47,42 +62,34 @@
     outline: none;
 }
 
-.watch-text {
-    margin: 1%;
-}
-
-.sentence-number {
-    display: inline-block;
-    position: relative;
-    padding: 5px;
-    margin-right: 10px;
-    flex-shrink: 0;
-    color: gray;
-}
-
 .sentence {
     display: flex;
     align-items: center;
     margin-bottom: 10px;
-    flex-wrap: wrap;
 }
 
 .sentence-number {
+    display: inline-block;
+    align-items: center; /* Выравнивание по центру по оси Y */
+    min-width: 30px;
     margin-right: 10px;
+    font-weight: bold;
     flex-shrink: 0; /* Не позволяет номеру сжиматься */
+    align-self: flex-end;
 }
 
 .tokens-container {
     display: flex; 
     flex-grow: 1; /* Позволяет контейнеру занимать все доступное пространство */
     flex-wrap: wrap; /* Позволяет токенам переноситься по строчке */
+    align-items: flex-end;
 }
 
 .token {
     display: flex;               
     flex-direction: column;   
     align-items: stretch;  
-    justify-content: center; 
+    justify-content: flex-end; 
     /* flex-wrap: wrap; */
     padding: 5px;                
     margin-right: 4px;            
@@ -90,6 +97,23 @@
     position: relative;
     white-space: nowrap; /* Запрещает перенос на новую строку */
 }
+
+.sentence.tokens-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.sentence-number {
+    min-width: 30px;
+    margin-right: 10px;
+    font-weight: bold;
+}
+.sentence-number {
+    margin-right: 10px;
+    flex-shrink: 0; /* Не позволяет номеру сжиматься */
+}
+
 
 .abbr {  
     display: none;             
