@@ -61,8 +61,8 @@
     <div class="watch-text">
         {% for sentence in sentence_data %}
             <div class="sentence">
-                <p class="sentence-number">{{ sentence.sentence.ordernumber|add:1 }}:</p>
                 <div class="tokens-container">
+                    <p class="sentence-number">{{ sentence.sentence.ordernumber|add:1 }}:</p>
                     {% for token in sentence.tokens %}
                         <span class="token"
                             {% if token.error_tag %}
