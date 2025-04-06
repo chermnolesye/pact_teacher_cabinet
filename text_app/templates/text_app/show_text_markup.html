@@ -97,19 +97,24 @@
                                         <span class="no-abbr">&nbsp;</span>
                                     {% endif %}
                                 {% elif selected_markup == 'error' or selected_markup == 'error_russian' or selected_markup == 'error_abbrev' %}
-                                    {% if token.error_tag %}
-                                        <span class="error-tag" style="background-color: {{ token.error_color }};">
-                                            {% if selected_markup == 'error' %}
-                                                {{ token.error_tag }}
-                                            {% elif selected_markup == 'error_russian' %}
-                                                {{ token.error_tag_russian }}
-                                            {% elif selected_markup == 'error_abbrev' %}
-                                                {{ token.error_tag_abbrev }}
-                                            {% endif %}
-                                        </span>
+                                    
+                                    {% if token.all_errors %}
+                                        {% for error in token.all_errors %}
+                                            <span class="error-tag" style="background-color: {{ error.error_color }};">
+                                                {% if selected_markup == 'error' %}
+                                                    {{ error.error_tag }}  
+                                                {% elif selected_markup == 'error_russian' %}
+                                                    {{ error.error_tag_russian }}  
+                                                {% elif selected_markup == 'error_abbrev' %}
+                                                    {{ error.error_tag_abbrev }}  
+                                                {% endif %}
+                                            </span>
+                                        {% endfor %}
                                     {% else %}
                                         <span class="no-err">&nbsp;</span>
                                     {% endif %}
+
+                                    
                                 {% endif %}
     
                                 {% if token.token == '-EMPTY-' %}

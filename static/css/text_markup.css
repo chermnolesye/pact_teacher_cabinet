@@ -1,4 +1,3 @@
-
 .panel {
     display: flex;
     flex-direction: row;
@@ -27,6 +26,7 @@ form {
     flex-grow: 1; 
     margin: 1%;
     overflow-y: auto;
+    flex-direction: column;
 }
 
 
@@ -55,6 +55,7 @@ form {
     border: 1px solid #0d6efd;
     background-color: #0d6efd;
     color: white;
+    width: 20px;
     border-radius: 15px;
     padding: 5px;
     margin: 5px;
@@ -72,10 +73,11 @@ form {
 .sentence-number {
     display: inline-block;
     min-width: 30px;
+    margin-top: 40px;
     margin-right: 10px;
     font-weight: bold;
     flex-shrink: 0;
-    align-self: flex-end; 
+    align-self: center; 
 }
 
 .tokens-container {
@@ -114,6 +116,9 @@ form {
     flex-shrink: 0; 
 }
 
+.abbr, .word, .error-tag {
+    border-radius: 8px; 
+}
 
 .abbr {  
     display: none;             
