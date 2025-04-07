@@ -151,7 +151,14 @@
                                         
                                         {% if token.all_errors %}
                                             {% for error in token.all_errors %}
-                                                <span class="error-tag" style="background-color: {{ error.error_color }};">
+                                            <span class="error-tag"
+                                                style="background-color: {{ error.error_color }};"
+                                                data-error-tag="{{ error.error_tag }}"
+                                                data-error-tag-abbrev="{{ error.error_tag_abbrev }}"
+                                                data-error-level="{{ error.error_level }}"
+                                                data-error-correct="{{ error.error_correct }}"
+                                                data-error-comment="{{ error.error_comment }}"
+                                            >
                                                     {% if selected_markup == 'error' %}
                                                         {{ error.error_tag }}  
                                                     {% elif selected_markup == 'error_russian' %}
@@ -164,8 +171,6 @@
                                         {% else %}
                                             <span class="no-err">&nbsp;</span>
                                         {% endif %}
-
-                                        
                                     {% endif %}
         
                                     {% if token.token == '-EMPTY-' %}
@@ -173,11 +178,6 @@
                                     {% else %}
                                         <span class="word">{{ token.token }}</span>
                                     {% endif %}
-                                {% endif %}
-        
-                                {# КОЛИЧЕСТВО ОШИБОК #}
-                                {% if token.all_errors and token.all_errors|length > 1 %}
-                                    <sup title="Количество ошибок" style="color: red;">{{ token.all_errors|length }}</sup>
                                 {% endif %}
                             </span>
                         {% endfor %}
@@ -215,57 +215,49 @@
     
             // Функция для отображения всплывающего окна с информацией об ошибке
             function showPopup(tokenElement) {
+
                 const errorTag = tokenElement.dataset.errorTag;
                 const errorTagAbbrev = tokenElement.dataset.errorTagAbbrev;
                 const errorLevel = tokenElement.dataset.errorLevel;
                 const errorCorrect = tokenElement.dataset.errorCorrect;
                 const errorComment = tokenElement.dataset.errorComment;
-    
-                // Проверяем, есть ли ошибка у токена
+
                 if (!errorTag) {
-                    return; // Если ошибки нет, ничего не делаем
+                    return;
                 }
-    
+
                 document.getElementById('error-tag').textContent = errorTag || 'Не указано';
                 document.getElementById('error-tag-abbrev').textContent = errorTagAbbrev ? `(${errorTagAbbrev})` : '';
                 document.getElementById('error-level').textContent = errorLevel || 'Не указано';
                 document.getElementById('error-correct').textContent = errorCorrect || 'Не указано';
                 document.getElementById('error-comment').textContent = errorComment || 'Не указано';
-    
-                // Получаем позицию токена на странице
-                // const tokenRect = tokenElement.getBoundingClientRect();
 
-                // var rect = tokenElement.getBoundingClientRect();
-                // var offsetLeft = rect.left + window.scrollX;
-                // var offsetTop = rect.top + window.scrollY;
-                // var height = rect.height;
-                // var width = rect.width;
-                // var left = offsetLeft ;
-                // var top = offsetTop - height - 6;
-                
-                // // Устанавливаем ширину всплывающего окна равной ширине токена
-                // popup.style.width = `${tokenRect.width}px`;
-                // popup.style.left = left + 'px';
-                // popup.style.top = top + 'px';
+                const rect = tokenElement.getBoundingClientRect();
+                const offsetLeft = rect.left + window.scrollX;
+                const offsetTop = rect.top + window.scrollY;
+                const height = rect.height;
 
-                // Получаем позицию токена на странице
-                const tokenRect = tokenElement.getBoundingClientRect();
+                const popup = document.getElementById('error-popup');
+                popup.style.display = 'block'; // Нужно, чтобы offsetHeight был доступен
+                popup.classList.add('show');
 
-                var rect = tokenElement.getBoundingClientRect();
-                var offsetLeft = rect.left + window.scrollX;
-                var offsetTop = rect.top + window.scrollY;
-                var height = rect.height;
-                var width = rect.width;
-                var left = offsetLeft;
-                var top = offsetTop - height - 6;
-               // Устанавливаем ширину всплывающего окна равной ширине токена
-                // popup.style.width = `${tokenRect.width}px`;
-                popup.style.left = left + 'px';
-                popup.style.top = top + 'px';
+                const popupHeight = popup.offsetHeight;
+                const spaceAbove = rect.top;
+                const spaceBelow = window.innerHeight - rect.bottom;
 
-                popup.style.display = 'block';
-                popup.classList.add('show'); // Добавляем класс для анимации
+                let top;
+                if (spaceAbove >= popupHeight + 10) {
+                    // Есть место сверху — показываем над токеном
+                    top = offsetTop - popupHeight - 6;
+                } else {
+                    // Места сверху нет — показываем под токеном
+                    top = offsetTop + height + 6;
+                }
+
+                popup.style.left = `${offsetLeft}px`;
+                popup.style.top = `${top}px`;
             }
+
 
             // Закрытие окна с анимацией
             closePopupBtn.addEventListener('click', function() {
@@ -277,12 +269,11 @@
             });
     
             // Слушаем клик по токенам
-            document.querySelectorAll('.token').forEach(function(tokenElement) {
-                tokenElement.addEventListener('click', function() {
-                    // Показываем всплывающее окно с информацией об ошибке, если она есть
-                    if (markupSelect.value === 'error' || markupSelect.value === 'error_russian' || markupSelect.value === 'error_abbrev') {
-                        showPopup(tokenElement);
-                    }
+            // Навешиваем клик на каждую .error-tag, а не на всю .token
+            document.querySelectorAll('.error-tag').forEach(function(errorTagElement) {
+                errorTagElement.addEventListener('click', function(e) {
+                    e.stopPropagation(); // Чтобы не всплывало до .token
+                    showPopup(this);     // Передаём текущий элемент в showPopup
                 });
             });
     
