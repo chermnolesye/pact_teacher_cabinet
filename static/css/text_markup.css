@@ -1,3 +1,5 @@
+
+
 .panel {
     display: flex;
     flex-direction: row;
@@ -12,7 +14,7 @@
     width: 100%;
     padding: 1%;
     box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-    gap: 15px;  
+    gap: 15px;
 }
 
 form {
@@ -24,7 +26,7 @@ form {
 .text-app-container {
     display: flex;
     flex-direction: column;
-    padding: 20px;
+    /* padding: 20px; */
     font-size: 16px;
 }
 
@@ -34,6 +36,7 @@ form {
     margin: 1%;
     overflow-y: auto;
     flex-direction: column;
+    padding: 10px;
 }
 
 
@@ -265,31 +268,44 @@ form {
 /* МЕНЮ ТЕКСТА */
 
 .menu-container {
+    width: 100%;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    background-color: #ffffff;
+
     display: flex;
     flex-direction: row;
-    align-items: flex-start;
+    align-items: stretch;
     margin: 10px;
-    position: relative;
+    padding: 10px;
+    position: sticky;
+    top: 0px;
+    z-index: 1000;
   }
 
   .menu-block {
-    display: inline-block;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     padding: 10px 15px;
     background-color: #ffffff;
-    border: 1px solid #1b1b1b;
+    border: 1px solid #6C757D;
     cursor: pointer;
     overflow: hidden;
+
   }
   
   .menu-content {
     display: none;
+    position: absolute;
     padding: 15px;
     background-color: white;
-    border: 1px solid #2e2e2e;
-    border-radius: 4px;
+    border: 1px solid #6C757D;
+    border-radius: 10px;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     z-index: 100;
     min-width: 200px;
+    top: 100%;
   }
   
   .menu-content.active {
@@ -299,11 +315,61 @@ form {
   .rate-btn {
     padding: 10px 15px;
     cursor: pointer;
+    background-color: #0d6efd;
+    color: #ffffff;
+    border: none;
   }
   
   .rate-btn:hover {
-    background-color: #45a049;
+    background-color: #3886fb;
   }
+
+.menu-container > .menu-block:first-child {
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+
+.menu-container > .rate-btn {
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.menu-container > .menu-block:not(:first-child) {
+    border-radius: 0;
+}
+
+.menu-content-view {
+    display: flex;
+    flex-direction: column;
+    color: #6C757D;
+}
+
+.menu-content-data {
+    margin: 6px 5px;
+    display: flex;
+    flex-direction: row;
+    color: #6C757D;
+}
+
+.menu-content-grade {
+    display: flex;
+    flex-direction: row;
+}
+
+.menu-content-grade-col {
+    display: flex;
+    flex-direction: column;
+    color: #0d6efd;
+}
+
+.p-dark {
+    color: #000;
+    margin-left: 5px;
+}
+
+.menu-content-grade > .menu-content-grade-col:first-child {
+    padding-right: 20px;
+}
   
   /* Стили модального окна */
   .modal-overlay {

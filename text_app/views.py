@@ -84,7 +84,7 @@ def show_text_markup(request, text_id=2379):
     write_tool = text.idwritetool
     emotion = text.idemotion
     year_study_language = text.educationlevel
-    self_farting = text.selfrating
+    self_rating = text.selfrating
     assesment = text.selfassesment
 
     context = {
@@ -100,7 +100,7 @@ def show_text_markup(request, text_id=2379):
         "text_type": text_type.texttypename if text_type else "Не указано",
         "emotion": emotion.emotionname,
         "year_study_language": year_study_language if text_type == None else "Не указано",
-        "self_farting": self_farting,
+        "self_rating": self_rating,
         "self_assesment": assesment,
     }
 

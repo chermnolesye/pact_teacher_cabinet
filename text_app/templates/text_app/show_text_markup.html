@@ -24,6 +24,232 @@
 
     <div class="text-app-container">
 
+        <div class="menu-container">
+            <!-- Блоки меню -->
+            <div class="menu-block" data-target="view-content">
+                <span>
+                    Вид
+                    <svg width="16" height="12" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M13.5753 2L7.70808 10.5L1.84082 2" stroke="#6C757D" stroke-width="3" stroke-linecap="round"/>
+                    </svg>       
+                </span>
+            </div>
+            <div class="menu-block" data-target="text-content">
+                <span>
+                    Текст
+                    <svg width="16" height="12" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M13.5753 2L7.70808 10.5L1.84082 2" stroke="#6C757D" stroke-width="3" stroke-linecap="round"/>
+                    </svg>                        
+                </span>
+            </div>
+            <div class="menu-block" data-target="author-content">
+                <span>
+                    Автор
+                    <svg width="16" height="12" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M13.5753 2L7.70808 10.5L1.84082 2" stroke="#6C757D" stroke-width="3" stroke-linecap="round"/>
+                    </svg>    
+                </span>
+            </div>
+            <div class="menu-block" data-target="grade-content">
+                <span>
+                    Оценка
+                    <svg width="16" height="12" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M13.5753 2L7.70808 10.5L1.84082 2" stroke="#6C757D" stroke-width="3" stroke-linecap="round"/>
+                    </svg>    
+                </span>
+            </div>
+            <div class="menu-block" data-target="metadata-content">
+                <span>
+                    Метаданные
+                    <svg width="16" height="12" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M13.5753 2L7.70808 10.5L1.84082 2" stroke="#6C757D" stroke-width="3" stroke-linecap="round"/>
+                    </svg>    
+                </span>
+            </div>
+            <button class="rate-btn">Оценить</button>
+
+            <!-- Контентные блоки -->
+            <div class="menu-content" id="view-content">
+                <div class="menu-content-view">
+                    <p>Язык разметки</p>
+
+                    <p>Компактный вид</p>
+
+                    <p>Части речи</p>
+
+                    <p>Ошибки</p>
+
+                </div>
+            </div>
+            <div class="menu-content" id="text-content">
+                <div class="menu-content-data">
+                    <p>Курс создания:</p>
+                    <p class="p-dark"> {{ year_study_language }} </p>
+                </div>
+                <div class="menu-content-data">
+                    <p>Дата создания:</p>
+                    <p class="p-dark"> {{ create_date|default:"Нет данных" }} </p>
+                </div>
+            </div>
+            <div class="menu-content" id="author-content">
+
+                <div class="menu-content-data">
+                    <p>Имя:</p>
+                    <p class="p-dark"> {{ author|default:"Нет данных" }} </p>
+                </div>
+                <div class="menu-content-data">
+                    <p>Группа:</p>
+                    <p class="p-dark"> {{ group|default:"Нет данных" }} ({{ academic_year|default:"Нет данных" }}) </p>
+                </div>
+            </div>
+            <div class="menu-content" id="grade-content">
+                <div class="menu-content-grade">
+                    <div class="menu-content-grade-col ">
+                        <p>Оценка работы</p>
+                        <div class="menu-content-data">
+                            <p>Оценка:</p>
+                            <p class="p-dark">  </p>
+                        </div>
+                        <div class="menu-content-data">
+                            <p>Полнота:</p>
+                            <p class="p-dark">  </p>
+                        </div>
+                        <div class="menu-content-data">
+                            <p>Структура:</p>
+                            <p class="p-dark">  </p>
+                        </div>
+                        <div class="menu-content-data">
+                            <p>Связность:</p>
+                            <p class="p-dark">  </p>
+                        </div>
+                        <div class="menu-content-data">
+                            <p>Проверяющий:</p>
+                            <p class="p-dark">  </p>
+                        </div>
+
+                        <p>Частеречная разметка</p>
+                        <div class="menu-content-data">
+                            <p>Статус:</p>
+                            <p class="p-dark">  </p>
+                        </div>
+
+                        <p>Разметка ошибок</p>
+                        <div class="menu-content-data">
+                            <p>Статус:</p>
+                            <p class="p-dark">  </p>
+                        </div>
+                        <div class="menu-content-data">
+                            <p>Проверяющий:</p>
+                            <p class="p-dark">  </p>
+                        </div>
+                    </div>
+
+                    <div class="menu-content-grade-col ">
+                        <p>Автооценка: Грамматика</p>
+                        <div class="menu-content-data">
+                            <p>Степень 1:</p>
+                            <p class="p-dark">  </p>
+                        </div>
+                        <div class="menu-content-data">
+                            <p>Степень 2:</p>
+                            <p class="p-dark">  </p>
+                        </div>
+                        <div class="menu-content-data">
+                            <p>Степень 3:</p>
+                            <p class="p-dark">  </p>
+                        </div>
+                        <div class="menu-content-data">
+                            <p>Оценка:</p>
+                            <p class="p-dark">  </p>
+                        </div>
+
+                        <p>Автооценка: Лексика</p>
+                        <div class="menu-content-data">
+                            <p>Степень 1:</p>
+                            <p class="p-dark">  </p>
+                        </div>
+                        <div class="menu-content-data">
+                            <p>Степень 2:</p>
+                            <p class="p-dark">  </p>
+                        </div>
+                        <div class="menu-content-data">
+                            <p>Степень 3:</p>
+                            <p class="p-dark">  </p>
+                        </div>
+                        <div class="menu-content-data">
+                            <p>Оценка:</p>
+                            <p class="p-dark">  </p>
+                        </div>
+
+                        <p>Автооценка: Орфография и пунктуация</p>
+                        <div class="menu-content-data">
+                            <p>Степень 1:</p>
+                            <p class="p-dark">  </p>
+                        </div>
+                        <div class="menu-content-data">
+                            <p>Степень 2:</p>
+                            <p class="p-dark">  </p>
+                        </div>
+                        <div class="menu-content-data">
+                            <p>Степень 3:</p>
+                            <p class="p-dark">  </p>
+                        </div>
+                        <div class="menu-content-data">
+                            <p>Оценка:</p>
+                            <p class="p-dark">  </p>
+                        </div>
+
+                        <p>Автооценка: Подсчет ошибок</p>
+                        <div class="menu-content-data">
+                            <p>Дискурс:</p>
+                            <p class="p-dark">  </p>
+                        </div>
+                        <div class="menu-content-data">
+                            <p>Пропуски:</p>
+                            <p class="p-dark">  </p>
+                        </div>
+                        <div class="menu-content-data">
+                            <p>Лишние элементы:</p>
+                            <p class="p-dark">  </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="menu-content" id="metadata-content">
+                <div class="menu-content-data">
+                    <p>Эмоционально-физиологическое состояние:</p>
+                    <p class="p-dark"> {{ emotion }} </p>
+                </div>
+                <div class="menu-content-data">
+                    <p>Место написания:</p>
+                    <p class="p-dark"> {{ write_place }} </p>
+                </div>
+                <div class="menu-content-data">
+                    <p>Год изучения языка:</p>
+                    <p class="p-dark"> {{ year_study_language }} </p>
+                </div>
+                <div class="menu-content-data">
+                    <p>Самооценивание:</p>
+                    <p class="p-dark"> {{ self_rating }} </p>
+                </div>
+                <div class="menu-content-data">
+                    <p>Оценка задания студентом:</p>
+                    <p class="p-dark"> {{ self_assesment }} </p>
+                </div>
+            </div>  
+        </div>
+
+        <!-- Модальное окно (изначально скрыто) -->
+        <div class="modal-overlay" id="modal">
+            <div class="modal-content">
+              <button class="close-modal">&times;</button>
+              <h2>Оценить работу</h2>
+              <form>
+                <!-- Форма для оценки -->
+              </form>
+            </div>
+        </div>
+
         <div class="panel">
             <div class="menu">
                 <!-- Форма для выбора разметки -->
@@ -41,54 +267,6 @@
                 </form>
             </div>
         </div>
-
-        <div class="menu-container">
-            <!-- Блоки меню -->
-            <div class="menu-block" data-target="view-content">
-                <span>Вид</span>
-            </div>
-            <div class="menu-block" data-target="text-content">
-                <span>Текст</span>
-            </div>
-            <div class="menu-block" data-target="author-content">
-                <span>Автор</span>
-            </div>
-            <div class="menu-block" data-target="grade-content">
-                <span>Оценка</span>
-            </div>
-            <div class="menu-block" data-target="metadata-content">
-                <span>Метаданные</span>
-            </div>
-            <button class="rate-btn">Оценить</button>
-
-            <!-- Контентные блоки -->
-            <div class="menu-content" id="view-content">
-                <p>Выбор разметки</p>
-            </div>
-            <div class="menu-content" id="text-content">
-                <p>Информация о тексте</p>
-            </div>
-            <div class="menu-content" id="author-content">
-                <p>Информация об авторе работы</p>
-            </div>
-            <div class="menu-content" id="grade-content">
-                <p>Информация о виде работы</p>
-            </div>
-            <div class="menu-content" id="metadata-content">
-                <p>Информация о метаданных</p>
-            </div>  
-        </div>
-
-        <!-- Модальное окно (изначально скрыто) -->
-        <div class="modal-overlay" id="modal">
-            <div class="modal-content">
-              <button class="close-modal">&times;</button>
-              <h2>Оценить работу</h2>
-              <form>
-                <!-- Форма для оценки -->
-              </form>
-            </div>
-          </div>
         
         <div class="watch-text">
 
@@ -316,8 +494,17 @@
                 
                 // Скрываем все другие контенты
                 document.querySelectorAll('.menu-content').forEach(c => {
-                    if (c !== content) c.style.display = 'none';
+                    if (c !== content) {
+                        c.style.display = 'none';
+                        c.style.position = 'absolute'; // Сброс позиции
+                    }
                 });
+
+                // Показываем текущий контент
+                // content.style.display = 'block';
+                
+                // // Для sticky контейнера переключаем на fixed позиционирование
+                // content.style.position = 'fixed';
                 
                 // Позиционируем текущий контент
                 const rect = this.getBoundingClientRect();
