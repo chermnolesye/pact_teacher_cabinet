@@ -106,6 +106,8 @@ def show_text_markup(request, text_id=2379):
 
     return render(request, "show_text_markup.html", context)
 
+def show_texts(request):
+    return render(request, "show_texts.html")
 
 def home_view(request):
     return render(request, "home.html")

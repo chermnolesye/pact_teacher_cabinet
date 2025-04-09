@@ -403,3 +403,14 @@ form {
     background: none;
     border: none;
   }
+
+  .clickable-icon {
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    margin-bottom: 10px;
+  }
+  
+  .clickable-icon:hover {
+    transform: scale(1.1);
+    margin-bottom: 10px;
+  }

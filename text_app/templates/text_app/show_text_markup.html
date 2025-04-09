@@ -293,6 +293,10 @@
                     <div class="tokens-container">
                         <p class="sentence-number">{{ sentence.sentence.ordernumber|add:1 }}:</p>
                         {% for token in sentence.tokens %}
+                            
+                            <svg class="clickable-icon" width="20" height="20" viewBox="0 0 54 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M34.5 27H27M27 27H19.5M27 27V19.5M27 27V34.5M14.5 5.34503C18.2988 3.14728 22.6113 1.99327 27 2.00003C40.8075 2.00003 52 13.1925 52 27C52 40.8075 40.8075 52 27 52C13.1925 52 2 40.8075 2 27C2 22.4475 3.2175 18.175 5.345 14.5" stroke="#0D6EFD" stroke-width="4" stroke-linecap="round"/>
+                            </svg>
                             <span class="token"
                                 {% if token.error_tag %}
                                     data-error-tag="{{ token.error_tag }}"
@@ -358,6 +362,7 @@
                                     {% endif %}
                                 {% endif %}
                             </span>
+
                         {% endfor %}
                     </div>
                 </div>
@@ -447,13 +452,33 @@
             });
     
             // Слушаем клик по токенам
-            // Навешиваем клик на каждую .error-tag, а не на всю .token
             document.querySelectorAll('.error-tag').forEach(function(errorTagElement) {
                 errorTagElement.addEventListener('click', function(e) {
                     e.stopPropagation(); // Чтобы не всплывало до .token
-                    showPopup(this);     // Передаём текущий элемент в showPopup
+                    showPopup(this);     
                 });
             });
+
+            document.querySelectorAll('.clickable-icon').forEach(icon => {
+                icon.addEventListener('click', function () {
+                    const newToken = document.createElement('span');
+                    newToken.className = 'token';
+                    newToken.innerHTML = '<span class="word">Пропущенное слово</span>';
+
+                    const parent = icon.parentNode;
+                    const allChildren = Array.from(parent.childNodes);
+                    const index = allChildren.indexOf(icon);
+
+                    // Вставить новый токен после SVG
+                    if (index > -1 && index < allChildren.length - 1) {
+                    parent.insertBefore(newToken, allChildren[index + 1]);
+                    } else {
+                    parent.appendChild(newToken);
+                    }
+                });
+            });
+
+
     
             // Функция для переключения видимости тегов ошибок
             function toggleErrorTagVisibility() {
