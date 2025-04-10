@@ -106,6 +106,9 @@ def show_text_markup(request, text_id=2379):
 
     return render(request, "show_text_markup.html", context)
 
+def annotate_text(request):
+    return render(request, "annotate_text.html")
+
 def show_texts(request):
     return render(request, "show_texts.html")
 
