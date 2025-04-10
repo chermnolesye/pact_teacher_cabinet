@@ -8,6 +8,7 @@ from core_app.models import (
     ErrorTag,
     Group,
     AcademicYear,
+    TextType,
 )
 
 
@@ -138,16 +139,6 @@ def show_texts(request):
         .values("idgroup", "groupname", "idayear__title")
         .distinct()
     )
-
-    years = AcademicYear.objects.all()
-    years_data = [
-        {
-            "id": year.idayear,
-            "name": year.title,
-        }
-        for year in years
-    ]
-
     group_data = [
         {
             "id": group["idgroup"],
@@ -157,7 +148,25 @@ def show_texts(request):
         for group in groups
     ]
 
-    context = {"groups": group_data, "years": years_data}
+    years = AcademicYear.objects.all().values("idayear", "title").distinct()
+    years_data = [
+        {
+            "id": year["idayear"],
+            "name": year["title"],
+        }
+        for year in years
+    ]
+
+    text_types = TextType.objects.all().values("idtexttype", "idtexttype").distinct()
+    text_type_data = [
+        {
+            "id": text_type["idtexttype"],
+            "name": text_type["idtexttype"],
+        }
+        for text_type in text_types
+    ]
+
+    context = {"groups": group_data, "years": years_data, "text_types": text_type_data}
 
     return render(request, "show_texts.html", context)
 
