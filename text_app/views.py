@@ -166,8 +166,26 @@ def show_texts(request):
         for text_type in text_types
     ]
 
-    context = {"groups": group_data, "years": years_data, "text_types": text_type_data}
+    finded_text_by_name_data = []
 
+    # Еще не факт что это работает, надо проверять
+    if request.method == "POST" and "search" in request.POST:
+        text_name = request.POST.get("text", "")
+
+        if text_name:
+            texts = Text.objects.filter(header__icontains=text_name).values(
+                "idtext", "header"
+            )
+            finded_text_by_name_data = [
+                {"id": text["idtext"], "header_text": text["header"]} for text in texts
+            ]
+
+    context = {
+        "groups": group_data,
+        "years": years_data,
+        "text_types": text_type_data,
+        "finded_text_by_name": finded_text_by_name_data,
+    }
     return render(request, "show_texts.html", context)
 
 
