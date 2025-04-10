@@ -142,17 +142,17 @@ def show_texts(request):
     years = AcademicYear.objects.all()
     years_data = [
         {
-            "id": year["idayear"],
-            "name": year["title"],
+            "id": year.idayear,
+            "name": year.title,
         }
         for year in years
     ]
 
     group_data = [
         {
-            "id": group["idgroup"],
-            "name": group["groupname"],
-            "year": group["idayear__title"],
+            "id": group.idgroup,
+            "name": group.groupname,
+            "year": group.idayear__title,
         }
         for group in groups
     ]
