@@ -44,6 +44,13 @@
     border-left: 1px solid #ccc;
   }
 
+  .filter-block {
+    display: none;
+  }
+  
+  .filter-block.visible {
+    display: block;
+  }
 
   .filter-block {
     max-width: 600px;
@@ -112,7 +119,7 @@
   }
   
   .new-text-button button svg {
-    margin-right: 8px; /* Добавляет отступ справа от SVG */
+    margin-right: 8px; 
   }
 
   
@@ -163,4 +170,24 @@
 
   .text-types li::before {
     margin-right: 8px;
+  }
+
+  .grouping-wrapper {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-top: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .grouping-wrapper label:first-child {
+    min-width: 120px;
+    font-weight: normal;
+    margin-top: 5px;
+  }
+
+  .grouping-options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
   }
