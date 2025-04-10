@@ -37,11 +37,17 @@
     <label>Учебный год</label>
     <select>
       <option>Все года</option>
+      {% for group in groups %}
+        <option value="{{ group.year }}">{{ group.year }}</option>
+      {% endfor %}
     </select>
 
     <label>Учебная группа</label>
     <select>
       <option>Все группы</option>
+      {% for group in groups %}
+        <option value="{{ group.id }}">{{ group.name }} ({{ group.year }})</option>
+      {% endfor %}
     </select>
 
     <label>Тип текста</label>
