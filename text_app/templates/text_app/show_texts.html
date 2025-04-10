@@ -52,7 +52,10 @@
 
     <label>Тип текста</label>
     <select>
-      <option>Тип текста</option>
+      <option value="">Все типы текста</option>
+      {% for text_type in text_types %}
+        <option value="{{ text_type.id }}">{{ text_type.name }}</option>
+      {% endfor %}
     </select>
 
     <label>Группировка по:</label>

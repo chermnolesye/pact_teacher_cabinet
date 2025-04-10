@@ -157,11 +157,11 @@ def show_texts(request):
         for year in years
     ]
 
-    text_types = TextType.objects.all().values("idtexttype", "idtexttype").distinct()
+    text_types = TextType.objects.all().values("idtexttype", "texttypename").distinct()
     text_type_data = [
         {
             "id": text_type["idtexttype"],
-            "name": text_type["idtexttype"],
+            "name": text_type["texttypename"],
         }
         for text_type in text_types
     ]
