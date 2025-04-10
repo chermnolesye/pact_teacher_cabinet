@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404
-from core_app.models import Text, Token, PosTag, Error, ErrorToken, ErrorTag
+from core_app.models import Text, Token, PosTag, Error, ErrorToken, ErrorTag, Group
+
 
 def show_text_markup(request, text_id=2379):
     if text_id is not None:
@@ -28,7 +29,7 @@ def show_text_markup(request, text_id=2379):
                 pos_tag_abbrev = token.idpostag.tagtextabbrev
                 pos_tag_color = token.idpostag.tagcolor
 
-            # Разметка для ошибок 
+            # Разметка для ошибок
             error_tokens = token.errortoken_set.select_related(
                 "iderror__iderrortag", "iderror__iderrorlevel"
             ).all()
@@ -37,15 +38,23 @@ def show_text_markup(request, text_id=2379):
             for error_token in error_tokens:
                 error = error_token.iderror
                 if error and error.iderrortag:
-                    errors_list.append({
-                        "error_tag": error.iderrortag.tagtext,
-                        "error_tag_russian": error.iderrortag.tagtextrussian,
-                        "error_tag_abbrev": error.iderrortag.tagtextabbrev,
-                        "error_color": error.iderrortag.tagcolor,
-                        "error_level": error.iderrorlevel.errorlevelname if error.iderrorlevel else "Не указано",
-                        "error_correct": error.correct if error.correct else "Не указано",
-                        "error_comment": error.comment if error.comment else "Не указано",
-                    })
+                    errors_list.append(
+                        {
+                            "error_tag": error.iderrortag.tagtext,
+                            "error_tag_russian": error.iderrortag.tagtextrussian,
+                            "error_tag_abbrev": error.iderrortag.tagtextabbrev,
+                            "error_color": error.iderrortag.tagcolor,
+                            "error_level": error.iderrorlevel.errorlevelname
+                            if error.iderrorlevel
+                            else "Не указано",
+                            "error_correct": error.correct
+                            if error.correct
+                            else "Не указано",
+                            "error_comment": error.comment
+                            if error.comment
+                            else "Не указано",
+                        }
+                    )
 
             # Основная ошибка для отображения (первая)
             main_error = errors_list[0] if errors_list else {}
@@ -99,19 +108,32 @@ def show_text_markup(request, text_id=2379):
         "write_tool": write_tool.writetoolname if write_tool else "Не указано",
         "text_type": text_type.texttypename if text_type else "Не указано",
         "emotion": emotion.emotionname,
-        "year_study_language": year_study_language if text_type == None else "Не указано",
+        "year_study_language": year_study_language
+        if text_type == None
+        else "Не указано",
         "self_rating": self_rating,
         "self_assesment": assesment,
     }
 
     return render(request, "show_text_markup.html", context)
 
+
 def annotate_text(request):
     return render(request, "annotate_text.html")
 
+
 def show_texts(request):
-    return render(request, "show_texts.html")
+    groups = Group.objects.select_related("idayear").all()
+
+    group_data = [
+        {"id": group.idgroup, "name": group.groupname, "year": group.idayear.title}
+        for group in groups
+    ]
+
+    context = {"groups": group_data}
+
+    return render(request, "show_texts.html", context)
+
 
 def home_view(request):
     return render(request, "home.html")
-
