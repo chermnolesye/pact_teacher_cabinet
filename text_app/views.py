@@ -150,9 +150,9 @@ def show_texts(request):
 
     group_data = [
         {
-            "id": group.idgroup,
-            "name": group.groupname,
-            "year": group.idayear__title,
+            "id": group["idgroup"],
+            "name": group["groupname"],
+            "year": group["idayear__title"],
         }
         for group in groups
     ]
