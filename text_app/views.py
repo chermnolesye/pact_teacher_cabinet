@@ -1,5 +1,14 @@
 from django.shortcuts import render, get_object_or_404
-from core_app.models import Text, Token, PosTag, Error, ErrorToken, ErrorTag, Group
+from core_app.models import (
+    Text,
+    Token,
+    PosTag,
+    Error,
+    ErrorToken,
+    ErrorTag,
+    Group,
+    AcademicYear,
+)
 
 
 def show_text_markup(request, text_id=2379):
@@ -123,14 +132,32 @@ def annotate_text(request):
 
 
 def show_texts(request):
-    groups = Group.objects.select_related("idayear").all()
+    groups = (
+        Group.objects.select_related("idayear")
+        .all()
+        .values("idgroup", "groupname", "idayear__title")
+        .distinct()
+    )
+
+    years = AcademicYear.objects.all()
+    years_data = [
+        {
+            "id": year["idayear"],
+            "name": year["title"],
+        }
+        for year in years
+    ]
 
     group_data = [
-        {"id": group.idgroup, "name": group.groupname, "year": group.idayear.title}
+        {
+            "id": group["idgroup"],
+            "name": group["groupname"],
+            "year": group["idayear__title"],
+        }
         for group in groups
     ]
 
-    context = {"groups": group_data}
+    context = {"groups": group_data, "years": years_data}
 
     return render(request, "show_texts.html", context)
 
