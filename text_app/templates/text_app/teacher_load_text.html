@@ -1,4 +1,3 @@
-<!-- teacher_load_text.html -->
 {% load static %}
 <!DOCTYPE html>
 <html lang="ru">
@@ -68,13 +67,11 @@
         const studentSelect = document.getElementById("id_student");
         groupSelect.addEventListener("change", function(){
             const groupId = this.value;
-            // Используем тот же URL, что и для формы, но добавляем group_id в query string
             fetch("{% url 'teacher_load_text' %}?group_id=" + groupId, {
                 headers: {"X-Requested-With": "XMLHttpRequest"}
             })
             .then(response => response.json())
             .then(data => {
-                // Очищаем список студентов
                 studentSelect.innerHTML = "";
                 data.students.forEach(function(student){
                     const option = document.createElement("option");
