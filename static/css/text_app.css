@@ -3,6 +3,7 @@
 .horizontal-wrap > * {
     display: flex;
     margin: 10px;
+    flex-wrap: wrap;
 }
 
 .vertical-level > * {
@@ -24,8 +25,13 @@
 }
 
 .add-text-container select,
-.add-text-container textarea,
 .add-text-container input:not([type="checkbox"], [type="radio"], [type="file"]) {
+    width: 100%;
+    min-width: 270px;
+    box-sizing: border-box;
+}
+
+.add-text-container textarea {
     width: 100%;
     box-sizing: border-box;
 }
