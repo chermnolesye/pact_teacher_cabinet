@@ -1,11 +1,7 @@
 
-.add-text-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
 
 .horizontal-wrap > * {
+    display: flex;
     margin: 10px;
 }
 
@@ -13,8 +9,49 @@
     margin: 5px;
 }
 
+/* Стили для загрузки текста */
+
+.add-text-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 #load-text {
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+.add-text-container select,
+.add-text-container textarea,
+.add-text-container input:not([type="checkbox"], [type="radio"], [type="file"]) {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.add-text-container textarea {
+    min-height: 400px;
+    min-width: 500px;
+    resize: vertical;
+}
+
+.horizontal-wrap > div {
+    flex: 1;
+}
+
+.vertical-level {
+    margin-bottom: 0;
+}
+
+.horizontal-wrap > div {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: 15px;
+}
+
+#load-text .button {
+    margin-top: 20px;
+    min-width: 250px;
 }
