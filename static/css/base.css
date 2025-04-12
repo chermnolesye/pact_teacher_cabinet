@@ -55,6 +55,16 @@ html, body {
 	justify-content: center;
 }
 
+.vertical-level {
+    display: flex;
+    flex-direction: column;
+}
+
+.horizontal-wrap {
+    display: flex;
+    flex-direction: row;
+  }
+
 h2 {
 	font-size: calc(1.325rem + .9vw);
 }
@@ -126,18 +136,30 @@ h2 {
     padding: 20px;
 }
 
-input {
-	padding: 5px;
-	border: none;
-	border: 1px solid var(--grey-color);
-	border-radius: var(--border-radius);
-	min-height: 35px;
+select,
+textarea,
+input:not([type="checkbox"], [type="radio"]) {
+    padding: 5px;
+    border: 1px solid var(--grey-color);
+    border-radius: var(--border-radius);
+    min-height: 35px;
+    box-sizing: border-box;
+    font-family: inherit;
+    font-size: inherit;
+    background-color: white;
 }
 
-input:focus {
+select:focus,
+textarea:focus,
+input:not([type="checkbox"], [type="radio"]):focus {
     outline: none;
     border-color: var(--secondary-color);
     box-shadow: 0 0 0 3px rgba(81, 151, 255, 0.25);
+}
+
+textarea {
+    resize: vertical;
+    min-height: 100px;
 }
 
 .input-group {

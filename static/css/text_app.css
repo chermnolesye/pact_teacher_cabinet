@@ -1,0 +1,20 @@
+
+.add-text-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.horizontal-wrap > * {
+    margin: 10px;
+}
+
+.vertical-level > * {
+    margin: 5px;
+}
+
+#load-text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}

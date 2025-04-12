@@ -1,11 +1,4 @@
 
-
-.panel {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-}
-
 .menu, .text-header {
     display: flex;
     flex-direction: row;
@@ -108,7 +101,6 @@ form {
     position: relative;
     white-space: nowrap;
 }
-
 
 .sentence.tokens-container {
     display: flex;
@@ -246,7 +238,6 @@ form {
     right: 10px;
     cursor: pointer;
 }
-
 
 /* МЕНЮ ТЕКСТА */
 
@@ -426,18 +417,12 @@ form {
     color: #6C757D;
   }
 
-  .horizontal-wrap {
-    display: flex;
-    flex-direction: row;
-  }
-
   .grade-buttons {
     display: flex;
     flex-direction: row;
     justify-content: space-evenly; 
     margin: 0px 20px;
   }
-
 
   /* Общие стили для группы опций */
 .option-group {
