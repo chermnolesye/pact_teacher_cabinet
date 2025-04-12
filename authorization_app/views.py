@@ -139,7 +139,7 @@ def user_login(request):
             if user is not None:
                 login(request, user)
                 if user.idrights.idrights == 2: 
-                    return redirect("text_app:show_text_markup") #Поменять!
+                    return redirect("show_text_markup") #Поменять!
                 elif user.idrights.idrights == 1:  
                     return redirect("show_text_markup")  #Поменять!
             else:

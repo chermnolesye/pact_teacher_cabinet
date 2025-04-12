@@ -129,7 +129,8 @@ def show_text_markup(request, text_id=2379):
 
 
 def annotate_text(request, text_id=2379):
-    if text_id is not None:
+    text_id = request.GET.get('text_id')
+    if text_id:
         text = get_object_or_404(Text, idtext=text_id)
     else:
         text = Text.objects.first()
@@ -233,7 +234,7 @@ def annotate_text(request, text_id=2379):
         "write_place": write_place.writeplacename if write_place else "Не указано",
         "write_tool": write_tool.writetoolname if write_tool else "Не указано",
         "text_type": text_type.texttypename if text_type else "Не указано",
-        "emotion": emotion.emotionname,
+        "emotion": emotion.emotionname if emotion else "Не указано",
         "year_study_language": year_study_language
         if text_type == None
         else "Не указано",
@@ -279,18 +280,32 @@ def show_texts(request):
     ]
 
     finded_text_by_name_data = []
-
-    # Еще не факт что это работает, надо проверять
-    if request.method == "POST" and "search" in request.POST:
+    if request.method == "POST":
+        # Получаем параметры из формы
         text_name = request.POST.get("text", "")
+        year_id = request.POST.get("year", "")         # id учебного года
+        group_id = request.POST.get("group", "")         # id группы
+        text_type_id = request.POST.get("text_type", "") # id типа текста
+        grouping = request.POST.get("grouping", "")
+
+        # Начинаем с выборки всех текстов
+        texts = Text.objects.all()
 
         if text_name:
-            texts = Text.objects.filter(header__icontains=text_name).values(
-                "idtext", "header"
-            )
-            finded_text_by_name_data = [
-                {"id": text["idtext"], "header_text": text["header"]} for text in texts
-            ]
+            texts = texts.filter(header__icontains=text_name)
+        if year_id:
+            # идём по связям: текст -> студент -> группа -> академ. год
+            texts = texts.filter(idstudent__idgroup__idayear=year_id)
+        if group_id:
+            # фильтруем по группе студента
+            texts = texts.filter(idstudent__idgroup=group_id)
+        if text_type_id:
+            texts = texts.filter(idtexttype_id=text_type_id)
+
+        texts = texts.values("idtext", "header")
+        finded_text_by_name_data = [
+            {"id": text["idtext"], "header_text": text["header"]} for text in texts
+        ]
 
     context = {
         "groups": group_data,
