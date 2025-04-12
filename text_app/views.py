@@ -320,6 +320,7 @@ def show_texts(request):
     }
     return render(request, "show_texts.html", context)
 
+
 def teacher_load_text(request):
     if request.headers.get('x-requested-with') == 'XMLHttpRequest' and "group_id" in request.GET:
         group_id = request.GET.get("group_id")
@@ -331,18 +332,48 @@ def teacher_load_text(request):
             } 
             for s in students
         ]
-        return JsonResponse({'students': students_data})
+        
+        try:
+            group = Group.objects.get(idgroup=group_id)
+            course = group.studycourse  
+        except Group.DoesNotExist:
+            course = None 
+
+        return JsonResponse({'students': students_data, 'course': course})
 
     if request.method == "POST":
         form = TeacherLoadTextForm(request.POST)
         if form.is_valid():
             text_obj = form.save(commit=False)
+            print(f"Полученные данные: {form.cleaned_data}")
+
             selected_student_id = request.POST.get("student")
+            group_id = request.POST.get("group")
+
+            if not selected_student_id:
+                form.add_error('student', 'Не выбран студент')
+                print("Не выбран студент")
+                return render(request, 'teacher_load_text.html', {'form': form})
+
+            print(f"Selected student ID: {selected_student_id}")
+            print(f"Group ID: {group_id}")
+
             text_obj.idstudent = get_object_or_404(Student, idstudent=selected_student_id)
             text_obj.iduserteacher = request.user
+
+            if group_id:
+                try:
+                    group = Group.objects.get(idgroup=group_id)
+                    text_obj.educationlevel = group.studycourse
+                except Group.DoesNotExist:
+                    pass  
+            print(f"Перед сохранением: {text_obj}")
+
             text_obj.save()
 
-            from nltk.tokenize import sent_tokenize, word_tokenize
+            print("Текст сохранен успешно")
+
+            # Токенизация текста
             sentences = sent_tokenize(text_obj.text, language='german')
             for order, sentence_text in enumerate(sentences, start=1):
                 if sentence_text.strip():
@@ -360,10 +391,12 @@ def teacher_load_text(request):
                         )
 
             return redirect('show_texts')
+        else:
+            print(f"Форма невалидна. Ошибки: {form.errors}")
     else:
         form = TeacherLoadTextForm()
-    return render(request, 'teacher_load_text.html', {'form': form})
 
+    return render(request, 'teacher_load_text.html', {'form': form})
 
 def home_view(request):
     return render(request, "home.html")

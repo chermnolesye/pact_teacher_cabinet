@@ -17,7 +17,7 @@
             {% csrf_token %}
 
             <div>
-                <div  class="horizontal-wrap">
+                <div class="horizontal-wrap">
                     <div>
                         <div class="vertical-level">
                             <label for="{{ form.header.id_for_label }}">Название текста</label>
@@ -40,7 +40,7 @@
                         </div>
                         <div class="vertical-level">
                             <label for="{{ form.educationlevel.id_for_label }}">Курс обучения</label>
-                            {{ form.educationlevel }}
+                            <input type="text" id="id_educationlevel" name="educationlevel" value="{{ form.educationlevel.value }}" readonly>
                         </div>
                         <div class="vertical-level">
                             <label for="{{ form.createdate.id_for_label }}">Дата создания</label>
@@ -86,26 +86,37 @@
     </div>
 
     <script>
-    document.addEventListener('DOMContentLoaded', function(){
-        const groupSelect = document.getElementById("id_group");
-        const studentSelect = document.getElementById("id_student");
-        groupSelect.addEventListener("change", function(){
-            const groupId = this.value;
-            fetch("{% url 'teacher_load_text' %}?group_id=" + groupId, {
-                headers: {"X-Requested-With": "XMLHttpRequest"}
-            })
-            .then(response => response.json())
-            .then(data => {
-                studentSelect.innerHTML = "";
-                data.students.forEach(function(student){
-                    const option = document.createElement("option");
-                    option.value = student.id;
-                    option.textContent = student.name;
-                    studentSelect.appendChild(option);
+        document.addEventListener('DOMContentLoaded', function() {
+            const groupSelect = document.getElementById("id_group");
+            const studentSelect = document.getElementById("id_student");
+            const educationLevelInput = document.getElementById("id_educationlevel");
+    
+            educationLevelInput.disabled = true;
+    
+            groupSelect.addEventListener("change", function() {
+                const groupId = this.value;
+                fetch("{% url 'teacher_load_text' %}?group_id=" + groupId, {
+                    headers: {"X-Requested-With": "XMLHttpRequest"}
+                })
+                .then(response => response.json())
+                .then(data => {
+                    studentSelect.innerHTML = '<option value="">Выберите студента</option>';
+                    data.students.forEach(function(student) {
+                        const option = document.createElement("option");
+                        option.value = student.id; 
+                        option.textContent = student.name;
+                        studentSelect.appendChild(option);
+                    });
+    
+                    if (data.course) {
+                        educationLevelInput.value = data.course;  
+                    } else {
+                        educationLevelInput.value = "";  
+                    }
                 });
             });
         });
-    });
     </script>
+        
 </body>
 </html>
