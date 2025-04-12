@@ -1,4 +1,7 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404
+from django.http import JsonResponse
+from .forms import TeacherLoadTextForm
+from nltk.tokenize import sent_tokenize, word_tokenize
 from core_app.models import (
     Text,
     Token,
@@ -9,6 +12,8 @@ from core_app.models import (
     Group,
     AcademicYear,
     TextType,
+    Student,
+    Sentence,
 )
 
 
@@ -315,6 +320,54 @@ def show_texts(request):
     }
     return render(request, "show_texts.html", context)
 
+def teacher_load_text(request):
+    # Если запрос AJAX и передан group_id – возвращаем студентов выбранной группы
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest' and "group_id" in request.GET:
+        group_id = request.GET.get("group_id")
+        students = Student.objects.filter(idgroup=group_id).select_related('iduser')
+        students_data = [
+            {
+                'id': s.idstudent, 
+                'name': f"{s.iduser.firstname} {s.iduser.lastname}"
+            } 
+            for s in students
+        ]
+        return JsonResponse({'students': students_data})
+    
+    if request.method == "POST":
+        form = TeacherLoadTextForm(request.POST)
+        if form.is_valid():
+            # Создаем объект текста без сохранения, чтобы потом добавить студента и преподавателя
+            text_obj = form.save(commit=False)
+            # Получаем выбранного студента (его id приходит из POST)
+            selected_student_id = request.POST.get("student")
+            text_obj.idstudent = get_object_or_404(Student, idstudent=selected_student_id)
+            # Устанавливаем преподавателя – как текущего пользователя (если это требуется)
+            text_obj.iduserteacher = request.user
+            text_obj.save()
+            
+            # Теперь умная токенизация через nltk
+            # sent_tokenize и word_tokenize с указанием языка (русский)
+            sentences = sent_tokenize(text_obj.text, language='russian')
+            for order, sentence_text in enumerate(sentences, start=1):
+                # Пропускаем пустые предложения
+                if sentence_text.strip():
+                    sentence_obj = Sentence.objects.create(
+                        sentensetext=sentence_text,
+                        ordernumber=order,
+                        idtext=text_obj
+                    )
+                    tokens = word_tokenize(sentence_text, language='russian')
+                    for t_order, token_text in enumerate(tokens, start=1):
+                        Token.objects.create(
+                            tokentext=token_text,
+                            tokenordernumber=t_order,
+                            idsentence=sentence_obj
+                        )
+            return redirect('show_texts')
+    else:
+        form = TeacherLoadTextForm()
+    return render(request, 'teacher_load_text.html', {'form': form})
 
 def home_view(request):
     return render(request, "home.html")

@@ -1,0 +1,90 @@
+<!-- teacher_load_text.html -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Загрузка текста от имени студента</title>
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+</head>
+<body>
+    <h1>Загрузка текста от имени студента</h1>
+    <form method="post">
+        {% csrf_token %}
+        <div>
+            <label for="{{ form.header.id_for_label }}">Название текста:</label>
+            {{ form.header }}
+        </div>
+        <div>
+            <label for="{{ form.text.id_for_label }}">Текст:</label>
+            {{ form.text }}
+        </div>
+        <div>
+            <label for="{{ form.group.id_for_label }}">Группа:</label>
+            {{ form.group }}
+        </div>
+        <div>
+            <label for="{{ form.student.id_for_label }}">Автор (студент):</label>
+            {{ form.student }}
+        </div>
+        <div>
+            <label for="{{ form.createdate.id_for_label }}">Дата создания:</label>
+            {{ form.createdate }}
+        </div>
+        <div>
+            <label for="{{ form.idtexttype.id_for_label }}">Тип текста:</label>
+            {{ form.idtexttype }}
+        </div>
+        <div>
+            <label for="{{ form.idemotion.id_for_label }}">Эмоция:</label>
+            {{ form.idemotion }}
+        </div>
+        <div>
+            <label for="{{ form.idwriteplace.id_for_label }}">Место написания:</label>
+            {{ form.idwriteplace }}
+        </div>
+        <div>
+            <label for="{{ form.idwritetool.id_for_label }}">Инструмент написания:</label>
+            {{ form.idwritetool }}
+        </div>
+        <div>
+            <label for="{{ form.educationlevel.id_for_label }}">Год изучения языка:</label>
+            {{ form.educationlevel }}
+        </div>
+        <div>
+            <label for="{{ form.selfrating.id_for_label }}">Самооценка:</label>
+            {{ form.selfrating }}
+        </div>
+        <div>
+            <label for="{{ form.selfassesment.id_for_label }}">Оценка:</label>
+            {{ form.selfassesment }}
+        </div>
+        <button type="submit">Загрузить текст</button>
+    </form>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function(){
+        const groupSelect = document.getElementById("id_group");
+        const studentSelect = document.getElementById("id_student");
+        groupSelect.addEventListener("change", function(){
+            const groupId = this.value;
+            // Используем тот же URL, что и для формы, но добавляем group_id в query string
+            fetch("{% url 'teacher_load_text' %}?group_id=" + groupId, {
+                headers: {"X-Requested-With": "XMLHttpRequest"}
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Очищаем список студентов
+                studentSelect.innerHTML = "";
+                data.students.forEach(function(student){
+                    const option = document.createElement("option");
+                    option.value = student.id;
+                    option.textContent = student.name;
+                    studentSelect.appendChild(option);
+                });
+            });
+        });
+    });
+    </script>
+</body>
+</html>
