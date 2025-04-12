@@ -24,6 +24,7 @@
 	--border-radius: 8px;
 	--primary-padding: 20px;
 	--grey-color: #6C757D;
+    --secondary-grey-color: #768088;
 }
 
 body {
@@ -71,6 +72,21 @@ h2 {
 
 .button:hover {
 	background-color: var(--secondary-color);
+}
+
+.button-grey {
+    border-radius: var(--border-radius);
+	color: #ffffff;
+    background-color: var(--grey-color);
+    padding: 5px 15px;
+	margin: 5px;
+	border: none;
+	cursor: pointer;
+	min-height: 35px;
+}
+
+.button-grey:hover {
+	background-color: var(--secondary-grey-color);
 }
 
 .password-toggle {

@@ -58,7 +58,7 @@
                     </svg>    
                 </span>
             </div>
-            <div class="menu-block" data-target="metadata-content">
+            <div class="menu-block menu-block-last" data-target="metadata-content">
                 <span>
                     Метаданные
                     <svg width="16" height="12" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -66,18 +66,52 @@
                     </svg>    
                 </span>
             </div>
-            <button class="rate-btn">Оценить</button>
+        </div>
+
 
             <!-- Контентные блоки -->
             <div class="menu-content" id="view-content">
                 <div class="menu-content-view">
-                    <p>Язык разметки</p>
 
-                    <p>Компактный вид</p>
+                    <div class="option-group">
+                        <p>Язык разметки</p>
+                        <div class="radio-group">
+                            <label class="radio-option">
+                                <input type="radio" name="language" value="deutsche" checked>
+                                <span class="radio-custom"></span>
+                                <span>Deutsche</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="language" value="russian">
+                                <span class="radio-custom"></span>
+                                <span>Русский</span>
+                            </label>
+                        </div>
+                    </div>
 
-                    <p>Части речи</p>
+                    <div class="option-group">
+                        <p>Компактный вид</p>
+                        <label class="switch">
+                            <input type="checkbox">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
 
-                    <p>Ошибки</p>
+                    <div class="option-group">
+                        <p>Части речи</p>
+                        <label class="switch">
+                            <input type="checkbox">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+            
+                    <div class="option-group">
+                        <p>Ошибки</p>
+                        <label class="switch">
+                            <input type="checkbox">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
 
                 </div>
             </div>
@@ -237,55 +271,11 @@
                     <p class="p-dark"> {{ self_assesment }} </p>
                 </div>
             </div>  
-        </div>
-
-        <!-- Модальное окно (изначально скрыто) -->
-        <div class="modal-overlay" id="modal">
-            <div class="modal-content">
-              <button class="close-modal">&times;</button>
-              <h2>Оценить работу</h2>
-              <form>
-                <!-- Форма для оценки -->
-              </form>
-            </div>
-        </div>
-
-        <div class="panel">
-            <div class="menu">
-                <!-- Форма для выбора разметки -->
-                <form method="get" action="" onchange="this.submit();">
-                    <label for="markup">Вид:</label>
-                    <select name="markup" id="markup">
-                        <option value="tagtext" {% if selected_markup == 'tagtext' %}selected{% endif %}>Части речи (Основная)</option>
-                        <option value="tagtextrussian" {% if selected_markup == 'tagtextrussian' %}selected{% endif %}>Части речи (На русском)</option>
-                        <option value="tagtextabbrev" {% if selected_markup == 'tagtextabbrev' %}selected{% endif %}>Аббревиатуры частей речи</option>
-                        <option value="error" {% if selected_markup == 'error' %}selected{% endif %}>Ошибки (Основная)</option>
-                        <option value="error_russian" {% if selected_markup == 'error_russian' %}selected{% endif %}>Ошибки (На русском)</option>
-                        <option value="error_abbrev" {% if selected_markup == 'error_abbrev' %}selected{% endif %}>Аббревиатуры ошибок</option>
-                        <option value="plain" {% if selected_markup == 'plain' %}selected{% endif %}>Без разметки</option>
-                    </select>
-                </form>
-            </div>
-        </div>
         
         <div class="watch-text">
 
             <div class="text-header">
                 <h1 class="text-title">{{ text.header }}</h1>
-                <!-- <button class="show-text-info" data-visible="false">&plus;</button>
-                <div class="text-info" style="display: none;">
-                    <p><strong>Автор:</strong> {{ author }}</p>
-                    <p><strong>Группа:</strong> {{ group }}</p>
-                    <p><strong>Учебный год:</strong> {{ academic_year }}</p>
-                    <p><strong>Дата создания текста:</strong> {{ create_date }}</p>
-                    <p><strong>Место написания текста:</strong> {{ write_place }}</p>
-                    <p><strong>Инструмент написания:</strong> {{ write_tool }}</p>
-                    <p><strong>Тип текста:</strong> {{ text_type }}</p>
-                    <p><strong>Эмоционально-физиологическое состояние:</strong> {{ emotion }}</p>
-                    <p><strong>Год изучения языка</strong>:</strong> {{ year_study_language }}</p>
-                    <p><strong>Оценка задания студентом</strong>:</strong> {{ self_farting }}</p>
-                    <p><strong>Самооценка</strong>:</strong> {{ self_assesment }}</p>
-                </div> -->
             </div>
 
             {% for sentence in sentence_data %}
@@ -294,75 +284,52 @@
                         <p class="sentence-number">{{ sentence.sentence.ordernumber|add:1 }}:</p>
                         {% for token in sentence.tokens %}
                             
-                            <svg class="clickable-icon" width="20" height="20" viewBox="0 0 54 54" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M34.5 27H27M27 27H19.5M27 27V19.5M27 27V34.5M14.5 5.34503C18.2988 3.14728 22.6113 1.99327 27 2.00003C40.8075 2.00003 52 13.1925 52 27C52 40.8075 40.8075 52 27 52C13.1925 52 2 40.8075 2 27C2 22.4475 3.2175 18.175 5.345 14.5" stroke="#0D6EFD" stroke-width="4" stroke-linecap="round"/>
-                            </svg>
-                            <span class="token"
+                            
+                        <span class="token" 
+                                data-pos-tag="{{ token.pos_tag }}"
+                                data-pos-tag-russian="{{ token.pos_tag_russian }}"
+                                data-pos-tag-abbrev="{{ token.pos_tag_abbrev }}"
+                                data-pos-color="{{ token.pos_tag_color }}"
                                 {% if token.error_tag %}
                                     data-error-tag="{{ token.error_tag }}"
+                                    data-error-tag-russian="{{ token.error_tag_russian }}"
                                     data-error-tag-abbrev="{{ token.error_tag_abbrev }}"
                                     data-error-level="{{ token.error_level }}"
-                                    data-error-correct="{{ token.error_correct }}"
-                                    data-error-comment="{{ token.error_comment }}"
                                     data-error-color="{{ token.error_color }}"
-                                    data-all-errors="{{ token.all_errors|safe|escapejs }}"
                                 {% endif %}>
+                            
+                                <!-- Часть речи (изначально скрыта) -->
+                                {% if token.pos_tag %}
+                                <span class="abbr" 
+                                        style="background-color: {{ token.pos_tag_color }}; display: none;"
+                                        data-pos-tag="{{ token.pos_tag }}"
+                                        data-pos-tag-russian="{{ token.pos_tag_russian }}"
+                                        data-pos-tag-abbrev="{{ token.pos_tag_abbrev }}">
+                                    {{ token.pos_tag }}
+                                    
+                                </span>
+                                {% endif %}
+
+                                <!-- Ошибки (изначально скрыты) -->
+                                {% if token.all_errors %}
+                                    {% for error in token.all_errors %}
+                                    <span class="error-tag" 
+                                        style="background-color: {{ error.error_color }}; display: none;"
+                                        data-error-tag="{{ error.error_tag }}"
+                                        data-error-tag-russian="{{ error.error_tag_russian }}"
+                                        data-error-tag-abbrev="{{ error.error_tag_abbrev }}">
+                                    {{ error.error_tag }}
+                                    </span>
+                                    {% endfor %}
+                                {% endif %}
                                 
-                                {% if selected_markup == 'plain' %}
-                                    {% if token.token == '-EMPTY-' %}
-                                        <span class="word">&loz;</span>
-                                    {% else %}
-                                        <span class="word">{{ token.token }}</span>
-                                    {% endif %}
+                                <!-- Само слово -->
+                                {% if token.token == '-EMPTY-' %}
+                                    <span class="word">&loz;</span>
                                 {% else %}
-                                    {% if selected_markup == 'tagtext' or selected_markup == 'tagtextrussian' or selected_markup == 'tagtextabbrev' %}
-                                        {% if token.pos_tag %}
-                                            <span class="abbr" style="background-color: {{ token.pos_tag_color }};">
-                                                {% if selected_markup == 'tagtext' %}
-                                                    {{ token.pos_tag }}
-                                                {% elif selected_markup == 'tagtextrussian' %}
-                                                    {{ token.pos_tag_russian }}
-                                                {% elif selected_markup == 'tagtextabbrev' %}
-                                                    {{ token.pos_tag_abbrev }}
-                                                {% endif %}
-                                            </span>
-                                        {% else %}
-                                            <span class="no-abbr">&nbsp;</span>
-                                        {% endif %}
-                                    {% elif selected_markup == 'error' or selected_markup == 'error_russian' or selected_markup == 'error_abbrev' %}
-                                        
-                                        {% if token.all_errors %}
-                                            {% for error in token.all_errors %}
-                                            <span class="error-tag"
-                                                style="background-color: {{ error.error_color }};"
-                                                data-error-tag="{{ error.error_tag }}"
-                                                data-error-tag-abbrev="{{ error.error_tag_abbrev }}"
-                                                data-error-level="{{ error.error_level }}"
-                                                data-error-correct="{{ error.error_correct }}"
-                                                data-error-comment="{{ error.error_comment }}"
-                                            >
-                                                    {% if selected_markup == 'error' %}
-                                                        {{ error.error_tag }}  
-                                                    {% elif selected_markup == 'error_russian' %}
-                                                        {{ error.error_tag_russian }}  
-                                                    {% elif selected_markup == 'error_abbrev' %}
-                                                        {{ error.error_tag_abbrev }}  
-                                                    {% endif %}
-                                                </span>
-                                            {% endfor %}
-                                        {% else %}
-                                            <span class="no-err">&nbsp;</span>
-                                        {% endif %}
-                                    {% endif %}
-        
-                                    {% if token.token == '-EMPTY-' %}
-                                        <span class="word">&loz;</span>
-                                    {% else %}
-                                        <span class="word">{{ token.token }}</span>
-                                    {% endif %}
+                                    <span class="word">{{ token.token }}</span>
                                 {% endif %}
                             </span>
-
                         {% endfor %}
                     </div>
                 </div>
@@ -371,28 +338,75 @@
     </div>
 
     <script>
-        // Отображение или скрытие информации о тексте
-        document.addEventListener("DOMContentLoaded", function () {
-        const button = document.querySelector('.show-text-info');
-        const textInfo = document.querySelector('.text-info');
+        // Скрипт для отображения разметки (НЕ ДЫШАТЬ НА НЕГО!!!)
+        document.addEventListener('DOMContentLoaded', function() {
+            const languageRadios = document.querySelectorAll('input[name="language"]');
+            const compactViewCheckbox = document.querySelector('.option-group:nth-child(2) input[type="checkbox"]');
+            const posCheckbox = document.querySelector('.option-group:nth-child(3) input[type="checkbox"]');
+            const errorsCheckbox = document.querySelector('.option-group:nth-child(4) input[type="checkbox"]');
+            const tokens = document.querySelectorAll('.token');
 
-        button.addEventListener('click', function () {
-            const isVisible = button.getAttribute('data-visible') === 'true';
-            if (isVisible) {
-                textInfo.style.display = 'none';
-                button.innerHTML = '&plus;';
-                button.setAttribute('data-visible', 'false');
-            } else {
-                textInfo.style.display = 'block';
-                button.innerHTML = '&minus;';
-                button.setAttribute('data-visible', 'true');
+            // Функция обновления отображения
+            function updateDisplay() {
+                const language = document.querySelector('input[name="language"]:checked').value;
+                const isCompact = compactViewCheckbox.checked;
+                const showPOS = posCheckbox.checked;
+                const showErrors = errorsCheckbox.checked;
+
+                tokens.forEach(token => {
+                    token.querySelectorAll('.abbr, .error-tag, .word').forEach(el => {
+                        el.style.display = 'none';
+                    });
+
+                    const word = token.querySelector('.word');
+                    if (word) word.style.display = 'inline';
+
+                    if (showPOS) {
+                        const posTag = token.querySelector('.abbr');
+                        if (posTag) {
+                            posTag.style.display = 'inline';
+                            if (isCompact) {
+                                posTag.textContent = posTag.dataset.posTagAbbrev || 
+                                    (language === 'russian' ? posTag.dataset.posTagRussian : posTag.dataset.posTagAbbrev);
+                            } else {
+                                posTag.textContent = language === 'russian' ? 
+                                    posTag.dataset.posTagRussian : posTag.dataset.posTag;
+                            }
+                        }
+                    }
+
+                    // Обработка ошибок
+                    if (showErrors) {
+                        const errorTags = token.querySelectorAll('.error-tag');
+                        if (errorTags.length > 0) {
+                            errorTags.forEach(tag => {
+                                tag.style.display = 'inline';
+                                if (isCompact) {
+                                    tag.textContent = tag.dataset.errorTagAbbrev;
+                                } else {
+                                    tag.textContent = language === 'russian' ? 
+                                        tag.dataset.errorTagRussian : tag.dataset.errorTag;
+                                }
+                            });
+                        }
+                    }
+                });
             }
-        });
-    });
 
+            // Обработчики событий
+            languageRadios.forEach(radio => {
+                radio.addEventListener('change', updateDisplay);
+            });
+
+            [compactViewCheckbox, posCheckbox, errorsCheckbox].forEach(checkbox => {
+                checkbox.addEventListener('change', updateDisplay);
+            });
+
+            // Инициализация
+            updateDisplay();
+        });
 
         document.addEventListener('DOMContentLoaded', function() {
-            const markupSelect = document.getElementById('markup');
             const popup = document.getElementById('error-popup');
             const closePopupBtn = document.getElementById('close-popup');
     
@@ -458,46 +472,6 @@
                     showPopup(this);     
                 });
             });
-
-            document.querySelectorAll('.clickable-icon').forEach(icon => {
-                icon.addEventListener('click', function () {
-                    const newToken = document.createElement('span');
-                    newToken.className = 'token';
-                    newToken.innerHTML = '<span class="word">Пропущенное слово</span>';
-
-                    const parent = icon.parentNode;
-                    const allChildren = Array.from(parent.childNodes);
-                    const index = allChildren.indexOf(icon);
-
-                    // Вставить новый токен после SVG
-                    if (index > -1 && index < allChildren.length - 1) {
-                    parent.insertBefore(newToken, allChildren[index + 1]);
-                    } else {
-                    parent.appendChild(newToken);
-                    }
-                });
-            });
-
-
-    
-            // Функция для переключения видимости тегов ошибок
-            function toggleErrorTagVisibility() {
-                const errorTagElements = document.querySelectorAll('.error-tag');
-                const noErrorTagElements = document.querySelectorAll('.no-err');
-                if (markupSelect.value === 'plain') {
-                    errorTagElements.forEach(el => el.style.display = 'none');
-                    noErrorTagElements.forEach(el => el.style.display = 'none');
-                } else {
-                    errorTagElements.forEach(el => el.style.display = 'flex');
-                    noErrorTagElements.forEach(el => el.style.display = 'flex');
-                }
-            }
-    
-            // Вызвать функцию при загрузке страницы
-            toggleErrorTagVisibility();
-    
-            // Добавить слушатель для изменения значения в селекте
-            markupSelect.addEventListener('change', toggleErrorTagVisibility);
         });
 
 
@@ -507,12 +481,13 @@
             const modal = document.getElementById('modal');
             const closeModal = document.querySelector('.close-modal');
             const menuBlocks = document.querySelectorAll('.menu-block');
-            
+            const backButton = document.querySelector('.button-grey');
+
+
             menuBlocks.forEach(block => {
-                block.addEventListener('click', function(e) {
+            block.addEventListener('click', function(e) {
                 e.stopPropagation();
                 
-                // Получаем привязанный контент
                 const contentId = this.getAttribute('data-target');
                 const content = document.getElementById(contentId);
                 if (!content) return;
@@ -521,57 +496,54 @@
                 document.querySelectorAll('.menu-content').forEach(c => {
                     if (c !== content) {
                         c.style.display = 'none';
-                        c.style.position = 'absolute'; // Сброс позиции
                     }
                 });
-
-                // Показываем текущий контент
-                // content.style.display = 'block';
-                
-                // // Для sticky контейнера переключаем на fixed позиционирование
-                // content.style.position = 'fixed';
                 
                 // Позиционируем текущий контент
                 const rect = this.getBoundingClientRect();
                 content.style.display = 'block';
                 content.style.position = 'fixed';
-                content.style.left = `${rect.left + window.scrollX}px`;
-                content.style.top = `${rect.bottom + window.scrollY + 5}px`;
-                });
-            });
-            
-            // Закрытие при клике вне
-            document.addEventListener('click', function() {
-                document.querySelectorAll('.menu-content').forEach(c => {
-                c.style.display = 'none';
+                content.style.left = `${rect.left}px`;
+                content.style.top = `${rect.bottom}px`;
+                content.style.zIndex = '1001'; // Выше чем у меню
                 });
             });
 
-                // Обработчики для модального окна
-            rateBtn.addEventListener('click', function(e) {
-                e.stopPropagation();
-                modal.style.display = 'flex';
+            // Обновление позиции при прокрутке
+            window.addEventListener('scroll', function() {
+                document.querySelectorAll('.menu-content').forEach(content => {
+                    if (content.style.display === 'block') {
+                        const targetId = content.id.replace('-content', '');
+                        const menuItem = document.querySelector(`[data-target="${content.id}"]`);
+                        if (menuItem) {
+                            const rect = menuItem.getBoundingClientRect();
+                            content.style.left = `${rect.left}px`;
+                            content.style.top = `${rect.bottom}px`;
+                        }
+                    }
+                });
             });
-            
-            closeModal.addEventListener('click', function() {
-                modal.style.display = 'none';
+
+            document.querySelectorAll('.menu-content').forEach(content => {
+                content.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                });
             });
-            
-            modal.addEventListener('click', function(e) {
-                if (e.target === modal) {
-                modal.style.display = 'none';
+
+            document.addEventListener('click', function(e) {
+                // Проверяем, был ли клик вне всех .menu-content и .menu-block
+                const isClickInsideContent = Array.from(document.querySelectorAll('.menu-content, .menu-block')).some(
+                    element => element.contains(e.target)
+                );
+                
+                if (!isClickInsideContent) {
+                    document.querySelectorAll('.menu-content').forEach(c => {
+                        c.style.display = 'none';
+                    });
                 }
             });
-            
-            // Закрытие при ресайзе окна (перепозиционирование)
-            window.addEventListener('resize', function() {
-                document.querySelectorAll('.menu-content').forEach(content => {
-                content.style.display = 'none';
-                });
+           
             });
-
-            });
-
     </script>
 
 </body>
