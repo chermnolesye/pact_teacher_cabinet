@@ -44,12 +44,34 @@ class TeacherLoadTextForm(forms.ModelForm):
 
     def clean_selfrating(self):
         value = self.cleaned_data.get('selfrating')
-        if value is not None and value < 0:
-            raise forms.ValidationError('Самооценка не может быть отрицательной.')
+        if value is not None:
+            if value < 1:
+                raise forms.ValidationError('Самооценка не может быть меньше 1.')
+            if value > 10:
+                raise forms.ValidationError('Самооценка не может быть больше 10.')
         return value
 
     def clean_selfassesment(self):
         value = self.cleaned_data.get('selfassesment')
-        if value is not None and value < 0:
-            raise forms.ValidationError('Оценка не может быть отрицательной.')
+        if value is not None:
+            if value < 1:
+                raise forms.ValidationError('Оценка не может быть меньше 1.')
+            if value > 10:
+                raise forms.ValidationError('Оценка не может быть больше 10.')
         return value
+
+    selfrating = forms.IntegerField(
+        label="Самооценка",
+        min_value=1,
+        max_value=10,
+        required=True,
+        widget=forms.NumberInput(attrs={'min': 1, 'max': 10, 'step': 1})  
+    )
+
+    selfassesment = forms.IntegerField(
+        label="Оценка",
+        min_value=1,
+        max_value=10,
+        required=True,
+        widget=forms.NumberInput(attrs={'min': 1, 'max': 10, 'step': 1}) 
+    )

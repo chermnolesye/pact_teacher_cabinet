@@ -371,12 +371,11 @@ def teacher_load_text(request):
             print(f"Текст успешно сохранен для студента {text_obj.idstudent.idstudent}, "
                   f"с ID текста: {text_obj.idtext}. Текст: {text_obj.text[:100]}...")
 
-            from nltk.tokenize import sent_tokenize, word_tokenize
             sentences = sent_tokenize(text_obj.text, language='german')
             
             print(f"Начинаем токенизацию текста. Количество предложений: {len(sentences)}")
             
-            for order, sentence_text in enumerate(sentences, start=1):
+            for order, sentence_text in enumerate(sentences, start=0): 
                 if sentence_text.strip():
                     sentence_obj = Sentence.objects.create(
                         sentensetext=sentence_text,
@@ -406,5 +405,6 @@ def teacher_load_text(request):
         form = TeacherLoadTextForm()
 
     return render(request, 'teacher_load_text.html', {'form': form})
+
 def home_view(request):
     return render(request, "home.html")
