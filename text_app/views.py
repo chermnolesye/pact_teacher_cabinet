@@ -14,6 +14,7 @@ from core_app.models import (
     TextType,
     Student,
     Sentence,
+    User,
 )
 
 
@@ -332,12 +333,12 @@ def teacher_load_text(request):
             } 
             for s in students
         ]
-        
+
         try:
             group = Group.objects.get(idgroup=group_id)
             course = group.studycourse  
         except Group.DoesNotExist:
-            course = None 
+            course = None
 
         return JsonResponse({'students': students_data, 'course': course})
 
@@ -345,36 +346,36 @@ def teacher_load_text(request):
         form = TeacherLoadTextForm(request.POST)
         if form.is_valid():
             text_obj = form.save(commit=False)
-            print(f"Полученные данные: {form.cleaned_data}")
 
             selected_student_id = request.POST.get("student")
             group_id = request.POST.get("group")
 
             if not selected_student_id:
                 form.add_error('student', 'Не выбран студент')
-                print("Не выбран студент")
                 return render(request, 'teacher_load_text.html', {'form': form})
 
-            print(f"Selected student ID: {selected_student_id}")
-            print(f"Group ID: {group_id}")
-
             text_obj.idstudent = get_object_or_404(Student, idstudent=selected_student_id)
-            text_obj.iduserteacher = request.user
+
+            default_teacher, created = User.objects.get_or_create(login='teacher_default')
+            text_obj.iduserteacher = default_teacher
 
             if group_id:
                 try:
                     group = Group.objects.get(idgroup=group_id)
                     text_obj.educationlevel = group.studycourse
                 except Group.DoesNotExist:
-                    pass  
-            print(f"Перед сохранением: {text_obj}")
-
+                    pass
+            
             text_obj.save()
 
-            print("Текст сохранен успешно")
+            print(f"Текст успешно сохранен для студента {text_obj.idstudent.idstudent}, "
+                  f"с ID текста: {text_obj.idtext}. Текст: {text_obj.text[:100]}...")
 
-            # Токенизация текста
+            from nltk.tokenize import sent_tokenize, word_tokenize
             sentences = sent_tokenize(text_obj.text, language='german')
+            
+            print(f"Начинаем токенизацию текста. Количество предложений: {len(sentences)}")
+            
             for order, sentence_text in enumerate(sentences, start=1):
                 if sentence_text.strip():
                     sentence_obj = Sentence.objects.create(
@@ -382,13 +383,21 @@ def teacher_load_text(request):
                         ordernumber=order,
                         idtext=text_obj
                     )
+                    print(f"Добавлено предложение {order}: {sentence_text}")
+
                     tokens = word_tokenize(sentence_text, language='german')
+                    print(f"Токенизируем предложение {order}, количество слов: {len(tokens)}")
+
                     for t_order, token_text in enumerate(tokens, start=1):
                         Token.objects.create(
                             tokentext=token_text,
                             tokenordernumber=t_order,
                             idsentence=sentence_obj
                         )
+                        print(f"Добавлен токен {t_order}: {token_text}")
+
+            print(f"Токенизация завершена для текста с ID {text_obj.idtext}. "
+                  f"Всего предложений: {len(sentences)}, слов: {sum(len(word_tokenize(s, language='german')) for s in sentences)}.")
 
             return redirect('show_texts')
         else:
@@ -397,6 +406,5 @@ def teacher_load_text(request):
         form = TeacherLoadTextForm()
 
     return render(request, 'teacher_load_text.html', {'form': form})
-
 def home_view(request):
     return render(request, "home.html")
