@@ -135,7 +135,7 @@ def show_text_markup(request, text_id=2379):
 
 
 def annotate_text(request, text_id=2379):
-    text_id = request.GET.get('text_id')
+    text_id = request.GET.get("text_id")
     if text_id:
         text = get_object_or_404(Text, idtext=text_id)
     else:
@@ -286,12 +286,13 @@ def show_texts(request):
     ]
 
     finded_text_by_name_data = []
+    grouped_texts = []
     if request.method == "POST":
         # Получаем параметры из формы
         text_name = request.POST.get("text", "")
-        year_id = request.POST.get("year", "")         # id учебного года
-        group_id = request.POST.get("group", "")         # id группы
-        text_type_id = request.POST.get("text_type", "") # id типа текста
+        year_id = request.POST.get("year", "")  # id учебного года
+        group_id = request.POST.get("group", "")  # id группы
+        text_type_id = request.POST.get("text_type", "")  # id типа текста
         grouping = request.POST.get("grouping", "")
 
         # Начинаем с выборки всех текстов
@@ -313,34 +314,55 @@ def show_texts(request):
             {"id": text["idtext"], "header_text": text["header"]} for text in texts
         ]
 
+        if grouping == "fio":
+            for text in texts:
+                fio = f"{text.idstudent.iduser.lastname} {text.idstudent.iduser.firstname} {text.idstudent.iduser.middlename}"
+                if fio not in grouped_texts:
+                    grouped_texts[fio] = []
+                grouped_texts[fio].append(
+                    {"id": text.idtext, "header_text": text.header}
+                )
+
+        elif grouping == "category":
+            for text in texts:
+                category = (
+                    text.idtexttype.texttypename if text.idtexttype else "Не указано"
+                )
+                if category not in grouped_texts:
+                    grouped_texts[category] = []
+                grouped_texts[category].append(
+                    {"id": text.idtext, "header_text": text.header}
+                )
+
     context = {
         "groups": group_data,
         "years": years_data,
         "text_types": text_type_data,
         "finded_text_by_name": finded_text_by_name_data,
+        "grouped_texts": grouped_texts,
     }
     return render(request, "show_texts.html", context)
 
 
 def teacher_load_text(request):
-    if request.headers.get('x-requested-with') == 'XMLHttpRequest' and "group_id" in request.GET:
+    if (
+        request.headers.get("x-requested-with") == "XMLHttpRequest"
+        and "group_id" in request.GET
+    ):
         group_id = request.GET.get("group_id")
-        students = Student.objects.filter(idgroup=group_id).select_related('iduser')
+        students = Student.objects.filter(idgroup=group_id).select_related("iduser")
         students_data = [
-            {
-                'id': s.idstudent, 
-                'name': f"{s.iduser.firstname} {s.iduser.lastname}"
-            } 
+            {"id": s.idstudent, "name": f"{s.iduser.firstname} {s.iduser.lastname}"}
             for s in students
         ]
 
         try:
             group = Group.objects.get(idgroup=group_id)
-            course = group.studycourse  
+            course = group.studycourse
         except Group.DoesNotExist:
             course = None
 
-        return JsonResponse({'students': students_data, 'course': course})
+        return JsonResponse({"students": students_data, "course": course})
 
     if request.method == "POST":
         form = TeacherLoadTextForm(request.POST)
@@ -351,12 +373,16 @@ def teacher_load_text(request):
             group_id = request.POST.get("group")
 
             if not selected_student_id:
-                form.add_error('student', 'Не выбран студент')
-                return render(request, 'teacher_load_text.html', {'form': form})
+                form.add_error("student", "Не выбран студент")
+                return render(request, "teacher_load_text.html", {"form": form})
 
-            text_obj.idstudent = get_object_or_404(Student, idstudent=selected_student_id)
+            text_obj.idstudent = get_object_or_404(
+                Student, idstudent=selected_student_id
+            )
 
-            default_teacher, created = User.objects.get_or_create(login='teacher_default')
+            default_teacher, created = User.objects.get_or_create(
+                login="teacher_default"
+            )
             text_obj.iduserteacher = default_teacher
 
             if group_id:
@@ -365,46 +391,53 @@ def teacher_load_text(request):
                     text_obj.educationlevel = group.studycourse
                 except Group.DoesNotExist:
                     pass
-            
+
             text_obj.save()
 
-            print(f"Текст успешно сохранен для студента {text_obj.idstudent.idstudent}, "
-                  f"с ID текста: {text_obj.idtext}. Текст: {text_obj.text[:100]}...")
+            print(
+                f"Текст успешно сохранен для студента {text_obj.idstudent.idstudent}, "
+                f"с ID текста: {text_obj.idtext}. Текст: {text_obj.text[:100]}..."
+            )
 
-            sentences = sent_tokenize(text_obj.text, language='german')
-            
-            print(f"Начинаем токенизацию текста. Количество предложений: {len(sentences)}")
-            
-            for order, sentence_text in enumerate(sentences, start=0): 
+            sentences = sent_tokenize(text_obj.text, language="german")
+
+            print(
+                f"Начинаем токенизацию текста. Количество предложений: {len(sentences)}"
+            )
+
+            for order, sentence_text in enumerate(sentences, start=0):
                 if sentence_text.strip():
                     sentence_obj = Sentence.objects.create(
-                        sentensetext=sentence_text,
-                        ordernumber=order,
-                        idtext=text_obj
+                        sentensetext=sentence_text, ordernumber=order, idtext=text_obj
                     )
                     print(f"Добавлено предложение {order}: {sentence_text}")
 
-                    tokens = word_tokenize(sentence_text, language='german')
-                    print(f"Токенизируем предложение {order}, количество слов: {len(tokens)}")
+                    tokens = word_tokenize(sentence_text, language="german")
+                    print(
+                        f"Токенизируем предложение {order}, количество слов: {len(tokens)}"
+                    )
 
                     for t_order, token_text in enumerate(tokens, start=1):
                         Token.objects.create(
                             tokentext=token_text,
                             tokenordernumber=t_order,
-                            idsentence=sentence_obj
+                            idsentence=sentence_obj,
                         )
                         print(f"Добавлен токен {t_order}: {token_text}")
 
-            print(f"Токенизация завершена для текста с ID {text_obj.idtext}. "
-                  f"Всего предложений: {len(sentences)}, слов: {sum(len(word_tokenize(s, language='german')) for s in sentences)}.")
+            print(
+                f"Токенизация завершена для текста с ID {text_obj.idtext}. "
+                f"Всего предложений: {len(sentences)}, слов: {sum(len(word_tokenize(s, language='german')) for s in sentences)}."
+            )
 
-            return redirect('show_texts')
+            return redirect("show_texts")
         else:
             print(f"Форма невалидна. Ошибки: {form.errors}")
     else:
         form = TeacherLoadTextForm()
 
-    return render(request, 'teacher_load_text.html', {'form': form})
+    return render(request, "teacher_load_text.html", {"form": form})
+
 
 def home_view(request):
     return render(request, "home.html")
