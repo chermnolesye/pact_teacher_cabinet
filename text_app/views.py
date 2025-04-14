@@ -287,6 +287,13 @@ def show_texts(request):
 
     finded_text_by_name_data = []
     grouped_texts = []
+
+    text_name = ""
+    year_id = ""
+    group_id = ""
+    text_type_id = ""
+    grouping = ""
+
     if request.method == "POST":
         # Получаем параметры из формы
         text_name = request.POST.get("text", "")
@@ -340,6 +347,7 @@ def show_texts(request):
         "text_types": text_type_data,
         "finded_text_by_name": finded_text_by_name_data,
         "grouped_texts": grouped_texts,
+        "selected_text": text_name,
     }
     return render(request, "show_texts.html", context)
 
