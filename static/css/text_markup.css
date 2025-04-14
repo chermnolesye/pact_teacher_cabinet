@@ -163,6 +163,10 @@ form {
     width: 100%;
 }
 
+.word:hover {
+    border: dashed 1px #4285f4;
+}
+
 #markup {
     margin: 2px; 
     padding: 8px; 
@@ -529,4 +533,48 @@ input:checked + .slider {
 
 input:checked + .slider:before {
     transform: translateX(26px);
+}
+
+.chosen_token {
+    border: solid 1px #4285f4 !important;
+}
+
+#select-menu {
+    position: fixed;
+    height: 50px;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    color: white;
+    text-align: center;
+    box-shadow: 0 -0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+.button-menu-select {
+    margin: 5px;
+    display: inline-block;
+    font-weight: 600;
+    line-height: 1.5;
+    height: 40px;
+    border-radius: 10px;
+    border: none;
+    color: white;
+    padding: 5px 40px;
+    font-size: 16px;
+}
+
+#button-add-annotation {
+    background-color: #0D6DFB;
+}
+
+#button-delete-tokens {
+    background-color: #E87C86;
+}
+
+#button-remove-highlight {
+    background-color: #6C757D;
+}
+
+.hide{
+    display: none;
 }

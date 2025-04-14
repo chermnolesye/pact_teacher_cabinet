@@ -342,56 +342,60 @@
                 <div class="tokens-container">
                     <p class="sentence-number">{{ sentence.sentence.ordernumber|add:1 }}:</p>
                     {% for token in sentence.tokens %}
-                        
-                        <svg class="clickable-icon" width="20" height="20" viewBox="0 0 54 54" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M34.5 27H27M27 27H19.5M27 27V19.5M27 27V34.5M14.5 5.34503C18.2988 3.14728 22.6113 1.99327 27 2.00003C40.8075 2.00003 52 13.1925 52 27C52 40.8075 40.8075 52 27 52C13.1925 52 2 40.8075 2 27C2 22.4475 3.2175 18.175 5.345 14.5" stroke="#0D6EFD" stroke-width="4" stroke-linecap="round"/>
-                        </svg>
-                        <span class="token" 
-                            data-pos-tag="{{ token.pos_tag }}"
-                            data-pos-tag-russian="{{ token.pos_tag_russian }}"
-                            data-pos-tag-abbrev="{{ token.pos_tag_abbrev }}"
-                            data-pos-color="{{ token.pos_tag_color }}"
-                            {% if token.error_tag %}
-                                data-error-tag="{{ token.error_tag }}"
-                                data-error-tag-russian="{{ token.error_tag_russian }}"
-                                data-error-tag-abbrev="{{ token.error_tag_abbrev }}"
-                                data-error-level="{{ token.error_level }}"
-                                data-error-color="{{ token.error_color }}"
-                            {% endif %}>
-                        
-                            <!-- Часть речи (изначально скрыта) -->
-                            {% if token.pos_tag %}
-                            <span class="abbr" 
-                                    style="background-color: {{ token.pos_tag_color }}; display: none;"
-                                    data-pos-tag="{{ token.pos_tag }}"
-                                    data-pos-tag-russian="{{ token.pos_tag_russian }}"
-                                    data-pos-tag-abbrev="{{ token.pos_tag_abbrev }}">
-                                {{ token.pos_tag }}
-                                
-                            </span>
-                            {% endif %}
 
-                            <!-- Ошибки (изначально скрыты) -->
-                            {% if token.all_errors %}
-                                {% for error in token.all_errors %}
-                                <span class="error-tag" 
-                                    style="background-color: {{ error.error_color }}; display: none;"
-                                    data-error-tag="{{ error.error_tag }}"
-                                    data-error-tag-russian="{{ error.error_tag_russian }}"
-                                    data-error-tag-abbrev="{{ error.error_tag_abbrev }}">
-                                {{ error.error_tag }}
-                                </span>
-                                {% endfor %}
-                            {% endif %}
-                            
-                            <!-- Само слово -->
-                            {% if token.token == '-EMPTY-' %}
-                                <span class="word">&loz;</span>
-                            {% else %}
-                                <span class="word">{{ token.token }}</span>
-                            {% endif %}
+                    <svg class="clickable-icon" width="20" height="20" viewBox="0 0 54 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M34.5 27H27M27 27H19.5M27 27V19.5M27 27V34.5M14.5 5.34503C18.2988 3.14728 22.6113 1.99327 27 2.00003C40.8075 2.00003 52 13.1925 52 27C52 40.8075 40.8075 52 27 52C13.1925 52 2 40.8075 2 27C2 22.4475 3.2175 18.175 5.345 14.5" stroke="#0D6EFD" stroke-width="4" stroke-linecap="round" />
+                    </svg>
+                    <span class="token"
+                          data-pos-tag="{{ token.pos_tag }}"
+                          data-pos-tag-russian="{{ token.pos_tag_russian }}"
+                          data-pos-tag-abbrev="{{ token.pos_tag_abbrev }}"
+                          data-pos-color="{{ token.pos_tag_color }}"
+                          {% if token.error_tag %}
+                          data-error-tag="{{ token.error_tag }}"
+                          data-error-tag-russian="{{ token.error_tag_russian }}"
+                          data-error-tag-abbrev="{{ token.error_tag_abbrev }}"
+                          data-error-level="{{ token.error_level }}"
+                          data-error-color="{{ token.error_color }}"
+                          {% endif %}>
+
+                        <!-- Часть речи (изначально скрыта) -->
+                        {% if token.pos_tag %}
+                        <span class="abbr"
+                              style="background-color: {{ token.pos_tag_color }}; display: none;"
+                              data-pos-tag="{{ token.pos_tag }}"
+                              data-pos-tag-russian="{{ token.pos_tag_russian }}"
+                              data-pos-tag-abbrev="{{ token.pos_tag_abbrev }}">
+                            {{ token.pos_tag }}
+
                         </span>
+                        {% endif %}
 
+                        <!-- Ошибки (изначально скрыты) -->
+                        {% if token.all_errors %}
+                        {% for error in token.all_errors %}
+                        <span class="error-tag"
+                              style="background-color: {{ error.error_color }}; display: none;"
+                              data-error-tag="{{ error.error_tag }}"
+                              data-error-tag-russian="{{ error.error_tag_russian }}"
+                              data-error-tag-abbrev="{{ error.error_tag_abbrev }}">
+                            {{ error.error_tag }}
+                        </span>
+                        {% endfor %}
+                        {% endif %}
+
+                        <!-- Само слово -->
+                        {% if token.token == '-EMPTY-' %}
+                        <span class="word">&loz;</span>
+                        {% else %}
+                        <span class="word">{{ token.token }}</span>
+                        {% endif %}
+                    </span>
+                    {% if token.token == '.' %}
+                    <svg class="clickable-icon" width="20" height="20" viewBox="0 0 54 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M34.5 27H27M27 27H19.5M27 27V19.5M27 27V34.5M14.5 5.34503C18.2988 3.14728 22.6113 1.99327 27 2.00003C40.8075 2.00003 52 13.1925 52 27C52 40.8075 40.8075 52 27 52C13.1925 52 2 40.8075 2 27C2 22.4475 3.2175 18.175 5.345 14.5" stroke="#0D6EFD" stroke-width="4" stroke-linecap="round" />
+                    </svg>
+                    {% endif %}
                     {% endfor %}
                 </div>
             </div>
@@ -399,6 +403,8 @@
     </div>
 
     <script>
+        const chosen = [];
+
         // Скрипт для отображения разметки (НЕ ДЫШАТЬ НА НЕГО!!!)
         document.addEventListener('DOMContentLoaded', function() {
             const languageRadios = document.querySelectorAll('input[name="language"]');
@@ -533,22 +539,100 @@
                 });
             });
 
-            document.querySelectorAll('.clickable-icon').forEach(icon => {
-                icon.addEventListener('click', function () {
-                    const newToken = document.createElement('span');
-                    newToken.className = 'token';
-                    newToken.innerHTML = '<span class="word">Пропущенное слово</span>';
-
-                    const parent = icon.parentNode;
-                    const allChildren = Array.from(parent.childNodes);
-                    const index = allChildren.indexOf(icon);
-
-                    // Вставить новый токен после SVG
-                    if (index > -1 && index < allChildren.length - 1) {
-                    parent.insertBefore(newToken, allChildren[index + 1]);
-                    } else {
-                    parent.appendChild(newToken);
+            function ClickOnWord(word) {
+                var menu = document.getElementById('select-menu');
+                if (word.classList.contains('chosen_token')) {
+                    word.classList.remove('chosen_token');
+                    var index = chosen.indexOf(word);
+                    if (index > -1) {
+                        chosen.splice(index, 1);
                     }
+                    if (chosen.length == 0) {
+                        menu.classList.add('hide');
+                    }
+                }
+                else {
+                    if (menu.classList.contains('hide')) {
+                        menu.classList.remove('hide');
+                        button_deselect = document.getElementById('button-remove-highlight');
+                        button_deselect.addEventListener('click', () => {
+                            document.querySelectorAll('.chosen_token').forEach(icon => {
+                                icon.classList.remove('chosen_token');
+                            });
+                            var menu = document.getElementById('select-menu');
+                            menu.classList.add('hide');
+                            chosen.splice(0, chosen.length);
+                        });
+                    }
+                    word.classList.add('chosen_token');
+                    chosen.push(word);
+                }
+            }
+
+            // функция для добавления токена пропущенного слова и токена рядом с ним
+            function ClickOnEmpty(icon) {
+                const newToken = document.createElement('span');
+                newToken.className = 'token';
+
+                var innerSpan = document.createElement('span');
+                innerSpan.innerHTML = "Пропущенное слово";
+                innerSpan.className = 'word';
+                innerSpan.addEventListener('click', () => {
+                    ClickOnWord(innerSpan);
+                });
+
+                newToken.appendChild(innerSpan);
+
+                const iconSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                const iconPath = document.createElementNS(
+                    'http://www.w3.org/2000/svg',
+                    'path'
+                );
+
+                iconSvg.setAttribute('fill', 'none');
+                iconSvg.setAttribute('height', '20');
+                iconSvg.setAttribute('width', '20');
+                iconSvg.setAttribute('viewBox', '0 0 54 54');
+                iconSvg.setAttribute('stroke', 'black');
+                iconSvg.classList.add('clickable-icon');
+                iconPath.setAttribute(
+                    'd',
+                    'M34.5 27H27M27 27H19.5M27 27V19.5M27 27V34.5M14.5 5.34503C18.2988 3.14728 22.6113 1.99327 27 2.00003C40.8075 2.00003 52 13.1925 52 27C52 40.8075 40.8075 52 27 52C13.1925 52 2 40.8075 2 27C2 22.4475 3.2175 18.175 5.345 14.5'
+                );
+                iconPath.setAttribute('stroke-linecap', 'round');
+                iconPath.setAttribute('stroke', '#0D6EFD');
+                iconPath.setAttribute('stroke-width', '4');
+
+                iconSvg.addEventListener('click', () => {
+                    ClickOnEmpty(icon);
+                });
+
+                iconSvg.appendChild(iconPath);
+
+                const parent = icon.parentNode;
+                const allChildren = Array.from(parent.childNodes);
+                const index = allChildren.indexOf(icon);
+
+                // Вставить новый токен после SVG и еще SVG после него
+                if (index > -1 && index < allChildren.length - 1) {
+                    parent.insertBefore(newToken, allChildren[index + 1]);
+                    parent.insertBefore(iconSvg, allChildren[index + 1]);
+                } else {
+                    parent.appendChild(newToken);
+                    parent.appendChild(newIcon);
+                }
+            }
+
+            // добавление каждому пустому токену функции по клику
+            document.querySelectorAll('.clickable-icon').forEach(icon => {
+                icon.addEventListener('click', () => {
+                    ClickOnEmpty(icon);
+                });
+            });
+
+            document.querySelectorAll('.word').forEach(word => {
+                word.addEventListener('click', () => {
+                    ClickOnWord(word);
                 });
             });
         });
@@ -661,6 +745,10 @@
             });
 
     </script>
-
+    <div id="select-menu" class="hide">
+        <button class="button-menu-select" id="button-add-annotation">Добавить аннотацию</button>
+        <button class="button-menu-select" id="button-delete-tokens">Удалить выбранные пустые токены</button>
+        <button class="button-menu-select" id="button-remove-highlight">Снять выделение</button>
+    </div>
 </body>
 </html>
