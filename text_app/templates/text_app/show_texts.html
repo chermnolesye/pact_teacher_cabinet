@@ -92,26 +92,35 @@
     </a>
   </div>
 
-  <!-- БЛОК ДЛЯ НАЙДЕННЫХ ТЕКСТОВ ЗАМЕНИТЕ НА КРАСИВЫЙ -->
-  {% if finded_text_by_name %}
-    <div class="results">
-      <h2>Найденные тексты</h2>
-      <ul>
-        {% for text in finded_text_by_name %}
-          <li>
-            <a href="{% url 'annotate_text' %}?text_id={{ text.id }}">
-              {{ text.header_text }}
-          </a>          
-          </li>
-        {% endfor %}
-      </ul>
-    </div>
-  {% else %}
-    {% if request.method == "POST" %}
-      <p>Ничего не найдено.</p>
-    {% endif %}
-  {% endif %}
+  <!-- Кнопка для скрытия/показа -->
+  <div class="toggle-results-button" style="display: none;">
+    <button id="toggle-results" class="toggle-btn">Скрыть результаты</button>
+  </div>
 
+{% if finded_text_by_name %}
+<div class="search-wrapper" id="search-results">
+  <div class="search-results">
+    <h2 class="results-title">Найденные тексты</h2>
+    <div class="results-grid">
+      {% for text in finded_text_by_name %}
+        <div class="result-card">
+          <a href="{% url 'annotate_text' %}?text_id={{ text.id }}" class="result-link">
+            {{ text.header_text }}
+          </a>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% else %}
+  {% if request.method == "POST" %}
+    <div class="search-wrapper">
+      <div class="no-results">
+        <p>Ничего не найдено по вашему запросу.</p>
+      </div>
+    </div>
+  {% endif %}
+{% endif %}
 
   <div class="text-types">
     <h3>
@@ -125,16 +134,46 @@
     <ul>
       {% for text_type in text_types %}
       <li>
-        <svg width="19" height="20" viewBox="0 0 39 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M29.25 16.6666H21.125M35.75 19.6633C35.75 15.2766 35.75 13.0816 34.4987 11.6566C34.384 11.525 34.2625 11.3999 34.1348 11.2816C32.7454 9.99992 30.6052 9.99992 26.3282 9.99992H25.7205C23.8469 9.99992 22.9093 9.99992 22.035 9.74492C21.5552 9.60426 21.0929 9.40741 20.657 9.15825C19.864 8.70658 19.201 8.02492 17.875 6.66659L16.9812 5.74992C16.536 5.29325 16.315 5.06659 16.081 4.86659C15.0746 4.01098 13.84 3.48649 12.5385 3.36159C12.2363 3.33325 11.921 3.33325 11.2937 3.33325C9.85887 3.33325 9.14225 3.33325 8.54425 3.44992C7.26024 3.69862 6.07912 4.33848 5.155 5.286C4.23087 6.23353 3.60664 7.44473 3.36375 8.76159C3.25 9.37659 3.25 10.1133 3.25 11.5833M35.7354 26.6666C35.6769 30.7999 35.3779 33.1416 33.8455 34.7132C31.9426 36.6666 28.8779 36.6666 22.75 36.6666H16.25C10.1221 36.6666 7.05737 36.6666 5.1545 34.7132C3.25 32.7616 3.25 29.6183 3.25 23.3333V18.3333" stroke="#0D6EFD" stroke-width="3" stroke-linecap="round"/>
-        </svg>
-        {{ text_type.name }}
+        <button class="text-type-button">
+          <svg width="19" height="20" viewBox="0 0 39 40" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 10px;">
+            <path d="M29.25 16.6666H21.125M35.75 19.6633C35.75 15.2766 35.75 13.0816 34.4987 11.6566C34.384 11.525 34.2625 11.3999 34.1348 11.2816C32.7454 9.99992 30.6052 9.99992 26.3282 9.99992H25.7205C23.8469 9.99992 22.9093 9.99992 22.035 9.74492C21.5552 9.60426 21.0929 9.40741 20.657 9.15825C19.864 8.70658 19.201 8.02492 17.875 6.66659L16.9812 5.74992C16.536 5.29325 16.315 5.06659 16.081 4.86659C15.0746 4.01098 13.84 3.48649 12.5385 3.36159C12.2363 3.33325 11.921 3.33325 11.2937 3.33325C9.85887 3.33325 9.14225 3.33325 8.54425 3.44992C7.26024 3.69862 6.07912 4.33848 5.155 5.286C4.23087 6.23353 3.60664 7.44473 3.36375 8.76159C3.25 9.37659 3.25 10.1133 3.25 11.5833M35.7354 26.6666C35.6769 30.7999 35.3779 33.1416 33.8455 34.7132C31.9426 36.6666 28.8779 36.6666 22.75 36.6666H16.25C10.1221 36.6666 7.05737 36.6666 5.1545 34.7132C3.25 32.7616 3.25 29.6183 3.25 23.3333V18.3333" stroke="#0D6EFD" stroke-width="3" stroke-linecap="round"/>
+          </svg>
+          {{ text_type.name }}
+        </button>
       </li>
       {% endfor %}
     </ul>
   </div>
 
   <script>
+    document.addEventListener('DOMContentLoaded', function() {
+    const toggleButton = document.getElementById('toggle-results');
+    const resultsContainer = document.querySelector('.search-results');
+    const toggleButtonContainer = document.querySelector('.toggle-results-button');
+
+    // Функция, которая активирует кнопку после загрузки результатов
+    function showToggleButton() {
+      toggleButtonContainer.style.display = 'block'; // Показываем кнопку
+    }
+
+    // Включаем кнопку, если результаты есть
+    if (resultsContainer.children.length > 0) {
+      showToggleButton();
+    }
+
+    toggleButton.addEventListener('click', function() {
+      if (resultsContainer.classList.contains('hidden')) {
+        resultsContainer.classList.remove('hidden');
+        toggleButton.textContent = 'Скрыть результаты';
+      } else {
+        resultsContainer.classList.add('hidden');
+        toggleButton.textContent = 'Показать результаты';
+      }
+    });
+  });
+
+
+
     document.addEventListener('DOMContentLoaded', function() {
       const filterButton = document.querySelector('.filter');
       const filterBlock = document.querySelector('.filter-block');

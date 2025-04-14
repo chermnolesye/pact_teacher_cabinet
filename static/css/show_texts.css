@@ -45,11 +45,15 @@
   }
 
   .filter-block {
-    display: none;
+    display: block;
   }
   
   .filter-block.visible {
     display: block;
+  }
+
+  .filter-block.hidden {
+    display: none; /* Скрыть окно фильтров, если добавлен класс "hidden" */
   }
 
   .filter-block {
@@ -164,6 +168,21 @@
     align-items: center;
   }
 
+  .text-type-button {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    background-color: #ffffff;
+    border: 1px solid #ffffff;
+    color: #0a0a0a;
+    font-size: 14px;
+    padding: 10px 15px;
+    border-radius: 8px;
+    width: 100%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
   .text-types li:first-child {
     border-top: none;
   }
@@ -191,3 +210,123 @@
     flex-direction: column;
     gap: 0.5rem;
   }
+
+/* Общие стили для оберток поиска */
+.search-wrapper {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.search-results {
+  margin-top: 1rem;
+}
+
+.results-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #2d3748;
+  margin-bottom: 1rem;
+}
+
+.results-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+}
+
+/* Карточка результата */
+.result-card {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.75rem;
+  padding: 1rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  transition: box-shadow 0.2s ease;
+}
+
+.result-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.result-link {
+  font-size: 1.125rem;
+  color: #2563eb;
+  text-decoration: none;
+}
+
+.result-link:hover {
+  text-decoration: underline;
+}
+
+/* Для блока, если ничего не найдено */
+.no-results {
+  margin-top: 1rem;
+  padding: 1rem;
+  border-left: 4px solid #a2cdff;
+  background-color: #dde8fa;
+  color: #2c11d9;
+  border-radius: 0.5rem;
+}
+
+/* Стили для группировки */
+.group {
+  margin-top: 1.5rem;
+}
+
+.group h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #2d3748;
+  margin-bottom: 1rem;
+}
+
+.group-items {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+}
+
+#grouped-by-fio .group h3, #grouped-by-category .group h3 {
+  color: #2563eb;
+}
+
+#grouped-by-fio .result-card, #grouped-by-category .result-card {
+  background-color: #f0f8ff;
+}
+
+
+/* Стили для кнопки */
+.toggle-results-button {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.toggle-btn {
+  background-color: #0D6EFD;
+  color: white;
+  font-size: 16px;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+
+
+/* Стили для скрытого состояния */
+.search-results {
+  display: block;  /* По умолчанию отображаем */
+  transition: opacity 0.3s ease;
+}
+
+.search-results.hidden {
+  display: none;
+}
+
+.search-results.show {
+  display: block;
+}
+
+
