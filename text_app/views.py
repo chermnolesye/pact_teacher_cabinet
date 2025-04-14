@@ -284,17 +284,9 @@ def show_texts(request):
         }
         for text_type in text_types
     ]
-   
 
     finded_text_by_name_data = []
-    grouped_texts = []
-
-    text_name = ""
-    year_id = ""
-    group_id = ""
-    text_type_id = ""
-    grouping = ""
-
+    grouped_texts = {}
     if request.method == "POST":
         # Получаем параметры из формы
         text_name = request.POST.get("text", "")
@@ -317,31 +309,48 @@ def show_texts(request):
         if text_type_id:
             texts = texts.filter(idtexttype_id=text_type_id)
 
-        texts = texts.values("idtext", "header")
+        texts = texts.values(
+            "idtext",
+            "header",
+            "idstudent__iduser__lastname",
+            "idstudent__iduser__firstname",
+            "idstudent__iduser__middlename",
+            "idtexttype__texttypename",
+        )
+
         finded_text_by_name_data = [
             {"id": text["idtext"], "header_text": text["header"]} for text in texts
         ]
 
-
         if grouping == "fio":
+            finded_text_by_name_data = []
             for text in texts:
-                fio = f"{text.idstudent.iduser.lastname} {text.idstudent.iduser.firstname} {text.idstudent.iduser.middlename}"
-                if fio not in grouped_texts:
-                    grouped_texts[fio] = []
-                grouped_texts[fio].append(
-                    {"id": text.idtext, "header_text": text.header}
+                fio_user = (
+                    f"{text['idstudent__iduser__lastname']} "
+                    f"{text['idstudent__iduser__firstname']} "
+                    f"{text['idstudent__iduser__middlename'] or ''}"
                 )
+                if fio_user not in grouped_texts:
+                    grouped_texts[fio_user] = []
+                else:
+                    grouped_texts[fio_user].append(
+                        {"id": text["idtext"], "header_text": text["header"]}
+                    )
 
         elif grouping == "category":
+            finded_text_by_name_data = []
             for text in texts:
                 category = (
-                    text.idtexttype.texttypename if text.idtexttype else "Не указано"
+                    text["idtexttype__texttypename"]
+                    if text["idtexttype__texttypename"]
+                    else "Не указано"
                 )
                 if category not in grouped_texts:
                     grouped_texts[category] = []
-                grouped_texts[category].append(
-                    {"id": text.idtext, "header_text": text.header}
-                )
+                else:
+                    grouped_texts[category].append(
+                        {"id": text["idtext"], "header_text": text["header"]}
+                    )
 
     context = {
         "groups": group_data,
@@ -349,7 +358,6 @@ def show_texts(request):
         "text_types": text_type_data,
         "finded_text_by_name": finded_text_by_name_data,
         "grouped_texts": grouped_texts,
-        "selected_text": text_name,
     }
     return render(request, "show_texts.html", context)
 

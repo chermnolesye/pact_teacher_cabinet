@@ -97,6 +97,31 @@
   <div class="toggle-results-button" style="display: none;">
     <button id="toggle-results" class="toggle-btn">Скрыть результаты</button>
   </div>
+  
+<!-- Юля, проверь, пожалуйста -->
+{% if grouped_texts %}
+<div class="search-wrapper" id="grouped-results">
+<div class="search-results">
+    <h2 class="results-title">Сгруппированные тексты</h2>
+    {% for group_pole, texts in grouped_texts.items %}
+    <div class="group-section">
+        <h3 class="group-title">{{ group_pole }}</h3>
+        <div class="results-grid">
+        {% for text in texts %}
+            <div class="result-card">
+            <a href="{% url 'annotate_text' %}?text_id={{ text.id }}" class="result-link">
+                {{ text.header_text }}
+            </a>
+            </div>
+        {% endfor %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+</div>
+{% endif %}
+<!-- До сюда -->
+
 
 {% if finded_text_by_name %}
 <div class="search-wrapper" id="search-results">
