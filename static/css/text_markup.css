@@ -580,11 +580,7 @@ input:checked + .slider:before {
 }
 
 
-
-
-
-
-
+/* Стили добавления аннотации */
 .modal {
     display: none;
     position: fixed;
@@ -635,7 +631,7 @@ input:checked + .slider:before {
 }
 
 .tag.selected {
-    background-color: #4CAF50;
+    background-color: #552a8a;
     color: white;
 }
 

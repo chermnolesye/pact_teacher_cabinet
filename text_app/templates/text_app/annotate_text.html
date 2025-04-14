@@ -633,20 +633,14 @@
 
             // Удаление пустых токенов
             document.getElementById('button-delete-tokens').addEventListener('click', () => {
-                // Перебираем все выбранные токены
                 chosen.forEach(token => {
-                    // Проверяем, есть ли текст в токене
                     if (!token.textContent.trim()) {
-                        // Удаляем сам токен
                         token.remove();
-                        
                     }
                 });
 
-                // Очищаем массив выбранных токенов
                 chosen = [];
 
-                // Прячем меню, если нет выбранных токенов
                 var menu = document.getElementById('select-menu');
                 menu.classList.add('hide');
             });
@@ -766,15 +760,6 @@
             });
 
         });
-
-
-
-
-        // Открытие модального окна при клике на кнопку "Добавить аннотацию"
-
-
-
-
     </script>
     <div id="select-menu" class="hide">
         <button class="button-menu-select" id="button-add-annotation">Добавить аннотацию</button>
@@ -817,7 +802,6 @@
     <script>
         // Открытие модального окна при клике на кнопку "Добавить аннотацию"
         document.getElementById('button-add-annotation').addEventListener('click', function() {
-            // Пример списка тегов (можно заменить на любые данные)
             const tags = [
                 { name: 'Tag1' },
                 { name: 'Tag2' },
@@ -825,7 +809,7 @@
             ];
     
             const tagsList = document.getElementById('tags-list');
-            tagsList.innerHTML = '';  // Очистим список перед добавлением новых тегов
+            tagsList.innerHTML = '';  
     
             // Создаем элементы для тегов
             tags.forEach(tag => {
@@ -856,17 +840,14 @@
     
         // Функция для выбора тега
         function selectTag(tag) {
-            // Отображаем выбранный тег в поле
             document.getElementById('selected-tag').value = tag.name;
     
-            // Выделяем тег
             document.querySelectorAll('.tag').forEach(t => t.classList.remove('selected'));
             event.target.classList.add('selected');
         }
     
         // Удаление аннотации
         document.getElementById('delete-annotation').addEventListener('click', function() {
-            // Очистка полей
             document.getElementById('selected-tag').value = '';
             document.getElementById('error-reason').value = '';
             document.getElementById('severity').value = '';
