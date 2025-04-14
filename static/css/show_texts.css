@@ -329,4 +329,9 @@
   display: block;
 }
 
-
+.new-text-button a, 
+.new-text-button a:hover, 
+.new-text-button a:focus, 
+.new-text-button a:active {
+  text-decoration: none;
+}
