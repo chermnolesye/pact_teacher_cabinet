@@ -284,6 +284,7 @@ def show_texts(request):
         }
         for text_type in text_types
     ]
+   
 
     finded_text_by_name_data = []
     grouped_texts = []
@@ -320,6 +321,7 @@ def show_texts(request):
         finded_text_by_name_data = [
             {"id": text["idtext"], "header_text": text["header"]} for text in texts
         ]
+
 
         if grouping == "fio":
             for text in texts:

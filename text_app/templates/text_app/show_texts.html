@@ -147,6 +147,15 @@
   </div>
 
   <script>
+    function toggleTextList(textType) {
+      var list = document.getElementById("text-list-" + textType);
+      if (list.style.display === "none") {
+          list.style.display = "block";
+      } else {
+          list.style.display = "none";
+      }
+    }
+    
     document.addEventListener('DOMContentLoaded', function() {
     const toggleButton = document.getElementById('toggle-results');
     const resultsContainer = document.querySelector('.search-results');
