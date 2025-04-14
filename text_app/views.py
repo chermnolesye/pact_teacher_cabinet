@@ -351,6 +351,16 @@ def show_texts(request):
                     grouped_texts[category].append(
                         {"id": text["idtext"], "header_text": text["header"]}
                     )
+    texts = Text.objects.all()
+    texts_by_types_for_folders = {}
+    for text in texts:
+        text_type = text.idtexttype.texttypename
+        if text_type not in texts_by_types_for_folders:
+            texts_by_types_for_folders[text_type] = []
+        else:
+            texts_by_types_for_folders[text_type].append(
+                {"id": text.idtext, "header_text": text.header}
+            )
 
     context = {
         "groups": group_data,
@@ -358,6 +368,7 @@ def show_texts(request):
         "text_types": text_type_data,
         "finded_text_by_name": finded_text_by_name_data,
         "grouped_texts": grouped_texts,
+        "texts_type_folders": texts_by_types_for_folders,
     }
     return render(request, "show_texts.html", context)
 

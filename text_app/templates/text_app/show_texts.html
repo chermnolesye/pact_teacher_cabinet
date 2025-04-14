@@ -97,7 +97,7 @@
   <div class="toggle-results-button" style="display: none;">
     <button id="toggle-results" class="toggle-btn">Скрыть результаты</button>
   </div>
-  
+
 <!-- Юля, проверь, пожалуйста -->
 {% if grouped_texts %}
 <div class="search-wrapper" id="grouped-results">
@@ -120,6 +120,16 @@
 </div>
 </div>
 {% endif %}
+
+<!-- Некрасивы вывод текстов по папкам просто для примера. Юля, это надо будет дооформить :) -->
+{% for text_type, texts in texts_type_folders.items %}
+  <h3>{{ text_type }}</h3>
+  <ul>
+    {% for text in texts %}
+      <li>{{ text.id }} — {{ text.header_text }}</li>
+    {% endfor %}
+  </ul>
+{% endfor %}
 <!-- До сюда -->
 
 
