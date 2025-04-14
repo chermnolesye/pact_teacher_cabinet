@@ -285,6 +285,9 @@ def show_texts(request):
         for text_type in text_types
     ]
 
+    # Алена, не удаляй это,пожалуйста, это надо для сохранения введенного поиска
+    text_name = ""
+
     finded_text_by_name_data = []
     grouped_texts = {}
     if request.method == "POST":
@@ -369,6 +372,7 @@ def show_texts(request):
         "finded_text_by_name": finded_text_by_name_data,
         "grouped_texts": grouped_texts,
         "texts_type_folders": texts_by_types_for_folders,
+        "selected_text": text_name, #Алена, не удаляй это,пожалуйста, это надо для сохранения введенного поиска
     }
     return render(request, "show_texts.html", context)
 

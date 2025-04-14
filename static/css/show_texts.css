@@ -137,16 +137,15 @@
     text-align: center;
   }
 
-
   .text-types {
     max-width: 600px;
     margin: 20px auto;
     background-color: white;
     border-radius: 12px;
-    box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
     padding: 10px;
   }
-
+  
   .text-types h3 {
     color: #007bff;
     font-size: 16px;
@@ -154,20 +153,21 @@
     display: flex;
     align-items: center;
   }
-
+  
   .text-types ul {
     list-style: none;
     padding: 0;
     margin: 0;
   }
-
+  
   .text-types li {
     padding: 8px 0;
     border-top: 1px solid #eee;
     display: flex;
-    align-items: center;
+    flex-direction: column; /* Изменено на колонку */
+    align-items: flex-start;
   }
-
+  
   .text-type-button {
     display: flex;
     align-items: center;
@@ -181,16 +181,25 @@
     width: 100%;
     cursor: pointer;
     transition: all 0.3s ease;
+    margin-bottom: 10px; /* Отступ снизу для кнопки */
   }
-
+  
   .text-types li:first-child {
     border-top: none;
   }
-
-  .text-types li::before {
-    margin-right: 8px;
+  
+  .text-list {
+    padding: 0;
+    margin-top: 10px; /* Отступ сверху для списка */
+    display: none; /* Скрытие списка по умолчанию */
   }
-
+  
+  .text-list li {
+    padding: 5px 0;
+    font-size: 14px;
+    color: #333;
+  }
+  
   .grouping-wrapper {
     display: flex;
     align-items: flex-start;

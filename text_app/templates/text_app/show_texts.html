@@ -28,7 +28,6 @@
         </svg>
       </button>
 
-      <!-- Кнопка поиска отправляет форму, устанавливаем name="search" -->
       <button type="submit" name="search" class="search">
         <svg width="20" height="20" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M50.9583 50.9583L61.1666 61.1666M16.6875 6.53745C22.5094 3.17781 29.3541 2.04905 35.9465 3.36146C42.5389 4.67386 48.4294 8.33792 52.5208 13.6711C56.6122 19.0043 58.6254 25.6429 58.1854 32.3502C57.7455 39.0576 54.8823 45.3763 50.1293 50.1293C45.3763 54.8823 39.0576 57.7455 32.3502 58.1854C25.6429 58.6254 19.0043 56.6122 13.6711 52.5208C8.33792 48.4294 4.67386 42.5389 3.36146 35.9465C2.04905 29.3541 3.17781 22.5094 6.53745 16.6875" stroke="#FFFDFD" stroke-width="4" stroke-linecap="round"/>
@@ -97,66 +96,52 @@
   <div class="toggle-results-button" style="display: none;">
     <button id="toggle-results" class="toggle-btn">Скрыть результаты</button>
   </div>
-
-<!-- Юля, проверь, пожалуйста -->
-{% if grouped_texts %}
-<div class="search-wrapper" id="grouped-results">
-<div class="search-results">
-    <h2 class="results-title">Сгруппированные тексты</h2>
-    {% for group_pole, texts in grouped_texts.items %}
-    <div class="group-section">
-        <h3 class="group-title">{{ group_pole }}</h3>
-        <div class="results-grid">
-        {% for text in texts %}
+  <div class="search-wrapper">
+    {% if grouped_texts or finded_text_by_name %}
+    
+      {% if grouped_texts %}
+      <div class="search-results" id="grouped-results">
+        <h2 class="results-title">Сгруппированные тексты</h2>
+        {% for group_pole, texts in grouped_texts.items %}
+        <div class="group-section">
+          <h3 class="group-title">{{ group_pole }}</h3>
+          <div class="results-grid">
+          {% for text in texts %}
             <div class="result-card">
-            <a href="{% url 'annotate_text' %}?text_id={{ text.id }}" class="result-link">
+              <a href="{% url 'annotate_text' %}?text_id={{ text.id }}" class="result-link">
                 {{ text.header_text }}
-            </a>
+              </a>
             </div>
+          {% endfor %}
+          </div>
+        </div>
         {% endfor %}
+      </div>
+      {% endif %}
+      
+      {% if finded_text_by_name %}
+      <div class="search-results" id="search-results">
+        <h2 class="results-title">Найденные тексты</h2>
+        <div class="results-grid">
+          {% for text in finded_text_by_name %}
+            <div class="result-card">
+              <a href="{% url 'annotate_text' %}?text_id={{ text.id }}" class="result-link">
+                {{ text.header_text }}
+              </a>
+            </div>
+          {% endfor %}
         </div>
-    </div>
-    {% endfor %}
-</div>
-</div>
-{% endif %}
-
-<!-- Некрасивы вывод текстов по папкам просто для примера. Юля, это надо будет дооформить :) -->
-{% for text_type, texts in texts_type_folders.items %}
-  <h3>{{ text_type }}</h3>
-  <ul>
-    {% for text in texts %}
-      <li>{{ text.id }} — {{ text.header_text }}</li>
-    {% endfor %}
-  </ul>
-{% endfor %}
-<!-- До сюда -->
-
-
-{% if finded_text_by_name %}
-<div class="search-wrapper" id="search-results">
-  <div class="search-results">
-    <h2 class="results-title">Найденные тексты</h2>
-    <div class="results-grid">
-      {% for text in finded_text_by_name %}
-        <div class="result-card">
-          <a href="{% url 'annotate_text' %}?text_id={{ text.id }}" class="result-link">
-            {{ text.header_text }}
-          </a>
-        </div>
-      {% endfor %}
-    </div>
-  </div>
-</div>
-{% else %}
-  {% if request.method == "POST" %}
-    <div class="search-wrapper">
+      </div>
+      {% endif %}
+    
+    {% else %}
+      {% if request.method == "POST" %}
       <div class="no-results">
         <p>Ничего не найдено по вашему запросу.</p>
       </div>
-    </div>
-  {% endif %}
-{% endif %}
+      {% endif %}
+    {% endif %}
+  </div>
 
   <div class="text-types">
     <h3>
@@ -168,14 +153,21 @@
       Тип текста
     </h3>
     <ul>
-      {% for text_type in text_types %}
+      {% for text_type, texts in texts_type_folders.items %}
       <li>
-        <button class="text-type-button">
+        <button class="text-type-button" onclick="toggleTextList('{{ text_type.name }}')">
           <svg width="19" height="20" viewBox="0 0 39 40" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 10px;">
             <path d="M29.25 16.6666H21.125M35.75 19.6633C35.75 15.2766 35.75 13.0816 34.4987 11.6566C34.384 11.525 34.2625 11.3999 34.1348 11.2816C32.7454 9.99992 30.6052 9.99992 26.3282 9.99992H25.7205C23.8469 9.99992 22.9093 9.99992 22.035 9.74492C21.5552 9.60426 21.0929 9.40741 20.657 9.15825C19.864 8.70658 19.201 8.02492 17.875 6.66659L16.9812 5.74992C16.536 5.29325 16.315 5.06659 16.081 4.86659C15.0746 4.01098 13.84 3.48649 12.5385 3.36159C12.2363 3.33325 11.921 3.33325 11.2937 3.33325C9.85887 3.33325 9.14225 3.33325 8.54425 3.44992C7.26024 3.69862 6.07912 4.33848 5.155 5.286C4.23087 6.23353 3.60664 7.44473 3.36375 8.76159C3.25 9.37659 3.25 10.1133 3.25 11.5833M35.7354 26.6666C35.6769 30.7999 35.3779 33.1416 33.8455 34.7132C31.9426 36.6666 28.8779 36.6666 22.75 36.6666H16.25C10.1221 36.6666 7.05737 36.6666 5.1545 34.7132C3.25 32.7616 3.25 29.6183 3.25 23.3333V18.3333" stroke="#0D6EFD" stroke-width="3" stroke-linecap="round"/>
           </svg>
-          {{ text_type.name }}
+          {{ text_type }}
         </button>
+
+        <!-- Список текстов для этого типа -->
+        <ul id="text-list-{{ text_type.name }}" class="text-list" style="display: none;">
+          {% for text in texts %}
+          <li>{{ text.id }} — {{ text.header_text }}</li>
+          {% endfor %}
+        </ul>
       </li>
       {% endfor %}
     </ul>

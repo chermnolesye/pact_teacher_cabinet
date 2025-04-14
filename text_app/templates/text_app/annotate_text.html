@@ -569,13 +569,14 @@
                 }
             }
 
+
             // функция для добавления токена пропущенного слова и токена рядом с ним
             function ClickOnEmpty(icon) {
                 const newToken = document.createElement('span');
                 newToken.className = 'token';
 
                 var innerSpan = document.createElement('span');
-                innerSpan.innerHTML = "Пропущенное слово";
+                innerSpan.innerHTML = " ";
                 innerSpan.className = 'word';
                 innerSpan.addEventListener('click', () => {
                     ClickOnWord(innerSpan);
@@ -629,6 +630,28 @@
                     ClickOnEmpty(icon);
                 });
             });
+
+            // Удаление пустых токенов
+            document.getElementById('button-delete-tokens').addEventListener('click', () => {
+                // Перебираем все выбранные токены
+                chosen.forEach(token => {
+                    // Проверяем, есть ли текст в токене
+                    if (!token.textContent.trim()) {
+                        // Удаляем сам токен
+                        token.remove();
+                        
+                    }
+                });
+
+                // Очищаем массив выбранных токенов
+                chosen = [];
+
+                // Прячем меню, если нет выбранных токенов
+                var menu = document.getElementById('select-menu');
+                menu.classList.add('hide');
+            });
+
+
 
             document.querySelectorAll('.word').forEach(word => {
                 word.addEventListener('click', () => {
@@ -742,7 +765,15 @@
                 });
             });
 
-            });
+        });
+
+
+
+
+        // Открытие модального окна при клике на кнопку "Добавить аннотацию"
+
+
+
 
     </script>
     <div id="select-menu" class="hide">
@@ -750,5 +781,99 @@
         <button class="button-menu-select" id="button-delete-tokens">Удалить выбранные пустые токены</button>
         <button class="button-menu-select" id="button-remove-highlight">Снять выделение</button>
     </div>
+
+    <!-- Окно для добавления аннотации -->
+    <div id="annotation-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="close-modal">&times;</span>
+            <h2>Аннотация</h2>
+
+            <label for="tags">Выберите тег:</label>
+            <div id="tags-list" class="tags-list">
+            </div>
+
+            <label for="selected-tag">Выбранный тег:</label>
+            <input type="text" id="selected-tag" disabled>
+
+            <label for="error-reason">Причина ошибки:</label>
+            <input type="text" id="error-reason">
+
+            <label for="severity">Степень грубости:</label>
+            <input type="text" id="severity">
+
+            <label for="correction">Исправление:</label>
+            <input type="text" id="correction">
+
+            <label for="comment">Комментарий:</label>
+            <textarea id="comment"></textarea>
+
+            <label for="author">Создатель аннотации:</label>
+            <input type="text" id="author" value="Имя Фамилия" disabled>
+
+            <button class="button" id="save-annotation">Сохранить</button>
+            <button class="button" id="delete-annotation">Удалить</button>
+        </div>
+    </div>
+    <script>
+        // Открытие модального окна при клике на кнопку "Добавить аннотацию"
+        document.getElementById('button-add-annotation').addEventListener('click', function() {
+            // Пример списка тегов (можно заменить на любые данные)
+            const tags = [
+                { name: 'Tag1' },
+                { name: 'Tag2' },
+                { name: 'Tag3' }
+            ];
+    
+            const tagsList = document.getElementById('tags-list');
+            tagsList.innerHTML = '';  // Очистим список перед добавлением новых тегов
+    
+            // Создаем элементы для тегов
+            tags.forEach(tag => {
+                const tagElement = document.createElement('div');
+                tagElement.classList.add('tag');
+                tagElement.textContent = tag.name;
+                tagElement.addEventListener('click', function() {
+                    selectTag(tag);
+                });
+                tagsList.appendChild(tagElement);
+            });
+    
+            // Показать модальное окно
+            document.getElementById('annotation-modal').style.display = 'block';
+        });
+    
+        // Закрытие модального окна
+        document.getElementById('close-modal').addEventListener('click', function() {
+            document.getElementById('annotation-modal').style.display = 'none';
+        });
+    
+        // Закрытие модального окна, если кликнут вне окна
+        window.addEventListener('click', function(event) {
+            if (event.target === document.getElementById('annotation-modal')) {
+                document.getElementById('annotation-modal').style.display = 'none';
+            }
+        });
+    
+        // Функция для выбора тега
+        function selectTag(tag) {
+            // Отображаем выбранный тег в поле
+            document.getElementById('selected-tag').value = tag.name;
+    
+            // Выделяем тег
+            document.querySelectorAll('.tag').forEach(t => t.classList.remove('selected'));
+            event.target.classList.add('selected');
+        }
+    
+        // Удаление аннотации
+        document.getElementById('delete-annotation').addEventListener('click', function() {
+            // Очистка полей
+            document.getElementById('selected-tag').value = '';
+            document.getElementById('error-reason').value = '';
+            document.getElementById('severity').value = '';
+            document.getElementById('correction').value = '';
+            document.getElementById('comment').value = '';
+        });
+    </script>
+
 </body>
 </html>
