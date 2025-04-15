@@ -331,12 +331,11 @@
             </div>
         </div>
 
+    <div class="text-header">
+        <h1 class="text-title">{{ text.header }}</h1>
+    </div>
+
     <div class="watch-text">
-
-        <div class="text-header">
-            <h1 class="text-title">{{ text.header }}</h1>
-        </div>
-
         {% for sentence in sentence_data %}
             <div class="sentence">
                 <div class="tokens-container">
@@ -400,6 +399,55 @@
                 </div>
             </div>
         {% endfor %}
+    </div>
+
+     <!-- Окно для добавления аннотации -->
+     <div id="annotation-modal" class="modal-overlay">
+        <div class="modal-content">
+
+            <div class="modal-head">
+                <p>Аннотация</p>
+                <button class="close-modal" id="close-modal">
+                    <svg width="30" height="30" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M27.101 17.0606L17.0606 27.101M17.0606 17.0606L27.101 27.101M12.0404 4.68683C15.0917 2.92153 18.5556 1.99459 22.0808 2.00002C33.1714 2.00002 42.1616 10.9902 42.1616 22.0808C42.1616 33.1714 33.1714 42.1616 22.0808 42.1616C10.9902 42.1616 2 33.1714 2 22.0808C2 18.4241 2.97794 14.9923 4.68681 12.0404" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+                    </svg>
+                </button>
+            </div>
+
+            <div class="annotation-modal-content">
+                <label for="tags">Выберите тег:</label>
+                <div id="tags-list" class="tags-list">
+                </div>
+
+                <label for="selected-tag">Выбранный тег:</label>
+                <input type="text" id="selected-tag" disabled>
+
+                <label for="error-reason">Причина ошибки:</label>
+                <input type="text" id="error-reason">
+
+                <label for="severity">Степень грубости:</label>
+                <input type="text" id="severity">
+
+                <label for="correction">Исправление:</label>
+                <input type="text" id="correction">
+
+                <label for="comment">Комментарий:</label>
+                <textarea id="comment"></textarea>
+
+                <p>Создатель аннотации: <p>
+            </div>
+
+            <div class="grade-buttons">
+                <button class="button" id="save-annotation">Сохранить</button>
+                <button class="button red-button" id="delete-annotation">Удалить</button>
+            </div>
+        </div>
+    </div>
+    
+    <div id="select-menu" class="hide">
+        <button class="button-menu-select" id="button-add-annotation">Добавить аннотацию</button>
+        <button class="button-menu-select" id="button-delete-tokens">Удалить выбранные пустые токены</button>
+        <button class="button-menu-select" id="button-remove-highlight">Снять выделение</button>
     </div>
 
     <script>
@@ -760,46 +808,7 @@
             });
 
         });
-    </script>
-    <div id="select-menu" class="hide">
-        <button class="button-menu-select" id="button-add-annotation">Добавить аннотацию</button>
-        <button class="button-menu-select" id="button-delete-tokens">Удалить выбранные пустые токены</button>
-        <button class="button-menu-select" id="button-remove-highlight">Снять выделение</button>
-    </div>
 
-    <!-- Окно для добавления аннотации -->
-    <div id="annotation-modal" class="modal">
-        <div class="modal-content">
-            <span class="close" id="close-modal">&times;</span>
-            <h2>Аннотация</h2>
-
-            <label for="tags">Выберите тег:</label>
-            <div id="tags-list" class="tags-list">
-            </div>
-
-            <label for="selected-tag">Выбранный тег:</label>
-            <input type="text" id="selected-tag" disabled>
-
-            <label for="error-reason">Причина ошибки:</label>
-            <input type="text" id="error-reason">
-
-            <label for="severity">Степень грубости:</label>
-            <input type="text" id="severity">
-
-            <label for="correction">Исправление:</label>
-            <input type="text" id="correction">
-
-            <label for="comment">Комментарий:</label>
-            <textarea id="comment"></textarea>
-
-            <label for="author">Создатель аннотации:</label>
-            <input type="text" id="author" value="Имя Фамилия" disabled>
-
-            <button class="button" id="save-annotation">Сохранить</button>
-            <button class="button" id="delete-annotation">Удалить</button>
-        </div>
-    </div>
-    <script>
         // Открытие модального окна при клике на кнопку "Добавить аннотацию"
         document.getElementById('button-add-annotation').addEventListener('click', function() {
             const tags = [
@@ -823,7 +832,7 @@
             });
     
             // Показать модальное окно
-            document.getElementById('annotation-modal').style.display = 'block';
+            document.getElementById('annotation-modal').style.display = 'flex';
         });
     
         // Закрытие модального окна

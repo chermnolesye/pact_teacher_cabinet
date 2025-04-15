@@ -25,6 +25,8 @@
 	--primary-padding: 20px;
 	--grey-color: #6C757D;
     --secondary-grey-color: #768088;
+    --red-color: #E87C86;
+    --red-secondary-color: #e5979f;
 }
 
 body {
@@ -78,10 +80,19 @@ h2 {
 	border: none;
 	cursor: pointer;
 	min-height: 35px;
+    font-weight: 600;
+}
+
+.red-button {
+    background-color: var(--red-color);
 }
 
 .button:hover {
 	background-color: var(--secondary-color);
+}
+
+.red-button:hover {
+	background-color: var(--red-secondary-color);
 }
 
 .button-grey {
@@ -93,6 +104,7 @@ h2 {
 	border: none;
 	cursor: pointer;
 	min-height: 35px;
+    font-weight: 600;
 }
 
 .button-grey:hover {
