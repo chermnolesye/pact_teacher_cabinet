@@ -186,23 +186,59 @@ class Student(models.Model):
         return f"Student {self.idstudent}"
 
 class Text(models.Model):
+    YEARS = (
+        (1, '1'),
+        (2, '2'),
+        (3, '3'),
+        (4, '4'),
+        (5, '5'),
+        (6, '6'),
+        (7, '7'),
+        (8, '8'),
+        (9, '9'),
+        (10, '10')
+    )
+
+    RATES = (
+        (1, '1'),
+        (2, '2'),
+        (3, '3'),
+        (4, '4'),
+        (5, '5')
+    )
+
+    TASK_RATES = (
+        (1, '1'),
+        (2, '2-'),
+        (3, '2'),
+        (4, '2+'),
+        (5, '3-'),
+        (6, '3'),
+        (7, '3+'),
+        (8, '4-'),
+        (9, '4'),
+        (10, '4+'),
+        (11, '5-'),
+        (12, '5')
+    )
+
     idtext = models.AutoField(primary_key=True)
     header = models.CharField(max_length=255)
     text = models.TextField()
     idstudent = models.ForeignKey('Student', on_delete=models.CASCADE, db_column='idstudent')
     createdate = models.DateField(null=True, blank=True)
     modifieddate = models.DateField(null=True, blank=True)
-    educationlevel = models.IntegerField(null=True, blank=True)
+    educationlevel = models.IntegerField(null=True, blank=True, choices=YEARS)
     idtexttype = models.ForeignKey('TextType', on_delete=models.CASCADE, db_column='idtexttype', null=True, blank=True)
     idwriteplace = models.ForeignKey('WritePlace', on_delete=models.CASCADE, db_column='idwriteplace', null=True, blank=True)
     idwritetool = models.ForeignKey('WriteTool', on_delete=models.CASCADE, db_column='idwritetool', null=True, blank=True)
     idemotion = models.ForeignKey('Emotion', on_delete=models.CASCADE, db_column='idemotion', null=True, blank=True)
-    textgrade = models.IntegerField(null=True, blank=True)
-    completeness = models.IntegerField(null=True, blank=True)
-    structure = models.IntegerField(null=True, blank=True)
-    coherence = models.IntegerField(null=True, blank=True)
-    selfrating = models.IntegerField(null=True, blank=True)
-    selfassesment = models.IntegerField(null=True, blank=True)
+    textgrade = models.IntegerField(null=True, blank=True, choices=TASK_RATES)
+    completeness = models.IntegerField(null=True, blank=True, choices=TASK_RATES)
+    structure = models.IntegerField(null=True, blank=True, choices=TASK_RATES)
+    coherence = models.IntegerField(null=True, blank=True, choices=TASK_RATES)
+    selfrating = models.IntegerField(null=True, blank=True, choices=TASK_RATES)
+    selfassesment = models.IntegerField(null=True, blank=True, choices=RATES)
     poscheckflag = models.BooleanField(null=True, blank=True)
     errorcheckflag = models.BooleanField(null=True, blank=True)
     poscheckdate = models.DateField(null=True, blank=True)
