@@ -277,57 +277,54 @@
         <!-- Модальное окно для оценки текста -->
         <div class="modal-overlay" id="modal">
             <div class="modal-content">
+                <div class="modal-head">
+                        <p>Оценить текст</p>
+                        <button class="close-modal">
+                            <svg width="30" height="30" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M27.101 17.0606L17.0606 27.101M17.0606 17.0606L27.101 27.101M12.0404 4.68683C15.0917 2.92153 18.5556 1.99459 22.0808 2.00002C33.1714 2.00002 42.1616 10.9902 42.1616 22.0808C42.1616 33.1714 33.1714 42.1616 22.0808 42.1616C10.9902 42.1616 2 33.1714 2 22.0808C2 18.4241 2.97794 14.9923 4.68681 12.0404" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+                            </svg>
+                        </button>
+                </div>
 
-            <div class="modal-head">
-                    <p>Оценить текст</p>
-                    <button class="close-modal">
-                        <svg width="30" height="30" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M27.101 17.0606L17.0606 27.101M17.0606 17.0606L27.101 27.101M12.0404 4.68683C15.0917 2.92153 18.5556 1.99459 22.0808 2.00002C33.1714 2.00002 42.1616 10.9902 42.1616 22.0808C42.1616 33.1714 33.1714 42.1616 22.0808 42.1616C10.9902 42.1616 2 33.1714 2 22.0808C2 18.4241 2.97794 14.9923 4.68681 12.0404" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
-                        </svg>
-                    </button>
-            </div>
+                <form method="post" id="grade-form">
+                    {% csrf_token %}
+                    
+                    <div class="grade-group">
+                            {{ grade_form.textgrade.label_tag }}
+                            {{ grade_form.textgrade }}
+                    </div>
 
-            <div>
-                    <div class="grade-group">
-                            <p> Оценка </p>
-                            <select></select>
+                    <div class="horizontal-wrap">
+                            <div class="grade-group">
+                                {{ grade_form.completeness.label_tag }}
+                                {{ grade_form.completeness }}
+                            </div>
+                            <div class="grade-group">
+                                {{ grade_form.structure.label_tag }}
+                                {{ grade_form.structure }}
+                            </div>
+                            <div class="grade-group">
+                                {{ grade_form.coherence.label_tag }}
+                                {{ grade_form.coherence }}
+                            </div>
                     </div>
-            </div>
 
-            <div class="horizontal-wrap">
-                    <div class="grade-group">
-                            <p> Полнота раскрытия: </p>
-                            <select></select>
+                    <div class="horizontal-wrap">
+                            <div class="grade-group">
+                                {{ grade_form.poscheckflag.label_tag }}
+                                {{ grade_form.poscheckflag }}
+                            </div>
+                            <div class="grade-group">
+                                {{ grade_form.errorcheckflag.label_tag }}
+                                {{ grade_form.errorcheckflag }}
+                            </div>
                     </div>
-                    <div class="grade-group">
-                            <p> Структура: </p>
-                            <select></select>
-                    </div>
-                    <div class="grade-group">
-                            <p> Связность: </p>
-                            <select></select>
-                    </div>
-            </div>
 
-            <div class="horizontal-wrap">
-                    <div class="grade-group">
-                            <p> Проверка частеречной разметки: </p>
-                            <select></select>
-                    </div>
-                    <div class="grade-group">
-                            <p> Проверка разметки ошибок: </p>
-                            <select></select>
-                    </div>
-            </div>
-
-            <div class="grade-buttons">
-                <button type="submit" class="button">Сохранить</button>
-                <button type="submit" class="button-grey">Назад</button>
-            </div>
-
-              <form>
-                <!-- Форма для оценки -->
-              </form>
+                    <div class="grade-buttons">
+                        <button type="submit" name="grade-form" class="button">Сохранить</button>
+                        <button type="submit" class="button-grey">Назад</button>
+                    </div>        
+                </form>
             </div>
         </div>
 
@@ -414,8 +411,11 @@
                 </button>
             </div>
 
-            <div class="annotation-modal-content">
-                <label for="tags">Выберите тег:</label>
+            <form method="post" id="annotation-form">
+                {% csrf_token %}
+                <div class="annotation-modal-content">
+                
+                <!-- <label for="tags">Выберите тег:</label>
                 <div id="tags-list" class="tags-list">
                 </div>
 
@@ -432,15 +432,28 @@
                 <input type="text" id="correction">
 
                 <label for="comment">Комментарий:</label>
-                <textarea id="comment"></textarea>
+                <textarea id="comment"></textarea> -->
+                    
+                    {{ annotation_form.iderrortag.label_tag }}
+                    {{ annotation_form.iderrortag }}
+                
+                    {{ annotation_form.idreason.label_tag }}
+                    {{ annotation_form.idreason }}
+                
+                    {{ annotation_form.iderrorlevel.label_tag }}
+                    {{ annotation_form.iderrorlevel }}
+                
+                    {{ annotation_form.comment.label_tag }}
+                    {{ annotation_form.comment }}
 
-                <p>Создатель аннотации: <p>
-            </div>
+                    <p>Создатель аннотации: <p>
 
-            <div class="grade-buttons">
-                <button class="button" id="save-annotation">Сохранить</button>
-                <button class="button red-button" id="delete-annotation">Удалить</button>
-            </div>
+                    <div class="grade-buttons">
+                        <button type="submit" name="annotation-form" class="button" id="save-annotation">Сохранить</button>
+                        <button class="button red-button" id="delete-annotation">Удалить</button>
+                    </div>
+                </div>
+            </form>   
         </div>
     </div>
     
@@ -823,6 +836,7 @@
 
         // Открытие модального окна при клике на кнопку "Добавить аннотацию"
         document.getElementById('button-add-annotation').addEventListener('click', function() {
+        /*
             const tags = [
                 { name: 'Tag1' },
                 { name: 'Tag2' },
@@ -842,6 +856,7 @@
                 });
                 tagsList.appendChild(tagElement);
             });
+            */
     
             // Показать модальное окно
             document.getElementById('annotation-modal').style.display = 'flex';
@@ -860,21 +875,21 @@
         });
     
         // Функция для выбора тега
-        function selectTag(tag) {
-            document.getElementById('selected-tag').value = tag.name;
+        // function selectTag(tag) {
+        //     document.getElementById('selected-tag').value = tag.name;
     
-            document.querySelectorAll('.tag').forEach(t => t.classList.remove('selected'));
-            event.target.classList.add('selected');
-        }
+        //     document.querySelectorAll('.tag').forEach(t => t.classList.remove('selected'));
+        //     event.target.classList.add('selected');
+        // }
     
         // Удаление аннотации
-        document.getElementById('delete-annotation').addEventListener('click', function() {
-            document.getElementById('selected-tag').value = '';
-            document.getElementById('error-reason').value = '';
-            document.getElementById('severity').value = '';
-            document.getElementById('correction').value = '';
-            document.getElementById('comment').value = '';
-        });
+        // document.getElementById('delete-annotation').addEventListener('click', function() {
+        //     document.getElementById('selected-tag').value = '';
+        //     document.getElementById('error-reason').value = '';
+        //     document.getElementById('severity').value = '';
+        //     document.getElementById('correction').value = '';
+        //     document.getElementById('comment').value = '';
+        // });
     </script>
 
 </body>

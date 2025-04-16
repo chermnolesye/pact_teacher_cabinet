@@ -80,6 +80,7 @@ h2 {
 	border: none;
 	cursor: pointer;
 	min-height: 35px;
+    font-size: 16px;
     font-weight: 600;
 }
 
@@ -104,6 +105,7 @@ h2 {
 	border: none;
 	cursor: pointer;
 	min-height: 35px;
+    font-size: 16px;
     font-weight: 600;
 }
 

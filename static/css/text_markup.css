@@ -375,13 +375,27 @@ form {
     border-top-left-radius: var(--border-radius);
   }
 
+  #grade-form {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin: 10px;
+  }
+
   .grade-group {
+    display: flex;
+    flex-direction: column;
     margin: 5px 10px;
     padding: 5px;
     color: var(--grey-color);
   }
 
+  .grade-group label {    
+    margin-bottom: 10px;
+  }
+
   .grade-buttons {
+    width: 100%;
     display: flex;
     flex-direction: row;
     justify-content: space-evenly; 

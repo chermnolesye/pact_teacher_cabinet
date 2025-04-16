@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
-from .forms import TeacherLoadTextForm
+from .forms import TeacherLoadTextForm, AddTextAnnotationForm, AddErrorAnnotationForm
 from nltk.tokenize import sent_tokenize, word_tokenize
 from core_app.models import (
     Text,
@@ -236,7 +236,21 @@ def annotate_text(request, text_id=2379):
     self_rating = text.selfrating
     assesment = text.selfassesment
 
+    if "grade-form" in request.POST:  
+        grade_form = AddTextAnnotationForm(request.POST)
+        # if form.is_valid():
+    else:
+        grade_form = AddTextAnnotationForm() 
+
+    if "annotation-form" in request.POST:  
+        annotation_form = AddErrorAnnotationForm(request.POST)
+        # if form.is_valid():
+    else:
+        annotation_form = AddErrorAnnotationForm()
+
     context = {
+        "grade_form": grade_form,
+        "annotation_form": annotation_form,
         "text": text,
         "sentence_data": sentence_data,
         "selected_markup": selected_markup,
@@ -254,7 +268,7 @@ def annotate_text(request, text_id=2379):
         "self_rating": self_rating,
         "self_assesment": assesment,
         "fio": get_teacher_fio(request)
-    }
+    }  
 
     return render(request, "annotate_text.html", context)
  #Если вам  нужен доступ только для зарегестрированных пользователей
