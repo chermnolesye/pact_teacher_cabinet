@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="{% static 'css/students.css' %}" />
 </head>
 <body>
-
+    <div id="header-container"></div>
     <div class="students-container">
         <h2 class="highlighted-header">
             Список студентов
@@ -81,6 +81,18 @@
             </div>
         </div>
     </div>
+    <script> 
+        document.addEventListener('DOMContentLoaded', function() {
+        fetch('/static/templates/base.html')
+            .then(response => response.text()) 
+            .then(data => {
+            document.getElementById('header-container').innerHTML = data;
+            let user_fio = "{{ fio|escapejs }}"; 
+            document.getElementById('user-link').textContent = user_fio;
+            });
+            
+        });
 
+    </script>
 </body>
 </html>

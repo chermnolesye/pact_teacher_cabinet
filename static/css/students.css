@@ -1,3 +1,7 @@
+.students-container{
+  margin-top:50px;
+}
+
 /* Стили модального окна */
 .modal-overlay {
     display: none;
