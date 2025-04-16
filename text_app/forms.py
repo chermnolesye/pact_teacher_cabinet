@@ -75,3 +75,6 @@ class TeacherLoadTextForm(forms.ModelForm):
         required=True,
         widget=forms.NumberInput(attrs={'min': 1, 'max': 10, 'step': 1}) 
     )
+
+class AddTextAnnotationForm(forms.Form):
+    text_grade = 1

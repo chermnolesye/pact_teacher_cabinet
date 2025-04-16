@@ -12,7 +12,7 @@
 
     <!-- Всплывающее окно с информацией об ошибке -->
     <div class="error-popup" id="error-popup">
-        <span class="close-btn" id="close-popup">X</span>
+        <span class="close-btn" id="close-popup">&#x2715;</span>
         <h3>
             <span id="error-tag"></span>
             <span id="error-tag-abbrev"></span>
@@ -358,18 +358,6 @@
                           data-error-color="{{ token.error_color }}"
                           {% endif %}>
 
-                        <!-- Часть речи (изначально скрыта) -->
-                        {% if token.pos_tag %}
-                        <span class="abbr"
-                              style="background-color: {{ token.pos_tag_color }}; display: none;"
-                              data-pos-tag="{{ token.pos_tag }}"
-                              data-pos-tag-russian="{{ token.pos_tag_russian }}"
-                              data-pos-tag-abbrev="{{ token.pos_tag_abbrev }}">
-                            {{ token.pos_tag }}
-
-                        </span>
-                        {% endif %}
-
                         <!-- Ошибки (изначально скрыты) -->
                         {% if token.all_errors %}
                         {% for error in token.all_errors %}
@@ -382,6 +370,18 @@
                         </span>
                         {% endfor %}
                         {% endif %}
+
+                        <!-- Часть речи (изначально скрыта) -->
+                        {% if token.pos_tag %}
+                        <span class="abbr"
+                              style="background-color: {{ token.pos_tag_color }}; display: none;"
+                              data-pos-tag="{{ token.pos_tag }}"
+                              data-pos-tag-russian="{{ token.pos_tag_russian }}"
+                              data-pos-tag-abbrev="{{ token.pos_tag_abbrev }}">
+                            {{ token.pos_tag }}
+
+                        </span>
+                        {% endif %}                    
 
                         <!-- Само слово -->
                         {% if token.token == '-EMPTY-' %}

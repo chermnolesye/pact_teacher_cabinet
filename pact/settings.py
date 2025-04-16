@@ -68,7 +68,9 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
             BASE_DIR / 'templates',  
-            BASE_DIR / 'text_app/templates/text_app',  
+            BASE_DIR / 'text_app/templates/text_app', 
+            BASE_DIR / 'students_app/templates/students_app',
+            BASE_DIR / 'years_and_groups_app/templates/years_and_groups_app',   
         ],
         'APP_DIRS': True,
         'OPTIONS': {
