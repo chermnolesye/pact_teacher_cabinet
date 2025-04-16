@@ -139,7 +139,7 @@
 
   .text-types {
     max-width: 600px;
-    margin: 20px auto;
+    width:100%;
     background-color: white;
     border-radius: 12px;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
@@ -322,7 +322,9 @@
   transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-
+#text-search-form{
+  text-align: left;
+}
 
 /* Стили для скрытого состояния */
 .search-results {
@@ -344,3 +346,4 @@
 .new-text-button a:active {
   text-decoration: none;
 }
+

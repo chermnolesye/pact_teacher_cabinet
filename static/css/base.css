@@ -221,9 +221,10 @@ textarea {
 	flex-direction: column;
 	justify-content: center;
     padding: var(--primary-padding);
-
+    margin-top: 50px;
 	width: 100%;
     max-width: 800px;
+    align-items: center;
 }
 
 .container > * {
@@ -250,3 +251,53 @@ textarea {
 .table thead th {
 	border-bottom: 1px solid rgb(222, 226, 230) !important;
 }
+
+
+
+a {
+    text-decoration: none;
+    color: #0d6efd; 
+  }
+  .header {
+    background-color: white; 
+    padding: 10px 20px;
+    position: fixed; 
+    top: 0; 
+    left: 0;
+    width: 100%; 
+    z-index: 100; 
+    display: flex;
+    justify-content: space-between; 
+    align-items: center; 
+    box-shadow: 0 5px 5px rgba(0, 0, 0, 0.1); 
+  }
+
+  .header__left {
+    display: flex;
+    align-items: center;
+  }
+  .header__right {
+    display: flex;
+    align-items: center;
+  }
+
+  .header__link {
+    display: flex;
+    align-items: center;
+  }
+
+  .header__link:last-child {
+    margin-right: 0; 
+  }
+
+  .header__link img {
+    width: 20px; 
+    height: 20px;
+    margin-right: 5px; 
+  }
+
+  .header-svg{
+      margin-right: 5px;
+      margin-left: 5px;
+      max-width: 25px;
+  }

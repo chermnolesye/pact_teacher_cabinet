@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from .forms import StudentRegistrationForm, TeacherRegistrationForm, StudentLoginForm, TeacherLoginForm, LoginForm
 from core_app.models import User, Student, Rights
 
@@ -117,7 +117,11 @@ def login_teacher(request):
             if user and user.check_password(password_data):
                 login(request, user)
                 messages.success(request, 'Вы успешно вошли в систему как преподаватель.')
-                return redirect('home')  # Заменить
+                # Получаем ФИО для шапки !!
+                fio = f"{user.lastname} {user.firstname} {user.middlename}"
+                # Сохраняем ФИО в сессии
+                request.session['teacher_fio'] = fio
+                return redirect('/text/show_texts/')  # Заменить !!!!
             else:
                 messages.error(request, 'Неправильный логин или пароль.')
     else:
@@ -138,10 +142,14 @@ def user_login(request):
 
             if user is not None:
                 login(request, user)
+                # Получаем ФИО для шапки !!
+                fio = f"{user.lastname} {user.firstname} {user.middlename}"
+                # Сохраняем ФИО в сессии
+                request.session['teacher_fio'] = fio
                 if user.idrights.idrights == 2: 
-                    return redirect("show_text_markup") #Поменять!
+                    return redirect("/text/show_texts/") #Поменять!
                 elif user.idrights.idrights == 1:  
-                    return redirect("show_text_markup")  #Поменять!
+                    return redirect("/text/show_texts/")  #Поменять!
             else:
                 messages.error(request, "Неверный логин или пароль.")
     else:
@@ -149,3 +157,8 @@ def user_login(request):
 
     return render(request, "authorization_app/login.html", {"form": form})
 
+#Прости Саша, но мне надо было проверить load_text, она вроде работает, но хз
+def logout_teacher(request):
+    logout(request)  # Вызываем функцию logout 
+    messages.success(request, 'Вы успешно вышли из системы.')
+    return redirect('/auth/login')  

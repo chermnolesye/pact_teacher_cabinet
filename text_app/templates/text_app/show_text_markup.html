@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="{% static 'css/text_markup.css' %}" />
 </head>
 <body>
-
+    <!--<div id="header-container"></div>-->
     <!-- Всплывающее окно с информацией об ошибке -->
     <div class="error-popup" id="error-popup">
         <span class="close-btn" id="close-popup">X</span>
@@ -336,7 +336,19 @@
             {% endfor %}
         </div>
     </div>
-
+    <!-- Шапка убрать коммент, если нужна
+    <script> 
+        document.addEventListener('DOMContentLoaded', function() {
+        fetch('/static/templates/base.html')
+            .then(response => response.text())
+            .then(data => {
+            document.getElementById('header-container').innerHTML = data;
+            let user_fio = "{{ fio|escapejs }}"; 
+            document.getElementById('user-link').textContent = user_fio;
+            });
+        });
+    
+    </script>-->
     <script>
         // Скрипт для отображения разметки (НЕ ДЫШАТЬ НА НЕГО!!!)
         document.addEventListener('DOMContentLoaded', function() {

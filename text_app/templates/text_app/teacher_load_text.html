@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="{% static 'css/text_app.css' %}">
 </head>
 <body>
+    <div id="header-container"></div>
 
     <div class="add-text-container">
 
@@ -84,7 +85,19 @@
         </form>
 
     </div>
+    <script> 
+        document.addEventListener('DOMContentLoaded', function() {
+        fetch('/static/templates/base.html')
+            .then(response => response.text()) 
+            .then(data => {
+            document.getElementById('header-container').innerHTML = data;
+            let user_fio = "{{ fio|escapejs }}"; 
+            document.getElementById('user-link').textContent = user_fio;
+            });
+            
+        });
 
+    </script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const groupSelect = document.getElementById("id_group");

@@ -8,10 +8,24 @@
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
 </head>
 <body>
+    <div id="header-container"></div>
     <div class="container">
         <a href="{% url 'show_text_markup' %}">Перейти к разметке текста</a>
         <a href="{% url 'annotate_text' %}">Перейти к аннотированию</a>
         <a href="{% url 'show_texts' %}">Перейти к поиску текстов</a>
     </div>
 </body>
+<!-- Шапка убрать коммент, если нужна
+    <script> 
+        document.addEventListener('DOMContentLoaded', function() {
+        fetch('/static/templates/base.html')
+            .then(response => response.text())
+            .then(data => {
+            document.getElementById('header-container').innerHTML = data;
+            let user_fio = "{{ fio|escapejs }}"; 
+            document.getElementById('user-link').textContent = user_fio;
+            });
+        });
+    
+    </script>-->
 </html>
