@@ -19,7 +19,7 @@ from core_app.models import (
 
 
 def show_text_markup(request, text_id=2379):
-    #Если вам  нужен доступ только для зарегестрированных пользователей (преподавателей)
+    # Если вам  нужен доступ только для зарегестрированных пользователей (преподавателей)
     # if has_teacher_rights(request):
     if text_id is not None:
         text = get_object_or_404(Text, idtext=text_id)
@@ -131,16 +131,19 @@ def show_text_markup(request, text_id=2379):
         else "Не указано",
         "self_rating": self_rating,
         "self_assesment": assesment,
-        "fio": get_teacher_fio(request)
+        "fio": get_teacher_fio(request),
     }
 
     return render(request, "show_text_markup.html", context)
- #Если вам  нужен доступ только для зарегестрированных пользователей
-    # else:
-    #     return redirect("/text/show_texts")
+
+
+# Если вам  нужен доступ только для зарегестрированных пользователей
+# else:
+#     return redirect("/text/show_texts")
+
 
 def annotate_text(request, text_id=2379):
-    #Если вам  нужен доступ только для зарегестрированных пользователей  (преподавателей)
+    # Если вам  нужен доступ только для зарегестрированных пользователей  (преподавателей)
     # if has_teacher_rights(request):
     text_id = request.GET.get("text_id")
     if text_id:
@@ -236,13 +239,13 @@ def annotate_text(request, text_id=2379):
     self_rating = text.selfrating
     assesment = text.selfassesment
 
-    if "grade-form" in request.POST:  
+    if "grade-form" in request.POST:
         grade_form = AddTextAnnotationForm(request.POST)
         # if form.is_valid():
     else:
-        grade_form = AddTextAnnotationForm() 
+        grade_form = AddTextAnnotationForm()
 
-    if "annotation-form" in request.POST:  
+    if "annotation-form" in request.POST:
         annotation_form = AddErrorAnnotationForm(request.POST)
         # if form.is_valid():
     else:
@@ -267,13 +270,16 @@ def annotate_text(request, text_id=2379):
         else "Не указано",
         "self_rating": self_rating,
         "self_assesment": assesment,
-        "fio": get_teacher_fio(request)
-    }  
+        "fio": get_teacher_fio(request),
+    }
 
     return render(request, "annotate_text.html", context)
- #Если вам  нужен доступ только для зарегестрированных пользователей
-    # else:
-    #     return redirect("/text/show_texts")
+
+
+# Если вам  нужен доступ только для зарегестрированных пользователей
+# else:
+#     return redirect("/text/show_texts")
+
 
 def show_texts(request):
     groups = (
@@ -343,6 +349,7 @@ def show_texts(request):
             "idstudent__iduser__firstname",
             "idstudent__iduser__middlename",
             "idtexttype__texttypename",
+            "modifieddate",
         )
 
         finded_text_by_name_data = [
@@ -378,15 +385,32 @@ def show_texts(request):
                     grouped_texts[category].append(
                         {"id": text["idtext"], "header_text": text["header"]}
                     )
+
     texts = Text.objects.all()
+    texts = texts.values(
+        "idtext",
+        "header",
+        "idstudent__iduser__lastname",
+        "idstudent__iduser__firstname",
+        "idstudent__iduser__middlename",
+        "idtexttype__texttypename",
+        "modifieddate",
+    )
     texts_by_types_for_folders = {}
     for text in texts:
-        text_type = text.idtexttype.texttypename
+        text_type = text["idtexttype__texttypename"]
         if text_type not in texts_by_types_for_folders:
             texts_by_types_for_folders[text_type] = []
         else:
             texts_by_types_for_folders[text_type].append(
-                {"id": text.idtext, "header_text": text.header}
+                {
+                    "id": text["idtext"],
+                    "header_text": text["header"],
+                    "author_lastname": text["idstudent__iduser__lastname"],
+                    "author_firstname": text["idstudent__iduser__firstname"],
+                    "author_middlename": text["idstudent__iduser__middlename"],
+                    "date_modificate": text["modifieddate"],
+                }
             )
 
     context = {
@@ -396,8 +420,8 @@ def show_texts(request):
         "finded_text_by_name": finded_text_by_name_data,
         "grouped_texts": grouped_texts,
         "texts_type_folders": texts_by_types_for_folders,
-        "selected_text": text_name, #Алена, не удаляй это,пожалуйста, это надо для сохранения введенного поиска
-        "fio": get_teacher_fio(request)
+        "selected_text": text_name,  # Алена, не удаляй это,пожалуйста, это надо для сохранения введенного поиска
+        "fio": get_teacher_fio(request),
     }
     return render(request, "show_texts.html", context)
 
@@ -467,7 +491,9 @@ def teacher_load_text(request):
                 for order, sentence_text in enumerate(sentences, start=0):
                     if sentence_text.strip():
                         sentence_obj = Sentence.objects.create(
-                            sentensetext=sentence_text, ordernumber=order, idtext=text_obj
+                            sentensetext=sentence_text,
+                            ordernumber=order,
+                            idtext=text_obj,
                         )
                         print(f"Добавлено предложение {order}: {sentence_text}")
 
@@ -495,7 +521,11 @@ def teacher_load_text(request):
         else:
             form = TeacherLoadTextForm()
 
-        return render(request, "teacher_load_text.html", {"form": form, "fio": get_teacher_fio(request)})
+        return render(
+            request,
+            "teacher_load_text.html",
+            {"form": form, "fio": get_teacher_fio(request)},
+        )
     else:
         return redirect("/text/show_texts")
 
@@ -503,16 +533,18 @@ def teacher_load_text(request):
 def home_view(request):
     return render(request, "home.html")
 
+
 def get_teacher_fio(request):
-    return request.session.get('teacher_fio', '')
+    return request.session.get("teacher_fio", "")
+
 
 def has_teacher_rights(request):
     if not request.user.is_authenticated:
         return False
     else:
-        if not hasattr(request.user, 'idrights'):  
+        if not hasattr(request.user, "idrights"):
             print("У вас нет прав доступа к этой странице.")
-            return False 
+            return False
         if request.user.idrights.idrights != 2:
             print("У вас нет прав доступа к этой странице.")
             return False
