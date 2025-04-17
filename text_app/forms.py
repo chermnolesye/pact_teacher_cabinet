@@ -147,6 +147,12 @@ class AddErrorAnnotationForm(forms.ModelForm):
         widget=forms.Select(attrs={'class': 'form-control'})
     )
 
+    correct = forms.CharField(
+        label="Исправление",
+        widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+        required=False
+    )
+
     comment = forms.CharField(
         label="Комментарий",
         widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
