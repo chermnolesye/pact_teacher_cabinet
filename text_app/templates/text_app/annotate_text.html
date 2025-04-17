@@ -449,6 +449,7 @@
                     <p>Создатель аннотации: <p>
 
                     <div class="grade-buttons">
+                        <!-- Нужно написать функцию  для добавления в бд аннотации -->
                         <button type="submit" name="annotation-form" class="button" id="save-annotation">Сохранить</button>
                         <button class="button red-button" id="delete-annotation">Удалить</button>
                     </div>
@@ -717,8 +718,6 @@
                 var menu = document.getElementById('select-menu');
                 menu.classList.add('hide');
             });
-
-
 
             document.querySelectorAll('.word').forEach(word => {
                 word.addEventListener('click', () => {

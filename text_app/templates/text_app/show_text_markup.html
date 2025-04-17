@@ -325,9 +325,9 @@
                                 
                                 <!-- Само слово -->
                                 {% if token.token == '-EMPTY-' %}
-                                    <span class="word">&loz;</span>
+                                    <span class="static_word">&loz;</span>
                                 {% else %}
-                                    <span class="word">{{ token.token }}</span>
+                                    <span class="static_word">{{ token.token }}</span>
                                 {% endif %}
                             </span>
                         {% endfor %}
@@ -366,12 +366,12 @@
                 const showErrors = errorsCheckbox.checked;
 
                 tokens.forEach(token => {
-                    token.querySelectorAll('.abbr, .error-tag, .word').forEach(el => {
+                    token.querySelectorAll('.abbr, .error-tag, .static_word').forEach(el => {
                         el.style.display = 'none';
                     });
 
-                    const word = token.querySelector('.word');
-                    if (word) word.style.display = 'inline';
+                    const static_word = token.querySelector('.static_word');
+                    if (static_word) static_word.style.display = 'inline';
 
                     if (showPOS) {
                         const posTag = token.querySelector('.abbr');
