@@ -745,21 +745,29 @@
                 const contentId = this.getAttribute('data-target');
                 const content = document.getElementById(contentId);
                 if (!content) return;
-                
+
+                const isAlreadyOpen = content.style.display === 'block';
+                                
                 // Скрываем все другие контенты
                 document.querySelectorAll('.menu-content').forEach(c => {
                     if (c !== content) {
                         c.style.display = 'none';
                     }
                 });
+            
+                if (isAlreadyOpen) {
+                    content.style.display = 'none';
+                }
+                else {
+                    // Позиционируем текущий контент
+                    const rect = this.getBoundingClientRect();
+                    content.style.display = 'block';
+                    content.style.position = 'fixed';
+                    content.style.left = `${rect.left}px`;
+                    content.style.top = `${rect.bottom}px`;
+                    content.style.zIndex = '1001'; // Выше чем у меню
+                }              
                 
-                // Позиционируем текущий контент
-                const rect = this.getBoundingClientRect();
-                content.style.display = 'block';
-                content.style.position = 'fixed';
-                content.style.left = `${rect.left}px`;
-                content.style.top = `${rect.bottom}px`;
-                content.style.zIndex = '1001'; // Выше чем у меню
                 });
             });
 
@@ -803,17 +811,20 @@
                 c.style.display = 'none';
                 });
             });
-            
+
+             // Обработчики для модального окна            
             if (backButton) {
                 backButton.addEventListener('click', function(e) {
                     e.preventDefault(); // Предотвращает отправку формы
                     modal.style.display = 'none';
                 });
             }
-
-            // Обработчики для модального окна
+           
             rateBtn.addEventListener('click', function(e) {
                 e.stopPropagation();
+                document.querySelectorAll('.menu-content').forEach(c => {
+                        c.style.display = 'none';                    
+                });
                 modal.style.display = 'flex';
             });
             

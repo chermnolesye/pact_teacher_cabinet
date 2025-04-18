@@ -53,14 +53,14 @@ form {
 
 .sentence-number {
     display: inline-block;
-    padding: 5px;
-    /* min-width: 30px;
-    margin-top: 40px; */
     margin-right: 10px;
     font-weight: bold;
     flex-shrink: 0;
-    align-self: center; 
+    align-self:flex-end; 
     color: var(--grey-color);
+    font-size: 16px;
+    margin: 2px; 
+    padding: 15px; 
 }
 
 .tokens-container {
@@ -100,7 +100,7 @@ form {
     white-space: nowrap; /* Запрещает перенос на новую строку */
     text-align: center;
             box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-    padding: 5px;
+    padding: 10px;
     display: flex;
     flex-grow: 1;
     justify-content: center;
@@ -133,24 +133,11 @@ form {
 }
 
 .word:hover {
-    box-sizing: border-box !important;
-    border: dashed 1px #4285f4;
+    /* box-sizing: border-box !important;
+    border: dashed 1px #4285f4; */
+    outline: 1px dashed var(--primary-color);
+    outline-offset: -1px;
 }
-
-/* #markup {
-    margin: 2px; 
-    padding: 8px;
-    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-    border: 1px solid var(--primary-color);
-    cursor: pointer;
-    border-radius: 1px; 
-}
-
-#markup:focus {
-    outline: none;
-    border-color: var(--primary-color);
-    box-shadow:  0 0.125rem 0.25rem rgba(0, 123, 255, 0.5);
-} */
 
 .error-tag {
     display: none;
@@ -158,7 +145,7 @@ form {
     white-space: nowrap; /* Запрещает перенос на новую строку */
     text-align: center;
     box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-    padding: 5px;
+    padding: 10px;
     display: flex;
     flex-grow: 1;
     justify-content: center;
@@ -515,7 +502,9 @@ input:checked + .slider:before {
 }
 
 .chosen_token {
-    border: solid 2px var(--secondary-color) !important;
+    /* border: solid 2px var(--secondary-color) !important; */
+    outline: solid 2px var(--secondary-color) !important;
+    outline-offset: -1px;
 }
 
 #select-menu {
@@ -586,6 +575,7 @@ input:checked + .slider:before {
     flex-direction: column;
     /* color: #6C757D; */
     padding: 20px;
+    justify-content: center;
 }
 
 .annotation-modal-content label {

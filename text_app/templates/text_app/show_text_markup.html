@@ -12,7 +12,7 @@
     <!--<div id="header-container"></div>-->
     <!-- Всплывающее окно с информацией об ошибке -->
     <div class="error-popup" id="error-popup">
-        <span class="close-btn" id="close-popup">X</span>
+        <span class="close-btn" id="close-popup">&#x2715;</span>
         <h3>
             <span id="error-tag"></span>
             <span id="error-tag-abbrev"></span>
@@ -270,20 +270,19 @@
                     <p>Оценка задания студентом:</p>
                     <p class="p-dark"> {{ self_assesment }} </p>
                 </div>
-            </div>  
-        
-        <div class="watch-text">
-
-            <div class="text-header">
-                <h1 class="text-title">{{ text.header }}</h1>
             </div>
+
+        <div class="text-header">
+            <h1 class="text-title">{{ text.header }}</h1>
+        </div>
+        
+        <div class="watch-text">          
 
             {% for sentence in sentence_data %}
                 <div class="sentence">
                     <div class="tokens-container">
                         <p class="sentence-number">{{ sentence.sentence.ordernumber|add:1 }}:</p>
-                        {% for token in sentence.tokens %}
-                            
+                        {% for token in sentence.tokens %}                        
                             
                         <span class="token" 
                                 data-pos-tag="{{ token.pos_tag }}"
@@ -296,20 +295,8 @@
                                     data-error-tag-abbrev="{{ token.error_tag_abbrev }}"
                                     data-error-level="{{ token.error_level }}"
                                     data-error-color="{{ token.error_color }}"
-                                {% endif %}>
-                            
-                                <!-- Часть речи (изначально скрыта) -->
-                                {% if token.pos_tag %}
-                                <span class="abbr" 
-                                        style="background-color: {{ token.pos_tag_color }}; display: none;"
-                                        data-pos-tag="{{ token.pos_tag }}"
-                                        data-pos-tag-russian="{{ token.pos_tag_russian }}"
-                                        data-pos-tag-abbrev="{{ token.pos_tag_abbrev }}">
-                                    {{ token.pos_tag }}
-                                    
-                                </span>
-                                {% endif %}
-
+                                {% endif %}>                            
+                                
                                 <!-- Ошибки (изначально скрыты) -->
                                 {% if token.all_errors %}
                                     {% for error in token.all_errors %}
@@ -321,6 +308,18 @@
                                     {{ error.error_tag }}
                                     </span>
                                     {% endfor %}
+                                {% endif %}
+
+                                <!-- Часть речи (изначально скрыта) -->
+                                {% if token.pos_tag %}
+                                <span class="abbr" 
+                                        style="background-color: {{ token.pos_tag_color }}; display: none;"
+                                        data-pos-tag="{{ token.pos_tag }}"
+                                        data-pos-tag-russian="{{ token.pos_tag_russian }}"
+                                        data-pos-tag-abbrev="{{ token.pos_tag_abbrev }}">
+                                    {{ token.pos_tag }}
+                                    
+                                </span>
                                 {% endif %}
                                 
                                 <!-- Само слово -->
@@ -503,6 +502,8 @@
                 const contentId = this.getAttribute('data-target');
                 const content = document.getElementById(contentId);
                 if (!content) return;
+
+                const isAlreadyOpen = content.style.display === 'block';
                 
                 // Скрываем все другие контенты
                 document.querySelectorAll('.menu-content').forEach(c => {
@@ -511,13 +512,19 @@
                     }
                 });
                 
-                // Позиционируем текущий контент
-                const rect = this.getBoundingClientRect();
-                content.style.display = 'block';
-                content.style.position = 'fixed';
-                content.style.left = `${rect.left}px`;
-                content.style.top = `${rect.bottom}px`;
-                content.style.zIndex = '1001'; // Выше чем у меню
+                if (isAlreadyOpen) {
+                    content.style.display = 'none';
+                }
+                else {
+                    // Позиционируем текущий контент
+                    const rect = this.getBoundingClientRect();
+                    content.style.display = 'block';
+                    content.style.position = 'fixed';
+                    content.style.left = `${rect.left}px`;
+                    content.style.top = `${rect.bottom}px`;
+                    content.style.zIndex = '1001'; // Выше чем у меню
+                } 
+                  
                 });
             });
 
