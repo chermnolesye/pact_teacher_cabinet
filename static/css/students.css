@@ -1,6 +1,4 @@
 
-
-
 .students-container {
   display: flex;
   flex-direction: column;
@@ -9,61 +7,6 @@
   margin: 10px 50px;
   margin-top: 60px;
 }
-
-/* Стили модального окна */
-.modal-overlay {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 1000;
-    justify-content: center;
-    align-items: center;
-
-  }
-  
-  .modal-content {
-    background-color: white;
-    padding: 0px;
-    border-radius: 5px;
-    width: 80%;
-    min-width: 500px;
-    width: auto;
-    max-width: 700px;
-    position: relative;
-    border-radius: var(--border-radius);
-
-    display: flex;
-    flex-direction: column;
-    padding-bottom: 20px;
-  }
-
-  .close-modal {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    font-size: 20px;
-    cursor: pointer;
-    background-color: var(--primary-color);
-    color: #ffffff;
-    border: none;
-  }
-
-  .modal-head {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    margin: 0px;
-    padding: 15px;
-    font-size: 20px;
-    color: #ffffff;
-    background-color: var(--primary-color);
-    border-top-right-radius: var(--border-radius);
-    border-top-left-radius: var(--border-radius);
-  }
 
   .students-form {
     display: flex;
@@ -137,17 +80,17 @@
   box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15);
 }
 
-.students-result {
+.students-result, .texts-result {
   display: flex;
   flex-direction: column;
   gap: 0px;
   width: 100%;
-  margin-top: 20px;
+  margin: 40px 0px;
   border-radius: var(--border-radius);
   box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15);
 }
 
-.students-result > .student-card:last-child {
+.students-result > .student-card:last-child, .texts-result > .student-card:last-child {
   border-bottom-left-radius: var(--border-radius);
   border-bottom-right-radius: var(--border-radius);
 }
@@ -160,6 +103,10 @@
   padding: 15px;
   border-top-right-radius: var(--border-radius);
   border-top-left-radius: var(--border-radius);
+}
+
+.header-card * {
+  font-weight: 600;
 }
 
 .student-card {
@@ -200,7 +147,7 @@
 .student-name a {
   color: #0d6efd;
   text-decoration: none;
-  font-weight: 500;
+  font-weight: 400;
 }
 
 .student-name a:hover {
@@ -211,4 +158,41 @@
   padding: 20px;
   text-align: center;
   color: #6c757d;
+}
+
+.text-type, .text-date, .text-errors {
+  flex: 1;
+  text-align: left;
+}
+
+.text-name {
+  flex: 2;
+  text-align: left;
+}
+
+.text-check, .text-grade {
+  flex: 1;
+  text-align: center;
+}
+
+.new-text-button button {
+  width: 200px;
+  background-color: var(--primary-color);
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: var(--border-radius);
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center; 
+}
+
+.new-text-button button:hover {
+  background-color: var(--secondary-color);
+}
+
+.new-text-button button svg {
+  margin-right: 8px; 
 }
