@@ -135,8 +135,9 @@ class Group(models.Model):
     class Meta:
         db_table = 'tblgroup'
 
+    
     def __str__(self):
-        return self.groupname
+        return f"{self.groupname} ({self.idayear})"
 
 class PosTag(models.Model):
     idpostag = models.AutoField(primary_key=True)

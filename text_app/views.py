@@ -425,109 +425,208 @@ def show_texts(request):
     }
     return render(request, "show_texts.html", context)
 
-
 def teacher_load_text(request):
-    if has_teacher_rights(request):
-        if (
-            request.headers.get("x-requested-with") == "XMLHttpRequest"
-            and "group_id" in request.GET
-        ):
-            group_id = request.GET.get("group_id")
-            students = Student.objects.filter(idgroup=group_id).select_related("iduser")
-            students_data = [
-                {"id": s.idstudent, "name": f"{s.iduser.firstname} {s.iduser.lastname}"}
-                for s in students
-            ]
+    if (
+        request.headers.get("x-requested-with") == "XMLHttpRequest"
+        and "group_id" in request.GET
+    ):
+        group_id = request.GET.get("group_id")
+        students = Student.objects.filter(idgroup=group_id).select_related("iduser")
+        students_data = [
+            {"id": s.idstudent, "name": f"{s.iduser.firstname} {s.iduser.lastname}"}
+            for s in students
+        ]
 
-            try:
-                group = Group.objects.get(idgroup=group_id)
-                course = group.studycourse
-            except Group.DoesNotExist:
-                course = None
+        try:
+            group = Group.objects.get(idgroup=group_id)
+            course = group.studycourse
+        except Group.DoesNotExist:
+            course = None
 
-            return JsonResponse({"students": students_data, "course": course})
+        return JsonResponse({"students": students_data, "course": course})
 
-        if request.method == "POST":
-            form = TeacherLoadTextForm(request.POST)
-            if form.is_valid():
-                text_obj = form.save(commit=False)
+    if request.method == "POST":
+        form = TeacherLoadTextForm(request.POST)
+        if form.is_valid():
+            text_obj = form.save(commit=False)
 
-                selected_student_id = request.POST.get("student")
-                group_id = request.POST.get("group")
+            selected_student_id = request.POST.get("student")
+            group_id = request.POST.get("group")
 
-                if not selected_student_id:
-                    form.add_error("student", "Не выбран студент")
-                    return render(request, "teacher_load_text.html", {"form": form})
+            if not selected_student_id:
+                form.add_error("student", "Не выбран студент")
+                return render(request, "teacher_load_text.html", {"form": form})
 
-                text_obj.idstudent = get_object_or_404(
-                    Student, idstudent=selected_student_id
-                )
+            text_obj.idstudent = get_object_or_404(
+                Student, idstudent=selected_student_id
+            )
 
-                default_teacher, created = User.objects.get_or_create(
-                    login="teacher_default"
-                )
-                text_obj.iduserteacher = default_teacher
+            default_teacher, created = User.objects.get_or_create(
+                login="teacher_default"
+            )
+            text_obj.iduserteacher = default_teacher
 
-                if group_id:
-                    try:
-                        group = Group.objects.get(idgroup=group_id)
-                        text_obj.educationlevel = group.studycourse
-                    except Group.DoesNotExist:
-                        pass
+            if group_id:
+                try:
+                    group = Group.objects.get(idgroup=group_id)
+                    text_obj.educationlevel = group.studycourse
+                except Group.DoesNotExist:
+                    pass
 
-                text_obj.save()
+            text_obj.save()
 
-                print(
-                    f"Текст успешно сохранен для студента {text_obj.idstudent.idstudent}, "
-                    f"с ID текста: {text_obj.idtext}. Текст: {text_obj.text[:100]}..."
-                )
+            print(
+                f"Текст успешно сохранен для студента {text_obj.idstudent.idstudent}, "
+                f"с ID текста: {text_obj.idtext}. Текст: {text_obj.text[:100]}..."
+            )
 
-                sentences = sent_tokenize(text_obj.text, language="german")
+            sentences = sent_tokenize(text_obj.text, language="german")
 
-                print(
-                    f"Начинаем токенизацию текста. Количество предложений: {len(sentences)}"
-                )
+            print(
+                f"Начинаем токенизацию текста. Количество предложений: {len(sentences)}"
+            )
 
-                for order, sentence_text in enumerate(sentences, start=0):
-                    if sentence_text.strip():
-                        sentence_obj = Sentence.objects.create(
-                            sentensetext=sentence_text,
-                            ordernumber=order,
-                            idtext=text_obj,
+            for order, sentence_text in enumerate(sentences, start=0):
+                if sentence_text.strip():
+                    sentence_obj = Sentence.objects.create(
+                        sentensetext=sentence_text,
+                        ordernumber=order,
+                        idtext=text_obj,
+                    )
+                    print(f"Добавлено предложение {order}: {sentence_text}")
+
+                    tokens = word_tokenize(sentence_text, language="german")
+                    print(
+                        f"Токенизируем предложение {order}, количество слов: {len(tokens)}"
+                    )
+
+                    for t_order, token_text in enumerate(tokens, start=1):
+                        Token.objects.create(
+                            tokentext=token_text,
+                            tokenordernumber=t_order,
+                            idsentence=sentence_obj,
                         )
-                        print(f"Добавлено предложение {order}: {sentence_text}")
+                        print(f"Добавлен токен {t_order}: {token_text}")
 
-                        tokens = word_tokenize(sentence_text, language="german")
-                        print(
-                            f"Токенизируем предложение {order}, количество слов: {len(tokens)}"
-                        )
+            print(
+                f"Токенизация завершена для текста с ID {text_obj.idtext}. "
+                f"Всего предложений: {len(sentences)}, слов: {sum(len(word_tokenize(s, language='german')) for s in sentences)}."
+            )
 
-                        for t_order, token_text in enumerate(tokens, start=1):
-                            Token.objects.create(
-                                tokentext=token_text,
-                                tokenordernumber=t_order,
-                                idsentence=sentence_obj,
-                            )
-                            print(f"Добавлен токен {t_order}: {token_text}")
-
-                print(
-                    f"Токенизация завершена для текста с ID {text_obj.idtext}. "
-                    f"Всего предложений: {len(sentences)}, слов: {sum(len(word_tokenize(s, language='german')) for s in sentences)}."
-                )
-
-                return redirect("show_texts")
-            else:
-                print(f"Форма невалидна. Ошибки: {form.errors}")
+            return redirect("show_texts")
         else:
-            form = TeacherLoadTextForm()
-
-        return render(
-            request,
-            "teacher_load_text.html",
-            {"form": form, "fio": get_teacher_fio(request)},
-        )
+            print(f"Форма невалидна. Ошибки: {form.errors}")
     else:
-        return redirect("/text/show_texts")
+        form = TeacherLoadTextForm()
+
+    return render(
+        request,
+        "teacher_load_text.html",
+        {"form": form, "fio": get_teacher_fio(request)},
+    )
+
+# def teacher_load_text(request):
+#     if has_teacher_rights(request):
+#         if (
+#             request.headers.get("x-requested-with") == "XMLHttpRequest"
+#             and "group_id" in request.GET
+#         ):
+#             group_id = request.GET.get("group_id")
+#             students = Student.objects.filter(idgroup=group_id).select_related("iduser")
+#             students_data = [
+#                 {"id": s.idstudent, "name": f"{s.iduser.firstname} {s.iduser.lastname}"}
+#                 for s in students
+#             ]
+
+#             try:
+#                 group = Group.objects.get(idgroup=group_id)
+#                 course = group.studycourse
+#             except Group.DoesNotExist:
+#                 course = None
+
+#             return JsonResponse({"students": students_data, "course": course})
+
+#         if request.method == "POST":
+#             form = TeacherLoadTextForm(request.POST)
+#             if form.is_valid():
+#                 text_obj = form.save(commit=False)
+
+#                 selected_student_id = request.POST.get("student")
+#                 group_id = request.POST.get("group")
+
+#                 if not selected_student_id:
+#                     form.add_error("student", "Не выбран студент")
+#                     return render(request, "teacher_load_text.html", {"form": form})
+
+#                 text_obj.idstudent = get_object_or_404(
+#                     Student, idstudent=selected_student_id
+#                 )
+
+#                 default_teacher, created = User.objects.get_or_create(
+#                     login="teacher_default"
+#                 )
+#                 text_obj.iduserteacher = default_teacher
+
+#                 if group_id:
+#                     try:
+#                         group = Group.objects.get(idgroup=group_id)
+#                         text_obj.educationlevel = group.studycourse
+#                     except Group.DoesNotExist:
+#                         pass
+
+#                 text_obj.save()
+
+#                 print(
+#                     f"Текст успешно сохранен для студента {text_obj.idstudent.idstudent}, "
+#                     f"с ID текста: {text_obj.idtext}. Текст: {text_obj.text[:100]}..."
+#                 )
+
+#                 sentences = sent_tokenize(text_obj.text, language="german")
+
+#                 print(
+#                     f"Начинаем токенизацию текста. Количество предложений: {len(sentences)}"
+#                 )
+
+#                 for order, sentence_text in enumerate(sentences, start=0):
+#                     if sentence_text.strip():
+#                         sentence_obj = Sentence.objects.create(
+#                             sentensetext=sentence_text,
+#                             ordernumber=order,
+#                             idtext=text_obj,
+#                         )
+#                         print(f"Добавлено предложение {order}: {sentence_text}")
+
+#                         tokens = word_tokenize(sentence_text, language="german")
+#                         print(
+#                             f"Токенизируем предложение {order}, количество слов: {len(tokens)}"
+#                         )
+
+#                         for t_order, token_text in enumerate(tokens, start=1):
+#                             Token.objects.create(
+#                                 tokentext=token_text,
+#                                 tokenordernumber=t_order,
+#                                 idsentence=sentence_obj,
+#                             )
+#                             print(f"Добавлен токен {t_order}: {token_text}")
+
+#                 print(
+#                     f"Токенизация завершена для текста с ID {text_obj.idtext}. "
+#                     f"Всего предложений: {len(sentences)}, слов: {sum(len(word_tokenize(s, language='german')) for s in sentences)}."
+#                 )
+
+#                 return redirect("show_texts")
+#             else:
+#                 print(f"Форма невалидна. Ошибки: {form.errors}")
+#         else:
+#             form = TeacherLoadTextForm()
+
+#         return render(
+#             request,
+#             "teacher_load_text.html",
+#             {"form": form, "fio": get_teacher_fio(request)},
+#         )
+#     else:
+#         return redirect("/text/show_texts")
 
 
 def home_view(request):
