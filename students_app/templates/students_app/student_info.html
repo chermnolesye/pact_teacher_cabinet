@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Студенты</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/base.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/students.css' %}" />
+</head>
+<body>
+    <div id="header-container"></div>
+    <div class="students-container">
+        <h2 class="highlighted-header">
+            Список студентов
+        </h2>
+
+        <form class="students-form">
+
+
+
+            <button class="button">Найти</button>
+        </form>
+
+        <div class="students-result">
+
+        </div>
+
+        <div id="add-student-modal" class="modal-overlay">
+            <div class="modal-content">
+                <div class="modal-head">
+                    <p>Добавить студента</p>
+                    <button class="close-modal" id="close-modal">
+                        <svg width="30" height="30" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M27.101 17.0606L17.0606 27.101M17.0606 17.0606L27.101 27.101M12.0404 4.68683C15.0917 2.92153 18.5556 1.99459 22.0808 2.00002C33.1714 2.00002 42.1616 10.9902 42.1616 22.0808C42.1616 33.1714 33.1714 42.1616 22.0808 42.1616C10.9902 42.1616 2 33.1714 2 22.0808C2 18.4241 2.97794 14.9923 4.68681 12.0404" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+                        </svg>
+                    </button>
+                </div>
+
+                <p>
+                    Вы уверены, что хотите удалить студента ______, из группы ____?
+                </p>
+                <div>
+                    <button class="button" type="submit">Да</button>
+                    <button class="button">Нет</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="edit-student-modal" class="modal-overlay">
+            <div class="modal-content">
+                <div class="modal-head">
+                    <p>Редактировать профиль студента</p>
+                    <button class="close-modal" id="close-modal">
+                        <svg width="30" height="30" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M27.101 17.0606L17.0606 27.101M17.0606 17.0606L27.101 27.101M12.0404 4.68683C15.0917 2.92153 18.5556 1.99459 22.0808 2.00002C33.1714 2.00002 42.1616 10.9902 42.1616 22.0808C42.1616 33.1714 33.1714 42.1616 22.0808 42.1616C10.9902 42.1616 2 33.1714 2 22.0808C2 18.4241 2.97794 14.9923 4.68681 12.0404" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="delete-student-modal" class="modal-overlay">
+            <div class="modal-content">
+                <div class="modal-head">
+                    <p>Подтвердите действие</p>
+                    <button class="close-modal" id="close-modal">
+                        <svg width="30" height="30" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M27.101 17.0606L17.0606 27.101M17.0606 17.0606L27.101 27.101M12.0404 4.68683C15.0917 2.92153 18.5556 1.99459 22.0808 2.00002C33.1714 2.00002 42.1616 10.9902 42.1616 22.0808C42.1616 33.1714 33.1714 42.1616 22.0808 42.1616C10.9902 42.1616 2 33.1714 2 22.0808C2 18.4241 2.97794 14.9923 4.68681 12.0404" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+                        </svg>
+                    </button>
+                </div>
+
+                <p>
+                    Вы уверены, что хотите удалить студента ______, из группы ____?
+                </p>
+                <div>
+                    <button class="button" type="submit">Да</button>
+                    <button class="button">Нет</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script> 
+    
+        document.addEventListener('DOMContentLoaded', function() {
+        fetch('/static/templates/base.html')
+            .then(response => response.text()) 
+            .then(data => {
+            document.getElementById('header-container').innerHTML = data;
+            let user_fio = "{{ fio|escapejs }}"; 
+            document.getElementById('user-link').textContent = user_fio;
+            });
+            
+        });
+
+    </script>
+</body>
+</html>
