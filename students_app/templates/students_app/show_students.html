@@ -56,3 +56,85 @@
     </script>
 </body>
 </html>
+
+
+<!-- <!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Студенты</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/base.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/students.css' %}" />
+</head>
+<body>
+    <div id="header-container"></div>
+    <div class="students-container">
+        <h2 class="highlighted-header">
+            Список студентов
+        </h2>
+
+        <form method="get" id="text-search-form">
+            <div class="search-bar">
+                <input type="text" name="q" placeholder="Поиск студента" value="{{ query }}">
+                
+                <select name="group" onchange="this.form.submit()">
+                    <option value="">Все группы</option>
+                    {% for group in groups %}
+                        <option value="{{ group.idgroup }}" {% if group_id|add:'' == group.idgroup|stringformat:"s" %}selected{% endif %}>
+                            {{ group.groupname }}
+                        </option>
+                    {% endfor %}
+                </select>
+
+                <button type="submit" name="search" class="search">
+                    <svg width="20" height="20" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M50.9583 50.9583L61.1666 61.1666M16.6875 6.53745C22.5094 3.17781 29.3541 2.04905 35.9465 3.36146C42.5389 4.67386 48.4294 8.33792 52.5208 13.6711C56.6122 19.0043 58.6254 25.6429 58.1854 32.3502C57.7455 39.0576 54.8823 45.3763 50.1293 50.1293C45.3763 54.8823 39.0576 57.7455 32.3502 58.1854C25.6429 58.6254 19.0043 56.6122 13.6711 52.5208C8.33792 48.4294 4.67386 42.5389 3.36146 35.9465C2.04905 29.3541 3.17781 22.5094 6.53745 16.6875" stroke="#FFFDFD" stroke-width="4" stroke-linecap="round"/>
+                    </svg>
+                </button>
+            </div>
+        </form>
+        
+        <div class="students-result">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>ФИО</th>
+                        <th>Логин</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for student in students %}
+                        <tr>
+                            <td>{{ student.idstudent }}</td>
+                            <td>
+                                {{ student.iduser.lastname }} {{ student.iduser.firstname }}
+                                {% if student.iduser.middlename %}
+                                    {{ student.iduser.middlename }}
+                                {% endif %}
+                            </td>
+                            <td>{{ student.iduser.login }}</td>
+                        </tr>
+                    {% empty %}
+                        <tr><td colspan="3">Студенты не найдены</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('/static/templates/base.html')
+                .then(response => response.text()) 
+                .then(data => {
+                    document.getElementById('header-container').innerHTML = data;
+                    let user_fio = "{{ fio|escapejs }}"; 
+                    document.getElementById('user-link').textContent = user_fio;
+                });
+        });
+    </script>
+</body>
+</html> -->

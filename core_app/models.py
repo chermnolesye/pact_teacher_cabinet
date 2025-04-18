@@ -265,10 +265,10 @@ class TextType(models.Model):
 
 class Token(models.Model):
     idtoken = models.AutoField(primary_key=True)
-    tokentext = models.TextField()  # longtext соответствует TextField
+    tokentext = models.TextField()  
     tokenordernumber = models.IntegerField()
-    idsentence = models.ForeignKey(Sentence, on_delete=models.CASCADE, related_name='tokens', db_column='idsentence')  # Используем существующую колонку
-    idpostag = models.ForeignKey(PosTag, on_delete=models.CASCADE, null=True, blank=True, db_column='idpostag')  # Используем существующую колонку
+    idsentence = models.ForeignKey(Sentence, on_delete=models.CASCADE, related_name='tokens', db_column='idsentence')  
+    idpostag = models.ForeignKey(PosTag, on_delete=models.CASCADE, null=True, blank=True, db_column='idpostag')  
 
     class Meta:
         db_table = 'tbltoken'
