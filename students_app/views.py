@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
-from django.db.models import Count, Q
+from django.db.models import Count, Q, F
 from core_app.models import (
     Student,
     Error,
@@ -49,14 +49,22 @@ def student_info(request, student_id):
     student = get_object_or_404(Student.objects.select_related('iduser'), pk=student_id)
 
     texts = Text.objects.filter(idstudent=student).annotate(
-        error_count=Count('sentence__tokens__errortoken__iderror', distinct=True) 
-    ).select_related('idtexttype')
+        error_count=Count('sentence__tokens__errortoken__iderror', distinct=True),
+        errorcheckflag=F('errorcheckflag'),
+        textgrade=F('textgrade'),
+        createdate=F('createdate'),
+        text_type=F('idtexttype__texttypename')
+    )
 
     if query:
         texts = texts.filter(textname__icontains=query)
 
+    full_name = student.get_full_name() 
     context = {
-        'student': student,
+        'student': {
+            'id': student.idstudent,
+            'full_name': full_name,
+        },
         'texts': texts,
         'query': query,
     }

@@ -184,6 +184,9 @@ class Student(models.Model):
 
     def __str__(self):
         return f"Student {self.idstudent}"
+    
+    def get_full_name(self):
+        return f"{self.iduser.lastname} {self.iduser.firstname} {self.iduser.middlename or ''}".strip()
 
 class Text(models.Model):
     YEARS = (
