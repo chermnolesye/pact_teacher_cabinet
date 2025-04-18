@@ -58,10 +58,12 @@
                 <div class="student-name">
                     
                     <p>
-                        {{ student.iduser.lastname }} {{ student.iduser.firstname }}
-                        {% if student.iduser.middlename %}
-                            {{ student.iduser.middlename }}
-                        {% endif %}
+                        <a href="{% url 'student_info' student.idstudent %}">
+                            {{ student.iduser.lastname }} {{ student.iduser.firstname }}
+                            {% if student.iduser.middlename %}
+                                {{ student.iduser.middlename }}
+                            {% endif %}
+                        </a>
                     </p>
                 </div>
                 <div class="student-login">{{ student.iduser.login }}</div>

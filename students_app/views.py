@@ -13,8 +13,8 @@ from core_app.models import (
 )
 
 def show_students(request):
-    query = request.GET.get('q', '').strip()
-    group_id = request.GET.get('group', '').strip()
+    query = request.GET.get('q', '').strip() 
+    group_id = request.GET.get('group', '').strip()  
 
     students = Student.objects.select_related('iduser', 'idgroup')
 
@@ -31,7 +31,6 @@ def show_students(request):
         ) | students.filter(
             iduser__login__icontains=query
         )
-
     groups = Group.objects.all()
 
     context = {
@@ -40,7 +39,9 @@ def show_students(request):
         'group_id': group_id,
         'groups': groups,
     }
+    
     return render(request, "show_students.html", context)
+
 
 def student_info(request, student_id):
     query = request.GET.get('q', '').strip()
@@ -48,7 +49,7 @@ def student_info(request, student_id):
     student = get_object_or_404(Student.objects.select_related('iduser'), pk=student_id)
 
     texts = Text.objects.filter(idstudent=student).annotate(
-        error_count=Count('tblsentence__tokens__errortoken__iderror', distinct=True)
+        error_count=Count('sentence__tokens__errortoken__iderror', distinct=True) 
     ).select_related('idtexttype')
 
     if query:
