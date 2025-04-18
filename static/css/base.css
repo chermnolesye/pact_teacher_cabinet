@@ -79,9 +79,10 @@ h2 {
 	margin: 5px;
 	border: none;
 	cursor: pointer;
-	min-height: 35px;
+	min-height: 40px;
     font-size: 16px;
     font-weight: 600;
+    min-width: 70px;
 }
 
 .red-button {
@@ -96,20 +97,11 @@ h2 {
 	background-color: var(--red-secondary-color);
 }
 
-.button-grey {
-    border-radius: var(--border-radius);
-	color: #ffffff;
+.grey-button {
     background-color: var(--grey-color);
-    padding: 5px 15px;
-	margin: 5px;
-	border: none;
-	cursor: pointer;
-	min-height: 35px;
-    font-size: 16px;
-    font-weight: 600;
 }
 
-.button-grey:hover {
+.grey-button:hover {
 	background-color: var(--secondary-grey-color);
 }
 

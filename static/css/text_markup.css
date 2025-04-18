@@ -214,6 +214,17 @@ form {
     overflow: hidden;
     color: var(--primary-color);
   }
+
+  .menu-block:hover {
+    color: #ffffff;
+    background-color: var(--primary-color);
+    transition: stroke 0.6s ease;
+  }
+
+  .menu-block:hover svg path {
+    stroke: #ffffff;
+    transition: stroke 0.3s ease;
+}
   
   .menu-content {
     display: none;
@@ -369,6 +380,19 @@ form {
   #grade-form {
     display: flex;
     flex-direction: column;
+    align-items: center;
+  }
+
+  .grade-buttons .button {
+    flex: 1;
+    max-width: 200px;
+    min-width: 150px;
+    padding: 10px;
+    text-align: center;
+}
+  .grade-form-selects {
+    display: flex;
+    flex-direction: column;
     align-items: flex-start;
     margin: 10px;
   }
@@ -389,8 +413,9 @@ form {
     width: 100%;
     display: flex;
     flex-direction: row;
-    justify-content: space-evenly; 
-    margin: 0px 20px;
+    margin: 5px 0px;
+    justify-content: center; 
+    gap: 30px;
   }
 
   /* Общие стили для группы опций */
@@ -574,7 +599,7 @@ input:checked + .slider:before {
     display: flex;
     flex-direction: column;
     /* color: #6C757D; */
-    padding: 20px;
+    padding: 5px;
     justify-content: center;
 }
 

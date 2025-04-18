@@ -29,40 +29,40 @@
             <div class="menu-block" data-target="view-content">
                 <span>
                     Вид
-                    <svg width="16" height="12" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M13.5753 2L7.70808 10.5L1.84082 2" stroke="#6C757D" stroke-width="3" stroke-linecap="round"/>
-                    </svg>       
+                    <svg width="10" height="10" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M13.5753 2L7.70808 10.5L1.84082 2" stroke="#0d6efd" stroke-width="3" stroke-linecap="round"/>
+                    </svg>         
                 </span>
             </div>
             <div class="menu-block" data-target="text-content">
                 <span>
                     Текст
-                    <svg width="16" height="12" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M13.5753 2L7.70808 10.5L1.84082 2" stroke="#6C757D" stroke-width="3" stroke-linecap="round"/>
-                    </svg>                        
+                    <svg width="10" height="10" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M13.5753 2L7.70808 10.5L1.84082 2" stroke="#0d6efd" stroke-width="3" stroke-linecap="round"/>
+                    </svg>                         
                 </span>
             </div>
             <div class="menu-block" data-target="author-content">
                 <span>
                     Автор
-                    <svg width="16" height="12" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M13.5753 2L7.70808 10.5L1.84082 2" stroke="#6C757D" stroke-width="3" stroke-linecap="round"/>
-                    </svg>    
+                    <svg width="10" height="10" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M13.5753 2L7.70808 10.5L1.84082 2" stroke="#0d6efd" stroke-width="3" stroke-linecap="round"/>
+                    </svg>      
                 </span>
             </div>
             <div class="menu-block" data-target="grade-content">
                 <span>
                     Оценка
-                    <svg width="16" height="12" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M13.5753 2L7.70808 10.5L1.84082 2" stroke="#6C757D" stroke-width="3" stroke-linecap="round"/>
-                    </svg>    
+                    <svg width="10" height="10" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M13.5753 2L7.70808 10.5L1.84082 2" stroke="#0d6efd" stroke-width="3" stroke-linecap="round"/>
+                    </svg>     
                 </span>
             </div>
             <div class="menu-block" data-target="metadata-content">
                 <span>
                     Метаданные
-                    <svg width="16" height="12" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M13.5753 2L7.70808 10.5L1.84082 2" stroke="#6C757D" stroke-width="3" stroke-linecap="round"/>
+                    <svg width="10" height="10" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M13.5753 2L7.70808 10.5L1.84082 2" stroke="#0d6efd" stroke-width="3" stroke-linecap="round"/>
                     </svg>    
                 </span>
             </div>
@@ -109,7 +109,7 @@
                     <div class="option-group">
                         <p>Ошибки</p>
                         <label class="switch">
-                            <input type="checkbox">
+                            <input type="checkbox" checked>
                             <span class="slider"></span>
                         </label>
                     </div>
@@ -288,41 +288,42 @@
 
                 <form method="post" id="grade-form">
                     {% csrf_token %}
-                    
-                    <div class="grade-group">
-                            {{ grade_form.textgrade.label_tag }}
-                            {{ grade_form.textgrade }}
-                    </div>
+                    <div class="grade-form-selects">
+                        <div class="grade-group">
+                                {{ grade_form.textgrade.label_tag }}
+                                {{ grade_form.textgrade }}
+                        </div>
 
-                    <div class="horizontal-wrap">
-                            <div class="grade-group">
-                                {{ grade_form.completeness.label_tag }}
-                                {{ grade_form.completeness }}
-                            </div>
-                            <div class="grade-group">
-                                {{ grade_form.structure.label_tag }}
-                                {{ grade_form.structure }}
-                            </div>
-                            <div class="grade-group">
-                                {{ grade_form.coherence.label_tag }}
-                                {{ grade_form.coherence }}
-                            </div>
-                    </div>
+                        <div class="horizontal-wrap">
+                                <div class="grade-group">
+                                    {{ grade_form.completeness.label_tag }}
+                                    {{ grade_form.completeness }}
+                                </div>
+                                <div class="grade-group">
+                                    {{ grade_form.structure.label_tag }}
+                                    {{ grade_form.structure }}
+                                </div>
+                                <div class="grade-group">
+                                    {{ grade_form.coherence.label_tag }}
+                                    {{ grade_form.coherence }}
+                                </div>
+                        </div>
 
-                    <div class="horizontal-wrap">
-                            <div class="grade-group">
-                                {{ grade_form.poscheckflag.label_tag }}
-                                {{ grade_form.poscheckflag }}
-                            </div>
-                            <div class="grade-group">
-                                {{ grade_form.errorcheckflag.label_tag }}
-                                {{ grade_form.errorcheckflag }}
-                            </div>
+                        <div class="horizontal-wrap">
+                                <div class="grade-group">
+                                    {{ grade_form.poscheckflag.label_tag }}
+                                    {{ grade_form.poscheckflag }}
+                                </div>
+                                <div class="grade-group">
+                                    {{ grade_form.errorcheckflag.label_tag }}
+                                    {{ grade_form.errorcheckflag }}
+                                </div>
+                        </div>
                     </div>
 
                     <div class="grade-buttons">
                         <button type="submit" name="grade-form" class="button">Сохранить</button>
-                        <button type="submit" class="button-grey">Назад</button>
+                        <button type="submit" class="button grey-button">Назад</button>
                     </div>        
                 </form>
             </div>
