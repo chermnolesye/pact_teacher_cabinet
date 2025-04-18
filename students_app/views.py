@@ -1,6 +1,11 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
+from django.db.models import Count, Q
 from core_app.models import (
+    Student,
+    Error,
+    ErrorToken,
+    Text,
     Group,
     AcademicYear,
     Student,
@@ -36,3 +41,23 @@ def show_students(request):
         'groups': groups,
     }
     return render(request, "show_students.html", context)
+
+def student_info(request, student_id):
+    query = request.GET.get('q', '').strip()
+
+    student = get_object_or_404(Student.objects.select_related('iduser'), pk=student_id)
+
+    texts = Text.objects.filter(idstudent=student).annotate(
+        error_count=Count('tblsentence__tokens__errortoken__iderror', distinct=True)
+    ).select_related('idtexttype')
+
+    if query:
+        texts = texts.filter(textname__icontains=query)
+
+    context = {
+        'student': student,
+        'texts': texts,
+        'query': query,
+    }
+
+    return render(request, 'student_info.html', context)
