@@ -1,5 +1,13 @@
-.students-container{
-  margin-top:50px;
+
+
+
+.students-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  margin: 10px 50px;
+  margin-top: 60px;
 }
 
 /* Стили модального окна */
@@ -64,45 +72,143 @@
   }
 
   .search-bar {
-    max-width: 600px;
-    margin: 0 auto;
     display: flex;
     align-items: center;
-    border: 1px solid #ccc;
+    background: white;
     border-radius: 8px;
     overflow: hidden;
-  }
+    height: 50px;
+    max-width: 600px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin: 20px 0px;
+}
 
-  .search-bar input {
+.search-bar input,
+.search-bar select {
     flex: 1;
-    padding: 10px;
+    height: 100%;
+    width: 100%;
     border: none;
+    padding: 15px;
     font-size: 16px;
     outline: none;
-  }
-
-  .search-bar button {
-    padding: 10px 15px;
-    border: none;
     background: transparent;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+}
 
-  .search-bar .filter {
-    background-color: transparent;
-    border-left: 1px solid #ccc;
-  }
+.search-bar select {
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230d6efd' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 16px;
+  padding-right: 30px;
+}
 
-  .search-bar button:last-child {
-    background-color: #007bff;
-    color: white;
-    border-left: 1px solid #ccc;
-  }
+.divider {
+  width: 1px;
+  height: 24px;
+  background-color: var(--primary-color);
+}
 
-  .search-bar .filter {
-    background-color: transparent;
-    border-left: 1px solid #ccc;
-  }
+.search-bar button.search {
+  width: 60px;
+  height: 100%;
+  border: none;
+  background: var(--primary-color);
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.search-bar button.search:hover {
+  background: var(--primary-color);
+}
+
+.students-result {
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+  width: 100%;
+  margin-top: 20px;
+  border-radius: var(--border-radius);
+  box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15);
+}
+
+.students-result {
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+  width: 100%;
+  margin-top: 20px;
+  border-radius: var(--border-radius);
+  box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15);
+}
+
+.students-result > .student-card:last-child {
+  border-bottom-left-radius: var(--border-radius);
+  border-bottom-right-radius: var(--border-radius);
+}
+
+.header-card {
+  display: flex;
+  align-items: center;
+  background-color: #f8f9fa;
+  gap: 60px;
+  padding: 15px;
+  border-top-right-radius: var(--border-radius);
+  border-top-left-radius: var(--border-radius);
+}
+
+.student-card {
+  display: flex;
+  /* align-items: center; */
+  gap: 60px;
+  padding: 15px;
+  background-color: white;  
+}
+
+.student-card:hover {
+  display: flex;
+  /* align-items: center; */
+  gap: 60px;
+  padding: 15px;
+  background-color: #f8f9fa;  
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.student-id {
+  width: 60px;
+  color: #6c757d;
+  flex-shrink: 0;
+}
+
+.student-name {
+  flex: 2;
+  text-align: left;
+}
+
+.student-login {
+  flex: 1;
+  text-align: left;
+  margin-left: 0;
+  color: black;
+}
+
+.student-name a {
+  color: #0d6efd;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.student-name a:hover {
+  text-decoration: underline;
+}
+
+.no-results {
+  padding: 20px;
+  text-align: center;
+  color: #6c757d;
+}

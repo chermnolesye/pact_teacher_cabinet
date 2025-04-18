@@ -155,9 +155,10 @@ input:not([type="checkbox"], [type="radio"]) {
     background-color: white;
 }
 
-select:focus,
+/* select:focus,
 textarea:focus,
-input:not([type="checkbox"], [type="radio"]):focus {
+input:not([type="checkbox"], [type="radio"]):focus { */
+:where(select, textarea, input:not([type="checkbox"], [type="radio"])):focus {
     outline: none;
     border-color: var(--secondary-color);
     box-shadow: 0 0 0 3px rgba(81, 151, 255, 0.25);
