@@ -50,16 +50,13 @@ def student_info(request, student_id):
 
     texts = Text.objects.filter(idstudent=student).annotate(
         error_count=Count('sentence__tokens__errortoken__iderror', distinct=True),
-        errorcheckflag=F('errorcheckflag'),
-        textgrade=F('textgrade'),
-        createdate=F('createdate'),
         text_type=F('idtexttype__texttypename')
     )
 
     if query:
-        texts = texts.filter(textname__icontains=query)
+        texts = texts.filter(header__icontains=query)  
 
-    full_name = student.get_full_name() 
+    full_name = student.get_full_name()
     context = {
         'student': {
             'id': student.idstudent,
