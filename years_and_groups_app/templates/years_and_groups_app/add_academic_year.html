@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Студенты</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/base.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/students.css' %}" />
+</head>
+<body>
+    <div id="header-container"></div>
+    
+
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-row">
+            {{ form.title }}
+        </div>
+
+        <div class="form-row">
+            {{ form.title_2 }}
+        </div>
+
+        <button type="submit">Сохранить</button>
+    </form>
+
+    <!-- Это примерно как должно работать для автоматического изменения года окончания, простите, если вы этого не хотели-->
+    <script>
+        const title = document.getElementById('title');
+        const title_2 = document.getElementById('title_2');
+
+        title.addEventListener('input', function() {
+            const titleValue = parseInt(title.value) || 0;
+            title_2.value = "/"+ String(titleValue + 1); 
+        });
+
+        window.addEventListener('load', function() {
+            const titleValue = parseInt(title.value) || 0;
+            title_2.value = String(titleValue + 1); 
+        });
+    </script>
+
+<script> 
+    
+    document.addEventListener('DOMContentLoaded', function() {
+    fetch('/static/templates/base.html')
+        .then(response => response.text()) 
+        .then(data => {
+        document.getElementById('header-container').innerHTML = data;
+        let user_fio = "{{ fio|escapejs }}"; 
+        document.getElementById('user-link').textContent = user_fio;
+        });
+        
+    });
+
+</script>
+
+
+</body>
+</html>

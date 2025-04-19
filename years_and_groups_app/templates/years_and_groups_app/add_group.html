@@ -10,9 +10,14 @@
 </head>
 <body>
     <div id="header-container"></div>
-    <div class="students-container">
-        
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Добавить группу</button>
+    </form>
+    
 
+    <div class="students-container">
         <div id="add-student-modal" class="modal-overlay">
             <div class="modal-content">
                 <div class="modal-head">
