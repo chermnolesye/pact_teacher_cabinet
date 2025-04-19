@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Студенты</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/base.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/students.css' %}" />
+</head>
+<body>
+    <div id="header-container"></div>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Добавить группу</button>
+</form>
+
+<script> 
+    
+    document.addEventListener('DOMContentLoaded', function() {
+    fetch('/static/templates/base.html')
+        .then(response => response.text()) 
+        .then(data => {
+        document.getElementById('header-container').innerHTML = data;
+        let user_fio = "{{ fio|escapejs }}"; 
+        document.getElementById('user-link').textContent = user_fio;
+        });
+        
+    });
+
+</script>
+</body>
+</html>

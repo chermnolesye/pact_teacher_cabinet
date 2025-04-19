@@ -15,8 +15,6 @@ class AddGroupForm(forms.Form):
     title_2 = forms.CharField(initial=f"/ {current_year+1}", label="Учебный год конечный", widget=forms.TextInput(attrs={'id': 'title_2', 'readonly': 'readonly'})) # второе поле для конечного года    
     idayear = forms.ModelChoiceField(label="Id года", required = False, widget=forms.HiddenInput(), queryset=AcademicYear.objects.all()) # для id FK
     
-
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # students = Student.objects.filter(idgroup=47).select_related('iduser')
@@ -85,7 +83,7 @@ class AddAcademicYearForm(forms.Form):
     title_2 = forms.CharField(initial=f"/ {current_year+1}", label="Учебный год конечный", widget=forms.TextInput(attrs={'id': 'title_2', 'readonly': 'readonly'})) # второе поле для конечного года
     
     class Meta:
-        model = Group
+        model = AcademicYear
         fields = ['title']
         
     def clean(self):
@@ -112,7 +110,7 @@ class AddAcademicYearForm(forms.Form):
         return None
     
 
-class EditGroupForm:  #Изменить !!!!
+class EditGroupForm(forms.ModelForm):  
     class Meta:
         model = Group
         fields = ['groupname', 'title', 'studycourse']
@@ -126,17 +124,29 @@ class EditGroupForm:  #Изменить !!!!
     
 
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+class EditAcademicYearForm(forms.ModelForm): 
+    class Meta:
+        model = AcademicYear
+        fields = ['title'] 
 
-
-class EditAcademicYearForm: #Изменить !!!!
     current_year = datetime.datetime.now().year
 
-    title = forms.IntegerField(label="Учебный год", required=True, min_value=current_year, max_value=current_year+1, initial=current_year, widget=forms.NumberInput(attrs={'id': 'title'}))
+    title = forms.IntegerField(label="Учебный год", required=True, min_value=current_year-1, max_value=current_year+1, widget=forms.NumberInput(attrs={'id': 'title'}))
     title_2 = forms.CharField(initial=f"/ {current_year+1}", label="Учебный год конечный", widget=forms.TextInput(attrs={'id': 'title_2', 'readonly': 'readonly'})) # второе поле для конечного года
-    
-    class Meta:
-        model = Group
-        fields = ['title']
-        
+
+    def clean_title(self):
+      title = self.cleaned_data['title']
+      instance_id = self.instance.pk if self.instance else None
+
+      if AcademicYear.objects.exclude(pk=instance_id).filter(title=f"{title}/{title+1}").exists():
+          raise forms.ValidationError(f"Учебный год {title}/{title+1} уже существует.")
+
+      return title
+
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        title = self.cleaned_data['title']
+        instance.title = f"{title}/{int(title)+1}"
+        if commit:
+            instance.save()
+        return instance
