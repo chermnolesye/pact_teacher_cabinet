@@ -110,3 +110,33 @@ class AddAcademicYearForm(forms.Form):
             
             return ac
         return None
+    
+
+class EditGroupForm:  #Изменить !!!!
+    class Meta:
+        model = Group
+        fields = ['groupname', 'title', 'studycourse']
+        
+    groupname = forms.CharField(label="Название группы", required=True)
+    studycourse = forms.IntegerField(label="Курс обучения", required = True, widget=forms.NumberInput(attrs={'id': 'studycourse'}), min_value=1, max_value=4)
+    current_year = datetime.datetime.now().year
+    title = forms.IntegerField(label="Учебный год", required=True, min_value=current_year, max_value=current_year+1, initial=current_year, widget=forms.NumberInput(attrs={'id': 'title'}))
+    title_2 = forms.CharField(initial=f"/ {current_year+1}", label="Учебный год конечный", widget=forms.TextInput(attrs={'id': 'title_2', 'readonly': 'readonly'})) # второе поле для конечного года    
+    idayear = forms.ModelChoiceField(label="Id года", required = False, widget=forms.HiddenInput(), queryset=AcademicYear.objects.all()) # для id FK
+    
+
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+
+class EditAcademicYearForm: #Изменить !!!!
+    current_year = datetime.datetime.now().year
+
+    title = forms.IntegerField(label="Учебный год", required=True, min_value=current_year, max_value=current_year+1, initial=current_year, widget=forms.NumberInput(attrs={'id': 'title'}))
+    title_2 = forms.CharField(initial=f"/ {current_year+1}", label="Учебный год конечный", widget=forms.TextInput(attrs={'id': 'title_2', 'readonly': 'readonly'})) # второе поле для конечного года
+    
+    class Meta:
+        model = Group
+        fields = ['title']
+        

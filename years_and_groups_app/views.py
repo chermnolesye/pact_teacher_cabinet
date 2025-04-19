@@ -1,4 +1,5 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect , get_object_or_404
+from django.contrib import messages
 from django.http import JsonResponse
 from core_app.models import (
     Group,
@@ -6,7 +7,7 @@ from core_app.models import (
     Student,
     User,
 )
-from .forms import AddGroupForm, AddAcademicYearForm
+from .forms import AddGroupForm, AddAcademicYearForm, EditGroupForm, EditAcademicYearForm
 from django.forms import formset_factory
 
 
@@ -21,7 +22,7 @@ def add_academic_year(request):
         form = AddAcademicYearForm()
     return render(request, "add_academic_year.html", {'form': form})
 
-def add_group(request):
+def add_group(request): #Изменить разобраться со студентами
     if request.method == "POST":
         form = AddGroupForm(request.POST)
         if form.is_valid():
@@ -36,4 +37,52 @@ def add_group(request):
         form = AddGroupForm()
         students_without_group = Student.objects.filter(idgroup__isnull=True)
     return render(request, "add_group.html", {'form': form, 'students_without_group':students_without_group})
+
+def edit_group(request):
+    if request.method == "POST":
+        form = EditGroupForm(request.POST)
+        if form.is_valid():
+            group = form.save()
+        return redirect('/years_groups/edit_group') #изменить !!!!!
+    else:
+        form = EditGroupForm()
+    return render(request, "edit_group.html", {'form': form}) #изменить !!!!!
+
+
+def delete_group(request, group_id):  #Изменить !!!!!
+    try:
+        group = get_object_or_404(Group, pk=group_id)
+        
+        group.delete()
+        return redirect('/years_groups/add_group') #Изменить !!!!
+        
+    except Exception as e:
+        messages.error(request, f"Произошла ошибка при удалении группы: {str(e)}")
+        return redirect('/years_groups/add_group')
+
+
+def edit_academic_year(request):
+    if request.method == "POST":
+        form = EditAcademicYearForm(request.POST)
+        if form.is_valid():
+            group = form.save()
+        else:
+            return render(request, 'delete_group.html', {'group': group})
+        return redirect('/years_groups/edit_group') #изменить !!!!!
+    else:
+        form = EditAcademicYearForm()
+    return render(request, "edit_group.html", {'form': form}) #изменить !!!!!
+
+def delete_academic_year(request, academic_year_id):
+    try:
+        academic_year = get_object_or_404(AcademicYear, pk=academic_year_id)
+        
+        academic_year.delete()
+        return redirect('/years_groups/add_academic_year') #Изменить !!!!
+        
+    except Exception as e:
+        messages.error(request, f"Произошла ошибка при удалении учебного года: {str(e)}")
+        return redirect('/years_groups/add_academic_year')
+
+
 
