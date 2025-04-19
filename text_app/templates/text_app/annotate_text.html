@@ -611,9 +611,12 @@
     
             // Слушаем клик по токенам
             document.querySelectorAll('.error-tag').forEach(function(errorTagElement) {
-                errorTagElement.addEventListener('click', function(e) {
+                errorTagElement.addEventListener('mouseover', function(e) {
                     e.stopPropagation(); // Чтобы не всплывало до .token
                     showPopup(this);     
+                });
+                errorTagElement.addEventListener('click', function (e) {
+                    document.getElementById('annotation-modal').style.display = 'flex';
                 });
             });
 
@@ -654,8 +657,9 @@
                 newToken.className = 'token';
 
                 var innerSpan = document.createElement('span');
-                innerSpan.innerHTML = " ";
+                innerSpan.innerHTML = "Пропущенное слово";
                 innerSpan.className = 'word';
+                innerSpan.classList.add('empty-token');
                 innerSpan.addEventListener('click', () => {
                     ClickOnWord(innerSpan);
                 });
@@ -674,6 +678,7 @@
                 iconSvg.setAttribute('viewBox', '0 0 54 54');
                 iconSvg.setAttribute('stroke', 'black');
                 iconSvg.classList.add('clickable-icon');
+                iconSvg.classList.add('empty-token');
                 iconPath.setAttribute(
                     'd',
                     'M34.5 27H27M27 27H19.5M27 27V19.5M27 27V34.5M14.5 5.34503C18.2988 3.14728 22.6113 1.99327 27 2.00003C40.8075 2.00003 52 13.1925 52 27C52 40.8075 40.8075 52 27 52C13.1925 52 2 40.8075 2 27C2 22.4475 3.2175 18.175 5.345 14.5'
@@ -683,7 +688,7 @@
                 iconPath.setAttribute('stroke-width', '4');
 
                 iconSvg.addEventListener('click', () => {
-                    ClickOnEmpty(icon);
+                    ClickOnEmpty(iconSvg);
                 });
 
                 iconSvg.appendChild(iconPath);
@@ -711,13 +716,22 @@
 
             // Удаление пустых токенов
             document.getElementById('button-delete-tokens').addEventListener('click', () => {
-                chosen.forEach(token => {
-                    if (!token.textContent.trim()) {
+                chosen.forEach(word => {
+                    word.classList.remove('chosen_token');
+                    if (word.classList.contains('empty-token')) {
+                        let token = word.parentElement;
+                        var nextSibling = token.nextSibling;
+                        while (nextSibling && nextSibling.nodeType != 1) {
+                            nextSibling = nextSibling.nextSibling
+                        }
+                        if (nextSibling.classList.contains('empty-token')) {
+                            nextSibling.remove();
+                        }
                         token.remove();
                     }
                 });
 
-                chosen = [];
+                chosen.splice(0, chosen.length);
 
                 var menu = document.getElementById('select-menu');
                 menu.classList.add('hide');

@@ -11,7 +11,7 @@
 } */
 
 .text-header {
-    width: 100%;
+    width: calc(100%-10px);
     box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
     background-color: #ffffff;
     margin: 0px 10px;
@@ -188,10 +188,9 @@ form {
 /* МЕНЮ ТЕКСТА */
 
 .menu-container {
-    width: 100%;
+    width: calc(100%-10px);
     box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
     background-color: #ffffff;
-
     display: flex;
     flex-direction: row;
     align-items: stretch;
@@ -200,7 +199,7 @@ form {
     position: sticky;
     top: 0px;
     z-index: 1000;
-  }
+}
 
   .menu-block {
     position: relative;
