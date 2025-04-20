@@ -265,7 +265,10 @@ a {
     box-shadow: 0 5px 5px rgba(0, 0, 0, 0.1); 
   }
 
-
+  .header__left {
+    display: flex;
+    align-items: center;
+  }
   .header__right {
     display: flex;
     align-items: center; 
