@@ -265,13 +265,13 @@ a {
     box-shadow: 0 5px 5px rgba(0, 0, 0, 0.1); 
   }
 
-  .header__left {
-    display: flex;
-    align-items: center;
-  }
+
   .header__right {
     display: flex;
-    align-items: center;
+    align-items: center; 
+    top:8px;
+    position:absolute;
+    right:20px;
   }
 
   .header__link {
@@ -291,9 +291,70 @@ a {
 
   .header-svg{
       margin-right: 5px;
-      margin-left: 5px;
+      margin-left: 5px; 
       max-width: 25px;
   }
+
+  nav{
+    background-color: #fff;
+    color: #0d6efd;
+    text-align: center;
+}
+nav > ul {
+   padding: 0;
+}
+nav li{
+    display: inline-block;
+    vertical-align: top;
+    margin-right:15px;
+}
+nav a{
+    color: #0d6efd;
+    text-decoration: none;
+    border: 1px solid transparent;
+    transition: 0.3s;
+}
+
+
+input[type="checkbox"] {
+    display: none;
+}
+nav label {    
+    display: none;
+    cursor: pointer;
+    transition: 0.3s;
+}
+ 
+
+
+@media screen and (max-width: 900px) {
+    nav {
+        text-align: left;
+        }
+    nav label{
+        z-index: 1;
+         display: inline-block;
+         background: transparent;
+         width: 40px;
+         height: 26px;
+    }
+    nav > ul {
+        display: none;
+        left:0;
+    }
+    nav li{
+        display: block;
+        vertical-align: top;
+        padding: 2px;
+    } 
+    input[type="checkbox"]:checked ~ label + ul {
+        display: block;
+    }
+    li a{
+        margin-left:0px;
+    }
+}
+
 
   /* Стили модального окна */
 .modal-overlay {
