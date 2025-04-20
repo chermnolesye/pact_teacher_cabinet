@@ -28,11 +28,13 @@ def add_group(request): #Изменить разобраться со студе
         form = AddGroupForm(request.POST)
         if form.is_valid():
             group = form.save()
-            # for form in formset:
-            #     if form.cleaned_data.get('student'):
-            #         student = form.cleaned_data['student']
-            #         student.idgroup = group
-            #         student.save()
+            ########
+            for form in formset:
+                if form.cleaned_data.get('student'):
+                    student = form.cleaned_data['student']
+                    student.idgroup = group
+                    student.save()
+            ########
             return redirect('/years_groups/add_group')
     else:
         form = AddGroupForm()

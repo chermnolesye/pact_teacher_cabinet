@@ -9,7 +9,7 @@ class AddGroupForm(forms.Form):
         fields = ['groupname', 'title', 'studycourse']
         
     groupname = forms.CharField(label="Название группы", required=True)
-    studycourse = forms.IntegerField(label="Курс обучения", required = True, widget=forms.NumberInput(attrs={'id': 'studycourse'}), min_value=1, max_value=4)
+    studycourse = forms.IntegerField(label="Курс обучения", required = True, widget=forms.NumberInput(attrs={'id': 'studycourse'}), min_value=1, max_value=5)
     current_year = datetime.datetime.now().year
     title = forms.IntegerField(label="Учебный год", required=True, min_value=current_year, max_value=current_year+1, initial=current_year, widget=forms.NumberInput(attrs={'id': 'title'}))
     title_2 = forms.CharField(initial=f"/ {current_year+1}", label="Учебный год конечный", widget=forms.TextInput(attrs={'id': 'title_2', 'readonly': 'readonly'})) # второе поле для конечного года    
@@ -17,20 +17,19 @@ class AddGroupForm(forms.Form):
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # students = Student.objects.filter(idgroup=47).select_related('iduser')
-        # students_data = [
-        #     {"id": s.idstudent, "name": f"{s.iduser.firstname} {s.iduser.lastname}"}
-        #     for s in students
-        # ]
-        # self.fields['student'] = forms.TypedChoiceField(
-        #     choices=[('', 'Выберите студента')] + students_data,
-        #     coerce=int,  
-        #     empty_value=None,  
-        #     required=False,
-        #     label="Студент"
-        # )
-        # self.student_fields = []
-
+        ###########
+        students = Student.objects.filter(idgroup=81).select_related('iduser')  #надо изменить id группы на что-то
+        students_data = [
+            ( s.idstudent, f"{s.iduser.firstname} {s.iduser.lastname}")
+            for s in students
+        ]
+        self.fields['student'] = forms.ChoiceField(
+            choices=[('', 'Выберите студента')] + students_data,
+            required=False,
+            label="Студент"
+        )
+        self.student_fields = []
+        ############
     def clean(self):
         cleaned_data = super().clean()
         groupname = cleaned_data.get('groupname')
@@ -47,15 +46,16 @@ class AddGroupForm(forms.Form):
             except AcademicYear.DoesNotExist:
                 academic_year = AcademicYear.objects.create(title=f"{title}/{title+1}")
             cleaned_data['idayear'] = academic_year
+            ##########
+            selected_students = []
+            for field_name in self.student_fields:
+                student = cleaned_data.get(field_name)
+                if student:
+                    selected_students.append(student)
 
-            #selected_students = []
-            # for field_name in self.student_fields:
-            #     student = cleaned_data.get(field_name)
-            #     if student:
-            #         selected_students.append(student)
-
-            # if len(selected_students) != len(set(selected_students)):
-            #     raise forms.ValidationError("Вы не можете выбрать одного и того же студента несколько раз.")
+            if len(selected_students) != len(set(selected_students)):
+                raise forms.ValidationError("Вы не можете выбрать одного и того же студента несколько раз.")
+            ############
         return cleaned_data
     
     def save(self):
@@ -63,14 +63,16 @@ class AddGroupForm(forms.Form):
             groupname = self.cleaned_data['groupname']
             studycourse = self.cleaned_data['studycourse']
             idayear = self.cleaned_data['idayear']
-
+            student_id = self.cleaned_data.get('student')
             group = group = Group.objects.create(groupname=groupname, studycourse=studycourse, idayear=idayear)
-            # for field_name in self.student_fields:
-            #     student = self.cleaned_data.get(field_name)
-            #     student = form.cleaned_data.get('student')
-            #     if student:
-            #         student.idgroup = group
-            #         student.save()
+            ###########
+            for field_name in self.student_fields:
+                student = self.cleaned_data.get(field_name)
+                student = form.cleaned_data.get('student')
+                if student:
+                    student.idgroup = group
+                    student.save()
+            #########
             return group
         return None
 
@@ -116,7 +118,7 @@ class EditGroupForm(forms.ModelForm):
         fields = ['groupname', 'title', 'studycourse']
         
     groupname = forms.CharField(label="Название группы", required=True)
-    studycourse = forms.IntegerField(label="Курс обучения", required = True, widget=forms.NumberInput(attrs={'id': 'studycourse'}), min_value=1, max_value=4)
+    studycourse = forms.IntegerField(label="Курс обучения", required = True, widget=forms.NumberInput(attrs={'id': 'studycourse'}), min_value=1, max_value=5)
     current_year = datetime.datetime.now().year
     title = forms.IntegerField(label="Учебный год", required=True, min_value=current_year, max_value=current_year+1, initial=current_year, widget=forms.NumberInput(attrs={'id': 'title'}))
     title_2 = forms.CharField(initial=f"/ {current_year+1}", label="Учебный год конечный", widget=forms.TextInput(attrs={'id': 'title_2', 'readonly': 'readonly'})) # второе поле для конечного года    
