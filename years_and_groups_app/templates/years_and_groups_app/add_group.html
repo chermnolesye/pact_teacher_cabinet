@@ -10,10 +10,11 @@
 </head>
 <body>
     <div id="header-container"></div>
-    <form method="post">
+    <form method="post" id="add-group-form">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit">Добавить группу</button>
+        <button type="button" id="add-student-button">Добавить студента</button>
+        <button type="submit">Сохранить</button>
     </form>
     
 
@@ -89,5 +90,8 @@
         });
 
     </script>
+    <!--В добаление студента желательно сделать ограничение на добавление студнтов по уол-ву их без группы, но оно все равно работать не будет-->
+    <!--Если что у меня (Лиза есть какие-то скрипты js для добавления студентов, если надо скину, но они выкидывают какие-то непонятные ошибки, я хз как их исправить)-->
+
 </body>
 </html>

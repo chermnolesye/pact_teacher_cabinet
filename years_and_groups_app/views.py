@@ -33,14 +33,7 @@ def add_group(request):  # Изменить разобраться со студ
         form = AddGroupForm(request.POST)
         if form.is_valid():
             group = form.save()
-            ########
-            for form in formset:
-                if form.cleaned_data.get("student"):
-                    student = form.cleaned_data["student"]
-                    student.idgroup = group
-                    student.save()
-            ########
-            return redirect("/years_groups/add_group")
+            return redirect('/years_groups/add_group')
     else:
         form = AddGroupForm()
         students_without_group = Student.objects.filter(idgroup__isnull=True)
@@ -64,8 +57,23 @@ def edit_group(request, group_id):
                     messages.error(request, f"Ошибка в поле {field}: {error}")
     else:
         form = EditGroupForm(instance=group)
-    return render(request, "edit_group.html", {"form": form, "group": group})
+    return render(request, "edit_group.html", {'form': form, 'group': group, 'group_students': form.group_students})
 
+####### не работает в связи с невозможностью поставить null пока изменяет группу на 95, хз есть ли такая у вас, если нет создайте или поменяйте id 
+# скорее всего придется создавть url для него хз
+def remove_student_from_group(request):
+    if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':  
+        student_id = request.POST.get('student_id')
+        try:
+            student = Student.objects.get(pk=student_id)
+            # так как нельзя установить null проверяем по изменению руппы - хз как иначе
+            group = Group.objects.get(pk=95)
+            student.idgroup = group  # Удаляем студента из группы (или student.delete() для полного удаления)
+            student.save()
+            return JsonResponse({'status': 'success'})
+        except Student.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'Студент не найден'}, status=404)
+    return JsonResponse({'status': 'error', 'message': 'Неверный запрос'}, status=400)
 
 def delete_group(request, group_id):  # Изменить !!!!!
     try:
