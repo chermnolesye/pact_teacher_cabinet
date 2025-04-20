@@ -317,6 +317,10 @@ def show_texts(request):
 
     # Алена, не удаляй это,пожалуйста, это надо для сохранения введенного поиска
     text_name = ""
+    year_id = ""
+    group_id = ""
+    text_type_id = ""
+    grouping = ""
 
     finded_text_by_name_data = []
     grouped_texts = {}
@@ -421,6 +425,10 @@ def show_texts(request):
         "grouped_texts": grouped_texts,
         "texts_type_folders": texts_by_types_for_folders,
         "selected_text": text_name,  # Алена, не удаляй это,пожалуйста, это надо для сохранения введенного поиска
+        "selected_year": year_id,
+        "selected_group": group_id,
+        "selected_text_type": text_type_id,
+        "selected_grouping": grouping,
         "fio": get_teacher_fio(request),
     }
     return render(request, "show_texts.html", context)

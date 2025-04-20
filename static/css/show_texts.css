@@ -6,7 +6,7 @@
   }
 
   .search-bar {
-    max-width: 600px;
+    width: 600px;
     margin: 0 auto;
     display: flex;
     align-items: center;
@@ -43,26 +43,20 @@
     color: white;
     border-left: 1px solid #ccc;
   }
-
-  .filter-block {
-    display: block;
-  }
   
-  .filter-block.visible {
-    display: block;
-  }
-
-  .filter-block.hidden {
-    display: none; /* Скрыть окно фильтров, если добавлен класс "hidden" */
-  }
 
   .filter-block {
+    display: block;
     max-width: 600px;
     margin: 20px auto;
     border: 1px solid #ccc;
     border-radius: 10px;
     padding: 20px;
     background-color: white;
+  }
+
+  .filter-block.hidden {
+    display: none; /* добавляем класс .hidden для скрытия */
   }
 
   .filter-block select{
@@ -105,7 +99,6 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 100%;
   }
 
   .new-text-button button {
@@ -138,8 +131,7 @@
   }
 
   .text-types {
-    max-width: 600px;
-    width:100%;
+    width: 700px;
     background-color: white;
     border-radius: 12px;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
@@ -181,7 +173,7 @@
     width: 100%;
     cursor: pointer;
     transition: all 0.3s ease;
-    margin-bottom: 10px; /* Отступ снизу для кнопки */
+    margin-bottom: 10px; 
   }
   
   .text-types li:first-child {
@@ -190,8 +182,8 @@
   
   .text-list {
     padding: 0;
-    margin-top: 10px; /* Отступ сверху для списка */
-    display: none; /* Скрытие списка по умолчанию */
+    margin-top: 10px; 
+    display: none; 
   }
   
   .text-list li {
@@ -239,9 +231,9 @@
 }
 
 .results-grid {
-  display: grid;
-  gap: 1rem;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem; /* расстояние между текстами */
 }
 
 /* Карточка результата */
@@ -345,5 +337,48 @@
 .new-text-button a:focus, 
 .new-text-button a:active {
   text-decoration: none;
+}
+
+/* Стили для отображения содержимого папок */
+.texts-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  margin-top: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.texts-table th, .texts-table td {
+  padding: 12px;
+  text-align: left;
+}
+
+.texts-table th {
+  background-color: #f7f7f7;
+  color: #555;
+  font-weight: bold;
+}
+
+.texts-table tbody tr {
+  border-bottom: 1px solid #ddd;
+}
+
+.texts-table tbody tr:hover {
+  background-color: #f1f1f1;
+}
+
+.texts-table td {
+  color: #333;
+}
+
+.back-button {
+  font-size: 18px;
+  color: #161717;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
