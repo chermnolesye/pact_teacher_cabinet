@@ -29,7 +29,7 @@ class AddGroupForm(forms.ModelForm):
             'studycourse': forms.NumberInput(attrs={
                 'class': 'form-control',
                 'min': 1,
-                'max': 5,
+                'max': 10,
                 'step': 1,
                 'value': 1
             }),

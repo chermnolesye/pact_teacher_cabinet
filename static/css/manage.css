@@ -98,7 +98,7 @@
   background: var(--primary-color);
 }
 
-.students-result {
+.students-result, .groups-result {
   display: flex;
   flex-direction: column;
   gap: 0px;
