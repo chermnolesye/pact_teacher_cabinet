@@ -8,7 +8,16 @@
   margin-top: 60px;
 }
 
-  .students-form {
+.group-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  margin: 10px 50px;
+  margin-top: 60px;
+}
+
+  .students-form, .add-group-form {
     display: flex;
     flex-direction: column;
     align-items: center;
