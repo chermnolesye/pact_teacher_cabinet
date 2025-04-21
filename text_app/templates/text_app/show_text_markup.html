@@ -304,7 +304,11 @@
                                         style="background-color: {{ error.error_color }}; display: none;"
                                         data-error-tag="{{ error.error_tag }}"
                                         data-error-tag-russian="{{ error.error_tag_russian }}"
-                                        data-error-tag-abbrev="{{ error.error_tag_abbrev }}">
+                                        data-error-tag-abbrev="{{ error.error_tag_abbrev }}"
+                                        data-error-level="{{ token.error_level }}"
+                                        data-error-correct="{{ token.error_correct }}"
+                                        data-error-comment="{{ token.error_comment }}"
+                                        data-all-errors="{{ token.all_errors|safe|escapejs }}">
                                     {{ error.error_tag }}
                                     </span>
                                     {% endfor %}

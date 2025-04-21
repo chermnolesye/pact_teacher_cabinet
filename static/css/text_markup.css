@@ -537,7 +537,7 @@ input:checked + .slider:before {
     left: 0;
     bottom: 0;
     width: 100%;
-    color: white;
+    background-color:rgb(255, 255, 255);
     text-align: center;
     box-shadow: 0 -0.125rem 0.25rem rgba(0, 0, 0, 0.075);
 }
@@ -575,36 +575,88 @@ input:checked + .slider:before {
 
 /* Добавление аннотации */
 
+#id_iderrortag {
+    display: none;
+}
+
+label[for="id_iderrortag"] {
+    display: none;
+}
+
+/* Оставляем видимым label для стилизованного селекта */
+#tags-label {
+    display: block;
+}
+
+#tag-search {
+    border: 1px solid var(--grey-color);
+    border-radius: var(--border-radius);
+    /* box-shadow: 0 5px 10px rgba(26, 93, 159, 0.1); */
+    margin: 10px 5px;
+    color: var(--primary-color);
+}
+
 .tags-list {
     display: flex;
     flex-wrap: wrap;
+    align-content: flex-start;
     margin-bottom: 10px;
+    gap: 8px;
+    width: 550px;
+    height: 150px;
+    /* height: auto;
+    width: auto; */
+    box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+    border-radius: var(--border-radius);
+    overflow-y: auto;
+    padding: 10px;
 }
 
 .tag {
-    background-color: #ddd;
-    border-radius: 5px;
-    margin: 5px;
     padding: 5px 10px;
+    border-radius: var(--border-radius);
     cursor: pointer;
+    font-size: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.tag:hover {
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
 
 .tag.selected {
-    background-color: #552a8a;
-    color: white;
+    /* outline: 1px solid var(--primary-color);
+    outline-offset: -1px; */
+    background-color: var(--secondary-color);
+    color: #ffffff;
+}
+
+.selected-tag-display {
+    margin: 5px 0px;
+    padding: 10px 5px;
+    background-color: #f5f5f5;
+    color: var(--grey-color);
+    border-radius: var(--border-radius);
+}
+
+#selected-tag-name {
+    font-weight: 400;
+    color: var(--primary-color);
+    margin-left: 10px;
 }
 
 .annotation-modal-content {
     display: flex;
     flex-direction: column;
-    /* color: #6C757D; */
-    padding: 5px;
+    padding: 10px;
     justify-content: center;
+    overflow-y: auto;
 }
 
 .annotation-modal-content label {
     color: var(--grey-color);
     margin: 5px 0px;
+    padding: 0px 5px;
 }
 
 .annotation-modal-content p {

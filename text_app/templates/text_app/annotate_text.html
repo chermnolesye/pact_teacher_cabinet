@@ -363,7 +363,11 @@
                               style="background-color: {{ error.error_color }}; display: none;"
                               data-error-tag="{{ error.error_tag }}"
                               data-error-tag-russian="{{ error.error_tag_russian }}"
-                              data-error-tag-abbrev="{{ error.error_tag_abbrev }}">
+                              data-error-tag-abbrev="{{ error.error_tag_abbrev }}"
+                              data-error-level="{{ token.error_level }}"
+                              data-error-correct="{{ token.error_correct }}"
+                              data-error-comment="{{ token.error_comment }}"
+                              data-all-errors="{{ token.all_errors|safe|escapejs }}">
                             {{ error.error_tag }}
                         </span>
                         {% endfor %}
@@ -415,25 +419,13 @@
             <form method="post" id="annotation-form">
                 {% csrf_token %}
                 <div class="annotation-modal-content">
-                
-                <!-- <label for="tags">Выберите тег:</label>
-                <div id="tags-list" class="tags-list">
-                </div>
-
-                <label for="selected-tag">Выбранный тег:</label>
-                <input type="text" id="selected-tag" disabled>
-
-                <label for="error-reason">Причина ошибки:</label>
-                <input type="text" id="error-reason">
-
-                <label for="severity">Степень грубости:</label>
-                <input type="text" id="severity">
-
-                <label for="correction">Исправление:</label>
-                <input type="text" id="correction">
-
-                <label for="comment">Комментарий:</label>
-                <textarea id="comment"></textarea> -->
+                    <label id="tags-label" for="id_iderrortag">Выберите тег:</label>
+                    <input type="text" id="tag-search" placeholder="Поиск тега" class="tag-search">
+                    <div id="tags-list" class="tags-list"></div>                    
+                    {{ annotation_form.iderrortag }}
+                    <div class="selected-tag-display">
+                        Выбранный тег: <span id="selected-tag-name">Не выбран</span>
+                    </div>
                     
                     {{ annotation_form.iderrortag.label_tag }}
                     {{ annotation_form.iderrortag }}
@@ -467,8 +459,8 @@
         <button class="button-menu-select" id="button-delete-tokens">Удалить выбранные пустые токены</button>
         <button class="button-menu-select" id="button-remove-highlight">Снять выделение</button>
     </div>
-    <!-- Шапка убрать коммент, если нужна
-    <script> 
+    <!-- Шапка убрать коммент, если нужна  -->
+    <!-- <script> 
         document.addEventListener('DOMContentLoaded', function() {
         fetch('/static/templates/base.html')
             .then(response => response.text())
@@ -479,7 +471,7 @@
             });
         });
     
-    </script>-->
+    </script> -->
     <script>
         const chosen = [];
 
@@ -649,7 +641,6 @@
                     chosen.push(word);
                 }
             }
-
 
             // функция для добавления токена пропущенного слова и токена рядом с ним
             function ClickOnEmpty(icon) {
@@ -918,6 +909,65 @@
         //     document.getElementById('correction').value = '';
         //     document.getElementById('comment').value = '';
         // });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const select = document.getElementById('id_iderrortag');
+            const tagsList = document.getElementById('tags-list');
+            const selectedTagDisplay = document.getElementById('selected-tag-name');
+            
+            function updateSelectedTagDisplay() {
+                const selectedOption = select.options[select.selectedIndex];
+                selectedTagDisplay.textContent = selectedOption ? selectedOption.text : 'Не выбран';
+            }
+            
+            function renderTags() {
+                tagsList.innerHTML = '';
+                
+                Array.from(select.options).forEach(option => {
+                    if (option.value) {
+                        const tagElement = document.createElement('div');
+                        tagElement.classList.add('tag');
+                        tagElement.textContent = option.text;
+                        tagElement.dataset.value = option.value;
+                        
+                        if (option.selected) {
+                            tagElement.classList.add('selected');
+                            updateSelectedTagDisplay();
+                        }
+                        
+                        tagElement.addEventListener('click', function() {
+                            // Устанавливаем значение в оригинальном select
+                            select.value = option.value;
+                            
+                            // Обновляем выделение
+                            document.querySelectorAll('.tag').forEach(t => t.classList.remove('selected'));
+                            this.classList.add('selected');
+                            
+                            // Обновляем отображение выбранного тега
+                            updateSelectedTagDisplay();
+                        });
+                        
+                        tagsList.appendChild(tagElement);
+                    }
+                });
+            }
+            
+            // Инициализация при загрузке
+            renderTags();
+
+            document.getElementById('tag-search').addEventListener('input', function(e) {
+                const searchTerm = e.target.value.toLowerCase();
+                document.querySelectorAll('.tag').forEach(tag => {
+                    const tagText = tag.textContent.toLowerCase();
+                    tag.style.display = tagText.includes(searchTerm) ? 'block' : 'none';
+                });
+            });
+            
+            // Обновляем при изменении select (на случай, если он меняется программно)
+            select.addEventListener('change', function() {
+                renderTags();
+            });
+        });
     </script>
 
 </body>

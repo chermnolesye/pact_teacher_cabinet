@@ -127,7 +127,6 @@ class AddTextAnnotationForm(forms.ModelForm):
             'errorcheckflag'
         ]
 
-
 class AddErrorAnnotationForm(forms.ModelForm):
     iderrortag = forms.ModelChoiceField(
         queryset=ErrorTag.objects.all(),
@@ -149,8 +148,8 @@ class AddErrorAnnotationForm(forms.ModelForm):
 
     correct = forms.CharField(
         label="Исправление",
-        widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
-        required=False
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        required=True
     )
 
     comment = forms.CharField(
