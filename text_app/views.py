@@ -92,6 +92,8 @@ def show_text_markup(request, text_id=2379):
                     "error_correct": main_error.get("error_correct"),
                     "error_comment": main_error.get("error_comment"),
                     "all_errors": errors_list,  # Все ошибки для токена
+                    "token_order_number": token.tokenordernumber,
+                    "error_reason": error.idreason.reasonname if error.idreason else "Не указано",
                 }
             )
 
