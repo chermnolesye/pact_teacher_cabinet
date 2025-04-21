@@ -71,6 +71,9 @@ def show_text_markup(request, text_id=2379):
                             "error_comment": error.comment
                             if error.comment
                             else "Не указано",
+                            "all_errors": errors_list,  # Все ошибки для токена
+                            "token_order_number": token.tokenordernumber,
+                            "error_reason": error.idreason.reasonname if error.idreason else "Не указано",
                         }
                     )
 
@@ -93,7 +96,7 @@ def show_text_markup(request, text_id=2379):
                     "error_comment": main_error.get("error_comment"),
                     "all_errors": errors_list,  # Все ошибки для токена
                     "token_order_number": token.tokenordernumber,
-                    "error_reason": error.idreason.reasonname if error.idreason else "Не указано",
+                    "error_reason": main_error.get("error_reason"),
                 }
             )
 
@@ -198,6 +201,9 @@ def annotate_text(request, text_id=2379):
                             "error_comment": error.comment
                             if error.comment
                             else "Не указано",
+                            "all_errors": errors_list,  # Все ошибки для токена
+                            "token_order_number": token.tokenordernumber,
+                            "error_reason": error.idreason.reasonname if error.idreason else "Не указано",
                         }
                     )
 

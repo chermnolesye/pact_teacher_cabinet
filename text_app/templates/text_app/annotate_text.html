@@ -18,6 +18,7 @@
             <span id="error-tag-abbrev"></span>
         </h3>
         <p><strong>Степень грубости:</strong> <span id="error-level"></span></p>
+        <p><strong>Причина ошибки:</strong> <span id="error-reason"></span></p>
         <p><strong>Исправление:</strong> <span id="error-correct"></span></p>
         <p><strong>Комментарий:</strong> <span id="error-comment"></span></p>
     </div>
@@ -367,7 +368,8 @@
                               data-error-level="{{ token.error_level }}"
                               data-error-correct="{{ token.error_correct }}"
                               data-error-comment="{{ token.error_comment }}"
-                              data-all-errors="{{ token.all_errors|safe|escapejs }}">
+                              data-all-errors="{{ token.all_errors|safe|escapejs }}"
+                              data-error-reason="{{ token.error_reason }}">
                             {{ error.error_tag }}
                         </span>
                         {% endfor %}
@@ -549,10 +551,10 @@
     
             // Функция для отображения всплывающего окна с информацией об ошибке
             function showPopup(tokenElement) {
-
                 const errorTag = tokenElement.dataset.errorTag;
                 const errorTagAbbrev = tokenElement.dataset.errorTagAbbrev;
                 const errorLevel = tokenElement.dataset.errorLevel;
+                const errorReason = tokenElement.dataset.errorReason;
                 const errorCorrect = tokenElement.dataset.errorCorrect;
                 const errorComment = tokenElement.dataset.errorComment;
 
@@ -563,6 +565,7 @@
                 document.getElementById('error-tag').textContent = errorTag || 'Не указано';
                 document.getElementById('error-tag-abbrev').textContent = errorTagAbbrev ? `(${errorTagAbbrev})` : '';
                 document.getElementById('error-level').textContent = errorLevel || 'Не указано';
+                document.getElementById('error-reason').textContent = errorReason || 'Не указано';
                 document.getElementById('error-correct').textContent = errorCorrect || 'Не указано';
                 document.getElementById('error-comment').textContent = errorComment || 'Не указано';
 
