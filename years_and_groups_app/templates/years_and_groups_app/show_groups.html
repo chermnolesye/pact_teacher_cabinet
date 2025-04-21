@@ -18,7 +18,7 @@
 
         <form method="get" id="text-search-form">
             <div class="search-bar">
-                <input type="text" name="q" placeholder="Поиск студента" value="{{ query }}">
+                <input type="text" name="q" placeholder="Поиск группы" value="{{ query }}">
                 <button type="submit" name="search" class="search">
                     <svg width="20" height="20" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M50.9583 50.9583L61.1666 61.1666M16.6875 6.53745C22.5094 3.17781 29.3541 2.04905 35.9465 3.36146C42.5389 4.67386 48.4294 8.33792 52.5208 13.6711C56.6122 19.0043 58.6254 25.6429 58.1854 32.3502C57.7455 39.0576 54.8823 45.3763 50.1293 50.1293C45.3763 54.8823 39.0576 57.7455 32.3502 58.1854C25.6429 58.6254 19.0043 56.6122 13.6711 52.5208C8.33792 48.4294 4.67386 42.5389 3.36146 35.9465C2.04905 29.3541 3.17781 22.5094 6.53745 16.6875" stroke="#FFFDFD" stroke-width="4" stroke-linecap="round"/>
@@ -28,6 +28,51 @@
         </form>
 
         <div class="groups-results">
+            <div class="header-card">
+                <div class="group-id">
+                    ID
+                </div>
+                <div class="group-name">
+                    Название
+                </div>
+                <div class="group-course">
+                    Номер курса
+                </div>
+                <div class="group-year">
+                    Учебный год
+                </div>
+                <div class="group-settings">
+                </div>
+            </div>
+            {% for group in groupss %}
+            <div class="student-card">
+                <div class="group-id">
+                    {{ group.idgroup }}
+                </div>
+                <div class="group-name">
+                    {{ group.groupname }}
+                </div>
+                <div class="group-course">
+                    {{ group.studycourse }}
+                </div>
+                <div class="group-year">
+                    {{ group.idayear.title }}
+                </div>
+                <div class="group-settings">
+                    <p>
+                        <a href="{% url 'edit_group' group.idgroup %}">
+                            <svg class="bi" xmlns="http://www.w3.org/2000/svg" height="1.6em" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+                                <circle cx="12" cy="12" r="3" stroke-width="1.5"></circle>
+                                <path stroke-linecap="round" stroke-width="1.5" d="M3.66 10.64c.47.3.78.8.78 1.36s-.3 1.06-.78 1.36A2 2 0 0 0 2.6 15.4c.05.4.28.8.75 1.61.47.8.7 1.21 1.01 1.45a2 2 0 0 0 1.48.4c.24-.03.49-.13.82-.3.5-.27 1.09-.28 1.57 0s.77.8.79 1.35c.01.38.05.64.14.87a2 2 0 0 0 1.08 1.08c.37.15.84.15 1.77.15s1.4 0 1.77-.15a2 2 0 0 0 1.08-1.08c.09-.23.13-.49.14-.87.02-.56.3-1.07.8-1.35a1.62 1.62 0 0 1 1.56 0c.33.17.58.27.82.3a2 2 0 0 0 1.48-.4c.31-.24.54-.64 1.01-1.45l.49-.87m-.81-2.77c-.47-.3-.78-.8-.78-1.36s.3-1.06.78-1.36A2 2 0 0 0 21.4 8.6c-.05-.4-.28-.8-.75-1.61-.47-.8-.7-1.21-1.01-1.45a2 2 0 0 0-1.48-.4c-.24.03-.49.13-.82.3-.5.27-1.09.28-1.57 0s-.77-.8-.79-1.35a2.47 2.47 0 0 0-.14-.87 2 2 0 0 0-1.08-1.08C13.4 2 12.93 2 12 2s-1.4 0-1.77.15a2 2 0 0 0-1.08 1.08c-.09.23-.13.49-.14.87-.02.56-.3 1.07-.8 1.35-.47.28-1.06.27-1.56 0a2.46 2.46 0 0 0-.82-.3 2 2 0 0 0-1.48.4c-.31.24-.54.64-1.01 1.45l-.49.87"></path>
+                            </svg>
+                            Настройки группы
+                        </a>
+                    </p>
+                </div>
+            </div>
+            {% empty %}
+            <div class="no-results">Группа не найдена</div>
+            {% endfor %}
             
         </div>
        

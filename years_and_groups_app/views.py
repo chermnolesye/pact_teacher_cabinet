@@ -140,23 +140,23 @@ def delete_academic_year(request, academic_year_id):
         return redirect("/years_groups/add_academic_year")
 
 
-def show_groups(request):
-    groups = (
-        Group.objects.select_related("idayear")
-        .all()
-        .values("idgroup", "groupname", "idayear__title")
-        .distinct()
-    )
-    group_data = [
-        {
-            "id": group["idgroup"],
-            "name": group["groupname"],
-            "year": group["idayear__title"],
-        }
-        for group in groups
-    ]
-    context = {"groups": group_data}
-    return render(request, "edit_group.html", context)  # изменить !!!!!
+# def show_groups(request):
+#     groups = (
+#         Group.objects.select_related("idayear")
+#         .all()
+#         .values("idgroup", "groupname", "idayear__title")
+#         .distinct()
+#     )
+#     group_data = [
+#         {
+#             "id": group["idgroup"],
+#             "name": group["groupname"],
+#             "year": group["idayear__title"],
+#         }
+#         for group in groups
+#     ]
+#     context = {"groups": group_data}
+#     return render(request, "edit_group.html", context)  # изменить !!!!!
 
 
 def show_academic_years(request):
