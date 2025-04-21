@@ -9,8 +9,8 @@ class AddGroupForm(forms.ModelForm):
         fields = ['groupname', 'studycourse', 'idayear']
         labels = {
             'groupname': 'Название группы',
-            'studycourse': 'Курс',
-            'idayear': 'Учебный год',
+            'studycourse': 'Номер курса',
+            'idayear': 'Год обучения',
         }
         widgets = {
             'groupname': forms.TextInput(attrs={'class': 'form-control'}),
