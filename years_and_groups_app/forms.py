@@ -2,7 +2,6 @@ from django import forms
 from core_app.models import Group, AcademicYear, Student
 import datetime
 from django.forms import formset_factory
-
 class AddGroupForm(forms.ModelForm):
     idayear = forms.ModelChoiceField(
         queryset=AcademicYear.objects.all().order_by('-title'),
@@ -38,7 +37,51 @@ class AddGroupForm(forms.ModelForm):
 
     def clean_idayear(self):
         year = self.cleaned_data['idayear']
-        return year  
+        return year
+
+# ФОРМА КАК В СТАРОМ ПАКТЕ - ВОЗМОЖНО, СРАБОТАЕТ
+# def get_default_academic_year():
+#     default = datetime.datetime.now()
+#     if 0 < default.month < 9:
+#         default_year = default.year - 1
+#     else:
+#         default_year = default.year
+    
+#     return f"{default_year}-{default_year + 1}"
+
+# class AddGroupForm(forms.ModelForm):
+#     idayear = forms.ModelChoiceField(
+#         queryset=AcademicYear.objects.all().order_by('-title'),
+#         label='Учебный год',
+#         widget=forms.Select(attrs={
+#             'class': 'form-control',
+#         }),
+#         empty_label=None,
+#         initial=AcademicYear.objects.filter(title=get_default_academic_year()).first()  
+#     )
+
+#     class Meta:
+#         model = Group
+#         fields = ['groupname', 'studycourse', 'idayear']
+#         labels = {
+#             'groupname': 'Название группы',
+#             'studycourse': 'Курс',
+#             'idayear': 'Учебный год',
+#         }
+#         widgets = {
+#             'groupname': forms.TextInput(attrs={'class': 'form-control'}),
+#             'studycourse': forms.NumberInput(attrs={
+#                 'class': 'form-control',
+#                 'min': 1,
+#                 'max': 5,
+#                 'step': 1,
+#                 'value': 1
+#             }),
+#         }
+
+#     def clean_idayear(self):
+#         year = self.cleaned_data['idayear']
+#         return year
 
 
 # class AddGroupForm(forms.Form):
