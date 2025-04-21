@@ -16,6 +16,11 @@ from .forms import (
 )
 from django.forms import formset_factory
 
+def show_groups(request):
+    query = request.GET.get('search', '')  
+    groups = Group.objects.filter(groupname__icontains=query)  
+
+    return render(request, 'show_groups.html', {'groups': groups, 'search_query': query})
 
 def add_academic_year(request):
     if request.method == "POST":

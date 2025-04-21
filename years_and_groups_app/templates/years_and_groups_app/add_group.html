@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Студенты</title>
+    <title>Создание группы</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/base.css' %}" />
     <link rel="stylesheet" href="{% static 'css/manage.css' %}" />
@@ -12,35 +12,40 @@
 
     <div class="group-container">
 
-    <div id="header-container"> Создание группы </div>
-    
+        <div id="header-container">Создание группы</div>
+
         <form method="post" class="add-group-form">
             {% csrf_token %}
-             
+
             {{ form.groupname.label_tag }}
             {{ form.groupname }}
 
-            {{ form.idayear.label_tag }}
-            {{ form.idayer }}
-
             {{ form.studycourse.label_tag }}
             {{ form.studycourse }}
+
+            {{ form.idayear.label_tag }}
+            {{ form.idayear }}
+
+            <datalist id="academic-years-datalist">
+                {% for year in form.fields.idayear.queryset %}
+                    <option value="{{ year.title }}"></option>
+                {% endfor %}
+            </datalist>
+
+            <button type="submit">Сохранить</button>
         </form>
     </div>
 
-    <script> 
-    
-        document.addEventListener('DOMContentLoaded', function() {
-        fetch('/static/templates/base.html')
-            .then(response => response.text()) 
-            .then(data => {
-            document.getElementById('header-container').innerHTML = data;
-            let user_fio = "{{ fio|escapejs }}"; 
-            document.getElementById('user-link').textContent = user_fio;
-            });
-            
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            fetch('/static/templates/base.html')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('header-container').innerHTML = data;
+                    let user_fio = "{{ fio|escapejs }}";
+                    document.getElementById('user-link').textContent = user_fio;
+                });
         });
-
     </script>
 </body>
 </html>

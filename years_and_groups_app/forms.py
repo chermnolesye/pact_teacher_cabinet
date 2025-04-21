@@ -4,24 +4,42 @@ import datetime
 from django.forms import formset_factory
 
 class AddGroupForm(forms.ModelForm):
+    # Переопределяем поле, чтобы отображался правильный формат "год-год"
+    idayear = forms.ModelChoiceField(
+        queryset=AcademicYear.objects.all().order_by('-title'),
+        label='Учебный год',
+        widget=forms.NumberInput(attrs={
+            'class': 'form-control',
+            'min': 2000,
+            'max': 2100,
+            'step': 1,
+            'value': 2024
+        }),
+        empty_label=None  # Это нужно, чтобы убрать пустое значение
+    )
+
     class Meta:
         model = Group
         fields = ['groupname', 'studycourse', 'idayear']
         labels = {
             'groupname': 'Название группы',
-            'studycourse': 'Номер курса',
-            'idayear': 'Год обучения',
+            'studycourse': 'Курс',
+            'idayear': 'Учебный год',
         }
         widgets = {
             'groupname': forms.TextInput(attrs={'class': 'form-control'}),
-            'studycourse': forms.Select(choices=[(i, str(i)) for i in range(1, 6)],
-                                        attrs={'class': 'form-select'}),
-            'idayear': forms.Select(attrs={'class': 'form-select'}),
+            'studycourse': forms.NumberInput(attrs={
+                'class': 'form-control',
+                'min': 1,
+                'max': 5,
+                'step': 1,
+                'value': 1
+            }),
         }
 
-    def __init__(self, *args, **kwargs):
-        super(AddGroupForm, self).__init__(*args, **kwargs)
-        self.fields['idayear'].queryset = AcademicYear.objects.all().order_by('-title')
+    def clean_idayear(self):
+        year = self.cleaned_data['idayear']
+        return year  # Тут просто возвращаем объект, Django сам с ним всё сделает
 
 
 # class AddGroupForm(forms.Form):
