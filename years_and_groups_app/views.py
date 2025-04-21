@@ -13,6 +13,7 @@ from .forms import (
     AddAcademicYearForm,
     EditGroupForm,
     EditAcademicYearForm,
+    AddStudentToGroupForm
 )
 from django.forms import formset_factory
 
@@ -25,17 +26,6 @@ def show_groups(request):
         'query': query  
     })
 
-
-def add_academic_year(request):
-    if request.method == "POST":
-        form = AddAcademicYearForm(request.POST)
-        if form.is_valid():
-            ac = form.save()
-            return redirect("/years_groups/add_academic_year")
-    else:
-        form = AddAcademicYearForm()
-    return render(request, "add_academic_year.html", {"form": form})
-
 def add_group(request):
     if request.method == 'POST':
         form = AddGroupForm(request.POST)
@@ -46,6 +36,57 @@ def add_group(request):
         form = AddGroupForm()
 
     return render(request, 'add_group.html', {'form': form})
+
+def edit_group(request, group_id):
+    group = get_object_or_404(Group, idgroup=group_id)
+    students = Student.objects.filter(idgroup=group)
+
+    if request.method == 'POST':
+        if 'save_group' in request.POST:
+            form = EditGroupForm(request.POST, instance=group)
+            if form.is_valid():
+                form.save()
+                return redirect('edit_group', group_id=group.idgroup)
+
+        elif 'delete_student' in request.POST:
+            student_id = request.POST.get('student_id')
+            student = get_object_or_404(Student, idstudent=student_id)
+            student.idgroup = None
+            student.save()
+            return redirect('edit_group', group_id=group.idgroup)
+
+        elif 'add_student' in request.POST:
+            add_form = AddStudentToGroupForm(request.POST)
+            if add_form.is_valid():
+                student = add_form.cleaned_data['student']
+                student.idgroup = group
+                student.save()
+                return redirect('edit_group', group_id=group.idgroup)
+
+        elif 'delete_group' in request.POST:
+            group.delete()
+            return redirect('show_groups')
+
+    else:
+        form = EditGroupForm(instance=group)
+        add_form = AddStudentToGroupForm()
+
+    return render(request, 'edit_group.html', {
+        'group': group,
+        'form': form,
+        'students': students,
+        'add_form': add_form,
+    })
+
+def add_academic_year(request):
+    if request.method == "POST":
+        form = AddAcademicYearForm(request.POST)
+        if form.is_valid():
+            ac = form.save()
+            return redirect("/years_groups/add_academic_year")
+    else:
+        form = AddAcademicYearForm()
+    return render(request, "add_academic_year.html", {"form": form})
 
 # def add_group(request):  # Изменить разобраться со студентами
 #     if request.method == "POST":

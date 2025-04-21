@@ -2,6 +2,7 @@ from django import forms
 from core_app.models import Group, AcademicYear, Student
 import datetime
 from django.forms import formset_factory
+
 class AddGroupForm(forms.ModelForm):
     idayear = forms.ModelChoiceField(
         queryset=AcademicYear.objects.all().order_by('-title'),
@@ -38,6 +39,22 @@ class AddGroupForm(forms.ModelForm):
     def clean_idayear(self):
         year = self.cleaned_data['idayear']
         return year
+    
+class EditGroupForm(forms.ModelForm):
+    class Meta:
+        model = Group
+        fields = ['groupname', 'studycourse', 'idayear']
+        labels = {
+            'groupname': 'Название группы',
+            'studycourse': 'Курс',
+            'idayear': 'Год обучения'
+        }
+
+class AddStudentToGroupForm(forms.Form):
+    student = forms.ModelChoiceField(
+        queryset=Student.objects.filter(idgroup__isnull=True),
+        label="Добавить студента"
+    )
 
 # ФОРМА КАК В СТАРОМ ПАКТЕ - ВОЗМОЖНО, СРАБОТАЕТ
 # def get_default_academic_year():
