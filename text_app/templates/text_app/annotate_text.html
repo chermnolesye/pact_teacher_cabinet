@@ -323,7 +323,7 @@
                     </div>
 
                     <div class="grade-buttons">
-                        <button type="submit" name="grade-form" class="button">Сохранить</button>
+                        <button type="button" name="grade-form" class="button" onclick="addAnnotation()">Сохранить</button>
                         <button type="submit" class="button grey-button">Назад</button>
                     </div>        
                 </form>
@@ -385,7 +385,7 @@
                             {{ token.pos_tag }}
 
                         </span>
-                        {% endif %}                    
+                        {% endif %}
 
                         <!-- Само слово -->
                         {% if token.token == '-EMPTY-' %}
@@ -448,7 +448,7 @@
 
                     <div class="grade-buttons">
                         <!-- Нужно написать функцию  для добавления в бд аннотации -->
-                        <button type="submit" name="annotation-form" class="button" id="save-annotation">Сохранить</button>
+                        <button type="submit" name="annotation-form" class="button" id="save-annotation" onclick="addErrorAnnotation()">Сохранить</button>
                         <button class="button red-button" id="delete-annotation">Удалить</button>
                     </div>
                 </div>
@@ -971,6 +971,29 @@
                 renderTags();
             });
         });
+
+        function addErrorAnnotation() {
+            const data = {
+                tag: document.getElementById('selected-tag-name').innerHTML,
+                reason: document.getElementById('id_idreason').value,
+                degree: document.getElementById('id_iderrorlevel').value,
+                fix: document.getElementById('id_correct').value,
+                comment: document.getElementById('id_comment').value
+            };
+            console.log(data);
+        }
+
+        function addAnnotation() {
+            const data = {
+                textgrade: document.getElementById('id_textgrade').value,
+                completeness: document.getElementById('id_completeness').value,
+                structure: document.getElementById('id_structure').value,
+                coherence: document.getElementById('id_coherence').value,
+                poscheckflag: document.getElementById('id_poscheckflag').value,
+                errorcheckflag: document.getElementById('id_errorcheckflag').value
+            };
+            console.log(data);
+        }
     </script>
 
 </body>

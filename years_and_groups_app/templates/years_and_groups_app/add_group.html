@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Создание группы</title>
+    <title>Студенты</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/base.css' %}" />
     <link rel="stylesheet" href="{% static 'css/manage.css' %}" />
@@ -14,29 +14,27 @@
 
     <div class="group-container">
 
-        <h2 class="highlighted-header"> Создание группы </h2>
+        <div id="header-container">Создание группы</div>
 
         <form method="post" class="add-group-form">
             {% csrf_token %}
 
-            <div class="add-group-fields">
-                {{ form.groupname.label_tag }}
-                {{ form.groupname }}
+            {{ form.groupname.label_tag }}
+            {{ form.groupname }}
 
-                {{ form.idayear.label_tag }}
-                {{ form.idayear }}
+            {{ form.studycourse.label_tag }}
+            {{ form.studycourse }}
 
-                <datalist id="academic-years-datalist">
-                    {% for year in form.fields.idayear.queryset %}
-                        <option value="{{ year.title }}"></option>
-                    {% endfor %}
-                </datalist>
+            {{ form.idayear.label_tag }}
+            {{ form.idayear }}
 
-                {{ form.studycourse.label_tag }}
-                {{ form.studycourse }}
-            </div>
+            <datalist id="academic-years-datalist">
+                {% for year in form.fields.idayear.queryset %}
+                    <option value="{{ year.title }}"></option>
+                {% endfor %}
+            </datalist>
 
-            <button type="submit" class="button">Сохранить</button>
+            <button type="submit">Сохранить</button>
         </form>
     </div>
 
@@ -44,16 +42,19 @@
         
     </script>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            fetch('/static/templates/base.html')
-                .then(response => response.text())
-                .then(data => {
-                    document.getElementById('header-container').innerHTML = data;
-                    let user_fio = "{{ fio|escapejs }}";
-                    document.getElementById('user-link').textContent = user_fio;
-                });
+    <script> 
+    
+        document.addEventListener('DOMContentLoaded', function() {
+        fetch('/static/templates/base.html')
+            .then(response => response.text()) 
+            .then(data => {
+            document.getElementById('header-container').innerHTML = data;
+            let user_fio = "{{ fio|escapejs }}"; 
+            document.getElementById('user-link').textContent = user_fio;
+            });
+            
         });
+
     </script>
 </body>
 </html>
