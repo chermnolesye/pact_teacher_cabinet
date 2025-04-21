@@ -14,25 +14,44 @@
   align-items: center;
   width: 100%;
   margin: 10px 50px;
-  margin-top: 60px;
+  margin-top: 160px;
 }
 
-  .students-form, .add-group-form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
+.add-group-fields {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  /* flex: 1; */
+  align-items: flex-start;
+}
 
-  .search-bar {
-    display: flex;
-    align-items: center;
-    background: white;
-    border-radius: 8px;
-    overflow: hidden;
-    height: 50px;
-    max-width: 600px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    margin: 20px 0px;
+.add-group-fields label{
+  color: var(--grey-color);
+  margin-bottom: 5px;
+}
+
+.add-group-fields input{
+  margin: 10px 0px;
+}
+
+.students-form, .add-group-form  {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 800px;
+  width: auto;
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  height: 50px;
+  max-width: 600px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  margin: 20px 0px;
 }
 
 .search-bar input,
