@@ -27,21 +27,31 @@ def add_academic_year(request):
         form = AddAcademicYearForm()
     return render(request, "add_academic_year.html", {"form": form})
 
-
-def add_group(request):  # Изменить разобраться со студентами
-    if request.method == "POST":
+def add_group(request):
+    if request.method == 'POST':
         form = AddGroupForm(request.POST)
         if form.is_valid():
-            group = form.save()
-            return redirect('/years_groups/add_group')
+            form.save()
+            return redirect('add_group.html')  
     else:
         form = AddGroupForm()
-        students_without_group = Student.objects.filter(idgroup__isnull=True)
-    return render(
-        request,
-        "add_group.html",
-        {"form": form, "students_without_group": students_without_group},
-    )
+
+    return render(request, 'add_group.html', {'form': form})
+
+# def add_group(request):  # Изменить разобраться со студентами
+#     if request.method == "POST":
+#         form = AddGroupForm(request.POST)
+#         if form.is_valid():
+#             group = form.save()
+#             return redirect('/years_groups/add_group')
+#     else:
+#         form = AddGroupForm()
+#         students_without_group = Student.objects.filter(idgroup__isnull=True)
+#     return render(
+#         request,
+#         "add_group.html",
+#         {"form": form, "students_without_group": students_without_group},
+#     )
 
 
 def edit_group(request, group_id):
