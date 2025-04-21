@@ -4,7 +4,6 @@ import datetime
 from django.forms import formset_factory
 
 class AddGroupForm(forms.ModelForm):
-    # Переопределяем поле, чтобы отображался правильный формат "год-год"
     idayear = forms.ModelChoiceField(
         queryset=AcademicYear.objects.all().order_by('-title'),
         label='Учебный год',
@@ -15,7 +14,7 @@ class AddGroupForm(forms.ModelForm):
             'step': 1,
             'value': 2024
         }),
-        empty_label=None  # Это нужно, чтобы убрать пустое значение
+        empty_label=None  
     )
 
     class Meta:
@@ -39,7 +38,7 @@ class AddGroupForm(forms.ModelForm):
 
     def clean_idayear(self):
         year = self.cleaned_data['idayear']
-        return year  # Тут просто возвращаем объект, Django сам с ним всё сделает
+        return year  
 
 
 # class AddGroupForm(forms.Form):
