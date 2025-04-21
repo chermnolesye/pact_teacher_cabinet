@@ -14,27 +14,29 @@
 
     <div class="group-container">
 
-        <div id="header-container">Создание группы</div>
+        <h2 class="highlighted-header">Создание группы</h2>
 
         <form method="post" class="add-group-form">
             {% csrf_token %}
 
-            {{ form.groupname.label_tag }}
-            {{ form.groupname }}
+            <div class="add-group-fields">
+                {{ form.groupname.label_tag }}
+                {{ form.groupname }}
 
-            {{ form.studycourse.label_tag }}
-            {{ form.studycourse }}
+                {{ form.studycourse.label_tag }}
+                {{ form.studycourse }}
 
-            {{ form.idayear.label_tag }}
-            {{ form.idayear }}
+                {{ form.idayear.label_tag }}
+                {{ form.idayear }}
 
-            <datalist id="academic-years-datalist">
-                {% for year in form.fields.idayear.queryset %}
-                    <option value="{{ year.title }}"></option>
-                {% endfor %}
-            </datalist>
+                <datalist id="academic-years-datalist">
+                    {% for year in form.fields.idayear.queryset %}
+                        <option value="{{ year.title }}"></option>
+                    {% endfor %}
+                </datalist>
+            </div>
 
-            <button type="submit">Сохранить</button>
+            <button type="submit" class="button">Сохранить</button>
         </form>
     </div>
 
