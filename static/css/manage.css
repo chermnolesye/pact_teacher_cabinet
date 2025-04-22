@@ -1,5 +1,5 @@
 
-.students-container {
+.students-container, .show-groups-container {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -12,15 +12,6 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100%;
-  margin: 10px 50px;
-  margin-top: 60px;
-}
-
-.show-groups-container {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
   width: 100%;
   margin: 10px 50px;
   margin-top: 60px;
@@ -107,27 +98,29 @@
   background: var(--primary-color);
 }
 
-.students-result, .groups-result {
+/* .students-result, .groups-result {
   display: flex;
   flex-direction: column;
   gap: 0px;
   width: 100%;
   margin-top: 20px;
   border-radius: var(--border-radius);
-  box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15);
-}
+  box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15); 
+}*/
 
-.students-result, .texts-result {
+.students-result, .texts-result, .groups-result  {
   display: flex;
   flex-direction: column;
   gap: 0px;
   width: 100%;
-  margin: 40px 0px;
+  margin: 20px 0px;
   border-radius: var(--border-radius);
   box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15);
 }
 
-.students-result > .student-card:last-child, .texts-result > .student-card:last-child {
+.students-result > .student-card:last-child, 
+.texts-result > .student-card:last-child,
+.groups-result > .group-card:last-child {
   border-bottom-left-radius: var(--border-radius);
   border-bottom-right-radius: var(--border-radius);
 }
@@ -155,10 +148,10 @@
 }
 
 .student-card:hover {
-  display: flex;
+  /* display: flex; */
   /* align-items: center; */
-  gap: 60px;
-  padding: 15px;
+  /* gap: 60px;
+  padding: 15px; */
   background-color: #f8f9fa;  
   background-color: rgba(0, 0, 0, 0.1);
 }
@@ -215,18 +208,29 @@
 .group-header-card {
   display: flex;
   background-color: #f8f9fa;
-  gap: 60px;
+  gap: 40px;
   padding: 15px;
   border-top-right-radius: var(--border-radius);
   border-top-left-radius: var(--border-radius);
 }
 
+.group-card {
+  display: flex;
+  gap: 40px;
+  padding: 15px;
+  background-color: white;  
+}
+
+.group-card:hover {
+  background-color: #f8f9fa;  
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
 .groups-result {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  /* gap: 20px; */
   width: 100%;
-  margin: 40px 0px;
   border-radius: var(--border-radius);
   box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15);
 }
@@ -235,14 +239,29 @@
   font-weight: 600;
 }
 
-.group-id, .group-course {
+.group-id {
+  color: var(--grey-color);
   flex: 1;
   text-align: left;
 }
 
-.group-name, .group-year, .groups-settings {
+.group-course {
+  flex: 1;
+  text-align: center;
+}
+
+.group-name, .group-year {
   flex: 2;
-  text-align: left;
+  text-align: center;
+}
+
+.group-settings {
+  display: flex;
+  gap: 5px;
+  flex: 2;
+  color: var(--primary-color);
+  text-align: center;
+  justify-content: center;
 }
 
 .new-text-button button {

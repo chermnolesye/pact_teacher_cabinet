@@ -11,5 +11,5 @@ urlpatterns = [
     path('edit_academic_year/delete_academic_year/<int:academic_year_id>/', views.delete_academic_year, name='delete_academic_year'), #удаление
     path('edit_group/delete_group/<int:group_id>/', views.delete_group, name=' delete_group'), 
     path('show_groups/', views.show_groups, name='show_groups'),
-    path('edit_group', views.edit_group, name='edit_group')
+    path('edit_group/<int:group_id>/', views.edit_group, name='edit_group')
 ]
