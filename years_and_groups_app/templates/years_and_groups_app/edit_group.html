@@ -12,24 +12,31 @@
     <div id="header-container"></div>
 
     <div class="group-container">    
-        <form method="post" id="add-group-form">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="button" id="add-student-button">Добавить студента</button>
-            <h2>Студенты в группе:</h2>
-            <ul id="student-list">
-                {% for student in group_students %}
-                <li data-student-id="{{ student.pk }}">
-                    {{ student.iduser.firstname }} {{ student.iduser.lastname }}
-                        <button type="button" class="remove-student">Удалить</button>
-                    </li>
-                {% empty %}
-                    <li>В группе нет студентов.</li>
-                {% endfor %}
-            </ul>
-            <button type="submit">Сохранить</button>
+        <form method="post" id="edit-group-form" class="edit-group-form">
+            <div class="g-header-card">Информация о группе</div>
+            <div class="g-body-card">
+                {% csrf_token %}
+                {{ form.as_p }}
+                
+                <button type="submit">Сохранить</button>
+            </div>
         </form>
+
+        <button type="button" id="add-student-button">Добавить студента</button>
+        <h2>Студенты в группе:</h2>
+        <ul id="student-list">
+            {% for student in group_students %}
+            <li data-student-id="{{ student.pk }}">
+                {{ student.iduser.firstname }} {{ student.iduser.lastname }}
+                    <button type="button" class="remove-student">Удалить</button>
+                </li>
+            {% empty %}
+                <li>В группе нет студентов.</li>
+            {% endfor %}
+        </ul>
     </div> 
+
+    
 
     <!-- <div class="students-container">
         <div id="add-student-modal" class="modal-overlay">

@@ -57,6 +57,15 @@
   width: 100%;
 }
 
+.edit-group-form {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  width: 60%;
+  margin-right: 40%;
+}
+
 .search-bar {
   display: flex;
   align-items: center;
@@ -144,6 +153,26 @@
   font-weight: 600;
 }
 
+.g-header-card {
+  width: 100%;
+  text-align: left;
+  background-color: #f8f9fa;
+  padding: 15px;
+  border: 1px solid var(--secondary-grey-color);
+  border-top-right-radius: var(--border-radius);
+  border-top-left-radius: var(--border-radius);
+}
+
+.g-body-card {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 15px;
+  border: 1px solid var(--secondary-grey-color);
+  border-bottom-left-radius: var(--border-radius);
+  border-bottom-right-radius: var(--border-radius);
+}
+
 .student-card {
   display: flex;
   /* align-items: center; */
@@ -152,8 +181,7 @@
   background-color: white;  
 }
 
-.student-card:hover {
-  background-color: #f8f9fa;  
+.student-card:hover { 
   background-color: rgba(0, 0, 0, 0.1);
 }
 
