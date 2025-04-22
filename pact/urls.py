@@ -26,6 +26,6 @@ urlpatterns = [
     path('text/', include('text_app.urls')),
     path('students/', include('students_app.urls')),
     path('years_groups/', include('years_and_groups_app.urls')),
-    # path('statistics/', include('statistics_app.urls')),
+    path('statistics/', include('statistics_app.urls')),
     path('', home_view, name='home'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
