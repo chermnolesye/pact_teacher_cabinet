@@ -25,15 +25,12 @@
         
                 {{ form.studycourse.label_tag }}
                 {{ form.studycourse }}
-        
-                <!-- Начало учебного года -->
-                <label for="start-year">Начало учебного года</label>
-                <input type="number" id="start-year" name="start_year" min="2000" max="2100" step="1" value="2024" class="form-control">
-        
-                <!-- Конец учебного года (автоматически считается) -->
-                <label for="end-year">Конец учебного года</label>
-                <input type="text" id="end-year" class="form-control" readonly>
-        
+
+                <label for="start-year">Год обучения</label>
+                <div class="academic-year">
+                    <input type="number" id="start-year" name="start_year" min="2000" max="2100" step="1" value="2024" class="form-control">
+                    <input type="text" id="end-year" class="form-control" readonly>
+                </div>
                 <!-- Скрытое поле, в котором формируется строка 2024/2025 для отправки на сервер -->
                 <input type="hidden" name="idayear" id="idayear-hidden">
             </div>
@@ -43,7 +40,6 @@
                 <a href="{% url 'show_groups' %}" class="button grey-button">Назад</a>
             </div>
         </form>
-        <!-- <a href="{% url 'show_groups' %}"><button class="button grey-button twin-width">Назад</button></a> -->
     </div>
 
 <script>

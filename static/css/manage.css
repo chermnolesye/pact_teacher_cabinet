@@ -293,6 +293,39 @@
   justify-content: center;
 }
 
+.academic-year {
+  display: flex;
+  margin: 0px;
+  padding: 0px;
+  width: 100%;
+  margin: 10px 0px;
+}
+
+.academic-year input {
+  all: unset;
+  box-sizing: border-box;
+  font-family: inherit;
+  font-size: inherit;
+  font-size: 16px;
+  min-height: 35px;
+  border: 1px solid var(--secondary-grey-color);
+  padding: 5px;
+  max-width: 100px;
+  width: auto;
+}
+
+#start-year {
+  border-bottom-left-radius: var(--border-radius);
+  border-top-left-radius: var(--border-radius);
+  border-right: none;
+}
+
+#end-year {
+  border-bottom-right-radius: var(--border-radius);
+  border-top-right-radius: var(--border-radius);
+  background-color: #e6e7e8;
+}
+
 .new-text-button button {
   width: 200px;
   background-color: var(--primary-color);
