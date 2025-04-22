@@ -23,9 +23,6 @@
                 {{ form.groupname.label_tag }}
                 {{ form.groupname }}
 
-                {{ form.studycourse.label_tag }}
-                {{ form.studycourse }}
-
                 {{ form.idayear.label_tag }}
                 {{ form.idayear }}
 
@@ -34,10 +31,19 @@
                         <option value="{{ year.title }}"></option>
                     {% endfor %}
                 </datalist>
+                
+                {{ form.studycourse.label_tag }}
+                {{ form.studycourse }}
             </div>
 
-            <button type="submit" class="button">Создать группу</button>
+            <!-- <button type="submit" class="button twin-width">Создать группу</button> -->
+            <div class="form-buttons">
+                <button type="submit" class="button">Создать группу</button>
+                <a href="{% url 'show_groups' %}" class="button grey-button">Назад</a>
+            </div>
+            
         </form>
+        <!-- <a href="{% url 'show_groups' %}"><button class="button grey-button twin-width">Назад</button></a> -->
     </div>
 
     <script>

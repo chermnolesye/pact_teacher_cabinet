@@ -105,6 +105,12 @@ h2 {
 	background-color: var(--secondary-grey-color);
 }
 
+.twin-width {
+    max-width: 300px;
+    min-width: 100px;
+    width: auto;
+}
+
 .password-toggle {
     position: absolute;
     right: 10px;
