@@ -30,8 +30,10 @@ def add_group(request):
     if request.method == 'POST':
         form = AddGroupForm(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect('add_group.html')  
+            group = form.save(commit=False)
+            group.idayear = form.cleaned_data['idayear']
+            group.save()
+            return redirect('add_group')  # или куда тебе нужно перенаправление
     else:
         form = AddGroupForm()
 
@@ -74,7 +76,7 @@ def edit_group(request, group_id):
     return render(request, 'edit_group.html', {
         'group': group,
         'form': form,
-        'students': students,
+        'students': students, 
         'add_form': add_form,
     })
 
@@ -104,20 +106,20 @@ def add_academic_year(request):
 #     )
 
 
-def edit_group(request, group_id):
-    group = get_object_or_404(Group, pk=group_id)
-    if request.method == "POST":
-        form = EditGroupForm(request.POST, instance=group)
-        if form.is_valid():
-            form.save()
-            return redirect(f"/years_groups/edit_group/{group_id}")
-        else:
-            for field, errors in form.errors.items():
-                for error in errors:
-                    messages.error(request, f"Ошибка в поле {field}: {error}")
-    else:
-        form = EditGroupForm(instance=group)
-    return render(request, "edit_group.html", {'form': form, 'group': group, 'group_students': form.group_students})
+# def edit_group(request, group_id):
+#     group = get_object_or_404(Group, pk=group_id)
+#     if request.method == "POST":
+#         form = EditGroupForm(request.POST, instance=group)
+#         if form.is_valid():
+#             form.save()
+#             return redirect(f"/years_groups/edit_group/{group_id}")
+#         else:
+#             for field, errors in form.errors.items():
+#                 for error in errors:
+#                     messages.error(request, f"Ошибка в поле {field}: {error}")
+#     else:
+#         form = EditGroupForm(instance=group)
+#     return render(request, "edit_group.html", {'form': form, 'group': group, 'group_students': form.group_students})
 
 ####### не работает в связи с невозможностью поставить null пока изменяет группу на 95, хз есть ли такая у вас, если нет создайте или поменяйте id 
 # скорее всего придется создавть url для него хз

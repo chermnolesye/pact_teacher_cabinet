@@ -18,51 +18,65 @@
 
         <form method="post" class="add-group-form">
             {% csrf_token %}
-
+        
             <div class="add-group-fields">
                 {{ form.groupname.label_tag }}
                 {{ form.groupname }}
-
-                {{ form.idayear.label_tag }}
-                {{ form.idayear }}
-
-                <datalist id="academic-years-datalist">
-                    {% for year in form.fields.idayear.queryset %}
-                        <option value="{{ year.title }}"></option>
-                    {% endfor %}
-                </datalist>
-                
+        
                 {{ form.studycourse.label_tag }}
                 {{ form.studycourse }}
+        
+                <!-- Начало учебного года -->
+                <label for="start-year">Начало учебного года</label>
+                <input type="number" id="start-year" name="start_year" min="2000" max="2100" step="1" value="2024" class="form-control">
+        
+                <!-- Конец учебного года (автоматически считается) -->
+                <label for="end-year">Конец учебного года</label>
+                <input type="text" id="end-year" class="form-control" readonly>
+        
+                <!-- Скрытое поле, в котором формируется строка 2024/2025 для отправки на сервер -->
+                <input type="hidden" name="idayear" id="idayear-hidden">
             </div>
-
-            <!-- <button type="submit" class="button twin-width">Создать группу</button> -->
+        
             <div class="form-buttons">
                 <button type="submit" class="button">Создать группу</button>
                 <a href="{% url 'show_groups' %}" class="button grey-button">Назад</a>
             </div>
-            
         </form>
         <!-- <a href="{% url 'show_groups' %}"><button class="button grey-button twin-width">Назад</button></a> -->
     </div>
 
-    <script>
-        
-    </script>
-
-    <script> 
-    
-        document.addEventListener('DOMContentLoaded', function() {
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Загружаем хедер
         fetch('/static/templates/base.html')
-            .then(response => response.text()) 
+            .then(response => response.text())
             .then(data => {
-            document.getElementById('header-container').innerHTML = data;
-            let user_fio = "{{ fio|escapejs }}"; 
-            document.getElementById('user-link').textContent = user_fio;
+                document.getElementById('header-container').innerHTML = data;
+                let user_fio = "{{ fio|escapejs }}";
+                document.getElementById('user-link').textContent = user_fio;
             });
-            
-        });
 
-    </script>
+        // Логика расчёта конца учебного года
+        const startYearInput = document.getElementById('start-year');
+        const endYearInput = document.getElementById('end-year');
+        const hiddenInput = document.getElementById('idayear-hidden');
+
+        function updateAcademicYear() {
+            const startYear = parseInt(startYearInput.value);
+            if (!isNaN(startYear)) {
+                const endYear = startYear + 1;
+                endYearInput.value = endYear;
+                hiddenInput.value = `${startYear}/${endYear}`;
+            }
+        }
+
+        // Сразу вызвать для установки дефолтных значений
+        updateAcademicYear();
+
+        // Обновлять при изменении года начала
+        startYearInput.addEventListener('input', updateAcademicYear);
+    });
+</script>
 </body>
 </html>

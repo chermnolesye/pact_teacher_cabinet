@@ -4,26 +4,34 @@ import datetime
 from django.forms import formset_factory
 
 class AddGroupForm(forms.ModelForm):
-    idayear = forms.ModelChoiceField(
-        queryset=AcademicYear.objects.all().order_by('-title'),
-        label='Учебный год',
+    start_year = forms.IntegerField(
+        label='Начало учебного года',
         widget=forms.NumberInput(attrs={
             'class': 'form-control',
             'min': 2000,
             'max': 2100,
             'step': 1,
-            'value': 2024
-        }),
-        empty_label=None  
+            'value': 2024,
+            'id': 'start-year-input',
+        })
+    )
+
+    end_year_display = forms.CharField(
+        label='Учебный год',
+        required=False,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'readonly': True,
+            'id': 'end-year-display',
+        })
     )
 
     class Meta:
         model = Group
-        fields = ['groupname', 'studycourse', 'idayear']
+        fields = ['groupname', 'studycourse']  # убираем idayear отсюда
         labels = {
             'groupname': 'Название группы',
             'studycourse': 'Номер курса',
-            'idayear': 'Год обучения',
         }
         widgets = {
             'groupname': forms.TextInput(attrs={'class': 'form-control'}),
@@ -36,9 +44,18 @@ class AddGroupForm(forms.ModelForm):
             }),
         }
 
-    def clean_idayear(self):
-        year = self.cleaned_data['idayear']
-        return year
+    def clean(self):
+        cleaned_data = super().clean()
+        start_year = cleaned_data.get('start_year')
+
+        if start_year:
+            title = f"{start_year}/{start_year + 1}"
+            try:
+                academic_year = AcademicYear.objects.get(title=title)
+                cleaned_data['idayear'] = academic_year
+            except AcademicYear.DoesNotExist:
+                raise forms.ValidationError(f"Учебный год {title} не найден в базе данных.")
+        return cleaned_data
     
 class EditGroupForm(forms.ModelForm):
     class Meta:
@@ -224,128 +241,6 @@ class AddAcademicYearForm(forms.Form):
             return ac
         return None
     
-#есть изменение группы; отображение, добавление студентов в группу; НАДО удаление студента из группы - как хз
-class EditGroupForm(forms.ModelForm):  
-    class Meta:
-        model = Group
-        fields = ['groupname', 'title', 'studycourse']
-        
-    groupname = forms.CharField(label="Название группы", required=True)
-    studycourse = forms.IntegerField(label="Курс обучения", required = True, widget=forms.NumberInput(attrs={'id': 'studycourse'}), min_value=1, max_value=5)
-    current_year = datetime.datetime.now().year
-    title = forms.IntegerField(label="Учебный год", required=True, min_value=current_year, max_value=current_year+1, initial=current_year, widget=forms.NumberInput(attrs={'id': 'title'}))
-    title_2 = forms.CharField(initial=f"/ {current_year+1}", label="Учебный год конечный", widget=forms.TextInput(attrs={'id': 'title_2', 'readonly': 'readonly'})) # второе поле для конечного года    
-    idayear = forms.ModelChoiceField(label="Id года", required = False, widget=forms.HiddenInput(), queryset=AcademicYear.objects.all()) # для id FK
-    
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        ###########
-        self.available_students = self.get_available_students()
-        self.initial_student_field_count = 1
-        
-        instance_id = self.instance.pk if self.instance else None
-         ###для списка для отображения студентов в группе -- работает, но скорее всего не так как надо .... !!!!!!!!!!!!!!!!
-        students_list_data = '\n'.join([f"{s.iduser.firstname} {s.iduser.lastname} {s.iduser.middlename}" for s in Student.objects.filter(idgroup=instance_id).select_related('iduser')])
-        self.group_students = []
-        self.group_students = Student.objects.filter(idgroup=self.instance).select_related('iduser')
-
-        ###для селектора для добавления студентов
-        for i in range(1, self.initial_student_field_count + 1):
-            self.fields[f'student_{i}'] = self.get_student_field(i)
-        
-    
-    def get_available_students(self):
-        instance_id = self.instance.pk if self.instance else None
-        students = Student.objects.exclude(idgroup=instance_id).select_related('iduser') #надо изменить пока берет всех что есть, кроме тех, что уже в группе
-        return [(s.idstudent, f"{s.iduser.firstname} {s.iduser.lastname} {s.iduser.middlename}") for s in students]
-
-    def get_student_field(self, index):
-        return forms.ChoiceField(
-            choices=[('', 'Выберите студента')] + self.available_students,
-            required=False,
-            label=f"Студент {index}"
-        )
-
-    def clean(self):
-        cleaned_data = super().clean()
-        groupname = cleaned_data.get('groupname')
-        title = cleaned_data.get('title')
-        studycourse = cleaned_data.get('studycourse')
-        instance_id = self.instance.pk if self.instance else None
-
-       
-        if groupname and title and studycourse:
-            current_year = datetime.datetime.now().year
-            if title < current_year:
-                raise forms.ValidationError("Группу можно создавать только для текущего учебного года или последующих годов.")
-            try:
-                academic_year = AcademicYear.objects.get(title__startswith=str(title))
-            except AcademicYear.DoesNotExist:
-                academic_year = AcademicYear.objects.create(title=f"{title}/{title+1}")
-            cleaned_data['idayear'] = academic_year
-            ########## добавление студентов !!!!!!! должно брать без группы, без группы у нас не создать
-            selected_students = []
-            for field_name in self.fields:
-                if field_name.startswith('student_'):
-                    student = cleaned_data.get(field_name)
-                    if student:
-                        selected_students.append(student)
-
-            if len(selected_students) != len(set(selected_students)):
-                raise forms.ValidationError("Вы не можете выбрать одного и того же студента несколько раз.")
-            ############
-        return cleaned_data
-
-    def save(self, commit=True):
-        if self.is_valid():
-            groupname = self.cleaned_data['groupname']
-            studycourse = self.cleaned_data['studycourse']
-            idayear = self.cleaned_data['idayear']
-            student_id = self.cleaned_data.get('student')
-            instance = super().save(commit=False)
-            instance_id = self.instance.pk if self.instance else None
-
-            try:
-                Group.objects.get(groupname=groupname, studycourse=studycourse, idayear=idayear)
-                 ########### дОБАВЛЕНИЕ СТУДЕНТОВ  
-                for field_name in self.fields:
-                    if field_name.startswith('student_'):
-                        student = self.cleaned_data.get(field_name)
-                        if student:
-                            try:
-                                student = Student.objects.get(pk=student) #надо изменить id группы на что-то
-                                student.idgroup = instance
-                                student.save()
-                            except:
-                                raise forms.ValidationError("Такого судента нет")
-                #########
-            except Group.DoesNotExist:
-                if Group.objects.exclude(pk=instance_id).filter(groupname=groupname, studycourse=studycourse, idayear=idayear).exists():
-                    raise forms.ValidationError("Такая группа уже существует.")
-                
-                instance.groupname = groupname
-                instance.groupname = studycourse
-                instance.groupname = idayear
-                if commit:
-                    instance.save()
-                
-                ###########
-                for field_name in self.fields:
-                    if field_name.startswith('student_'):
-                        student = self.cleaned_data.get(field_name)
-                        #student = form.cleaned_data.get('student')
-                        if student:
-                            try:
-                                student = Student.objects.get(pk=student) #надо изменить id группы на что-то
-                                student.idgroup = instance
-                                student.save()
-                            except:
-                                raise forms.ValidationError("Такого судента нет")
-                #########
-                return instance
-        return None
 
 
 class EditAcademicYearForm(forms.ModelForm): 

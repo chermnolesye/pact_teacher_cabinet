@@ -17,24 +17,38 @@
             <div class="g-body-card">
                 {% csrf_token %}
                 {{ form.as_p }}
-                
-                <button type="submit">Сохранить</button>
+                <button type="submit" name="save_group">Сохранить</button>
             </div>
         </form>
-
-        <button type="button" id="add-student-button">Добавить студента</button>
+    
         <h2>Студенты в группе:</h2>
         <ul id="student-list">
-            {% for student in group_students %}
+            {% for student in students %}
             <li data-student-id="{{ student.pk }}">
                 {{ student.iduser.firstname }} {{ student.iduser.lastname }}
-                    <button type="button" class="remove-student">Удалить</button>
-                </li>
+                <form method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <input type="hidden" name="student_id" value="{{ student.pk }}">
+                    <button type="submit" name="delete_student" class="remove-student">Удалить</button>
+                </form>
+            </li>
             {% empty %}
-                <li>В группе нет студентов.</li>
+            <li>В группе нет студентов.</li>
             {% endfor %}
         </ul>
-    </div> 
+    
+        <h3>Добавить студента</h3>
+        <form method="post">
+            {% csrf_token %}
+            {{ add_form.as_p }}
+            <button type="submit" name="add_student">Добавить</button>
+        </form>
+    
+        <form method="post" onsubmit="return confirm('Удалить группу?');">
+            {% csrf_token %}
+            <button type="submit" name="delete_group">Удалить группу</button>
+        </form>
+    </div>
 
     
 
