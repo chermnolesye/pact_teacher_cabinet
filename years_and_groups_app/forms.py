@@ -4,34 +4,26 @@ import datetime
 from django.forms import formset_factory
 
 class AddGroupForm(forms.ModelForm):
-    start_year = forms.IntegerField(
-        label='Начало учебного года',
+    idayear = forms.ModelChoiceField(
+        queryset=AcademicYear.objects.all().order_by('-title'),
+        label='Учебный год',
         widget=forms.NumberInput(attrs={
             'class': 'form-control',
             'min': 2000,
             'max': 2100,
             'step': 1,
-            'value': 2024,
-            'id': 'start-year-input',
-        })
-    )
-
-    end_year_display = forms.CharField(
-        label='Учебный год',
-        required=False,
-        widget=forms.TextInput(attrs={
-            'class': 'form-control',
-            'readonly': True,
-            'id': 'end-year-display',
-        })
+            'value': 2024
+        }),
+        empty_label=None  
     )
 
     class Meta:
         model = Group
-        fields = ['groupname', 'studycourse']  # убираем idayear отсюда
+        fields = ['groupname', 'studycourse', 'idayear']
         labels = {
             'groupname': 'Название группы',
             'studycourse': 'Номер курса',
+            'idayear': 'Год обучения',
         }
         widgets = {
             'groupname': forms.TextInput(attrs={'class': 'form-control'}),
@@ -44,34 +36,39 @@ class AddGroupForm(forms.ModelForm):
             }),
         }
 
-    def clean(self):
-        cleaned_data = super().clean()
-        start_year = cleaned_data.get('start_year')
-
-        if start_year:
-            title = f"{start_year}/{start_year + 1}"
-            try:
-                academic_year = AcademicYear.objects.get(title=title)
-                cleaned_data['idayear'] = academic_year
-            except AcademicYear.DoesNotExist:
-                raise forms.ValidationError(f"Учебный год {title} не найден в базе данных.")
-        return cleaned_data
+    def clean_idayear(self):
+        year = self.cleaned_data['idayear']
+        return year
     
 class EditGroupForm(forms.ModelForm):
     class Meta:
         model = Group
-        fields = ['groupname', 'studycourse', 'idayear']
+        fields = ['groupname', 'studycourse']
         labels = {
             'groupname': 'Название группы',
             'studycourse': 'Курс',
             'idayear': 'Год обучения'
         }
 
+    def clean_idayear(self):
+        year_string = self.cleaned_data['idayear']
+        start_year, end_year = map(int, year_string.split('/'))
+        return f"{start_year}/{end_year}" 
+
 class AddStudentToGroupForm(forms.Form):
     student = forms.ModelChoiceField(
-        queryset=Student.objects.filter(idgroup__isnull=True),
-        label="Добавить студента"
+        queryset=Student.objects.all(),  
+        label="Добавить студента",
+        to_field_name='idstudent',  
+        empty_label="Выберите студента"  
     )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['student'].queryset = Student.objects.all()
+        self.fields['student'].widget = forms.Select(
+            choices=[(student.idstudent, f"{student.get_full_name()} ({student.iduser.login})") for student in Student.objects.all()]
+        )
 
 # ФОРМА КАК В СТАРОМ ПАКТЕ - ВОЗМОЖНО, СРАБОТАЕТ
 # def get_default_academic_year():

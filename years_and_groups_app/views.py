@@ -33,7 +33,7 @@ def add_group(request):
             group = form.save(commit=False)
             group.idayear = form.cleaned_data['idayear']
             group.save()
-            return redirect('add_group')  # или куда тебе нужно перенаправление
+            return redirect('add_group')  
     else:
         form = AddGroupForm()
 
@@ -157,7 +157,6 @@ def edit_academic_year(request, academic_year_id):
             form.save()
             return redirect(f"/years_groups/edit_academic_year/{academic_year_id}")
         else:
-            # Выводим ошибки формы
             for field, errors in form.errors.items():
                 for error in errors:
                     messages.error(request, f"Ошибка в поле {field}: {error}")

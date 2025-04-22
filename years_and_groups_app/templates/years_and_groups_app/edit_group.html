@@ -12,15 +12,22 @@
     <div id="header-container"></div>
 
     <div class="group-container">    
-        <form method="post" id="edit-group-form" class="edit-group-form">
-            <div class="g-header-card">Информация о группе</div>
-            <div class="g-body-card">
-                {% csrf_token %}
-                {{ form.as_p }}
-                <button type="submit" name="save_group">Сохранить</button>
+        <form method="post" id="edit-group-form">
+            {% csrf_token %}
+            {{ form.as_p}} 
+        
+            <div class="academic-year-fields">
+                <label for="start-year">Начало учебного года</label>
+                <input type="number" id="start-year" name="start_year" min="2000" max="2100" step="1" value="{{ group.idayear.title|slice:":4" }}" class="form-control">
+        
+                <label for="end-year">Конец учебного года</label>
+                <input type="text" id="end-year" class="form-control" readonly value="{{ group.idayear.title|slice:"5:" }}">
+        
+                <input type="hidden" name="idayear" id="idayear-hidden">
             </div>
+        
+            <button type="submit" name="save_group">Сохранить</button>
         </form>
-    
         <h2>Студенты в группе:</h2>
         <ul id="student-list">
             {% for student in students %}
@@ -113,17 +120,24 @@
     
     <script> 
     
-        document.addEventListener('DOMContentLoaded', function() {
-        fetch('/static/templates/base.html')
-            .then(response => response.text()) 
-            .then(data => {
-            document.getElementById('header-container').innerHTML = data;
-            let user_fio = "{{ fio|escapejs }}"; 
-            document.getElementById('user-link').textContent = user_fio;
-            });
-            
-        });
+    document.addEventListener('DOMContentLoaded', function () {
+            const startYearInput = document.getElementById('start-year');
+            const endYearInput = document.getElementById('end-year');
+            const idayearHidden = document.getElementById('idayear-hidden');
 
+            const updateEndYear = () => {
+                const startYear = parseInt(startYearInput.value);
+                if (!isNaN(startYear)) {
+                    const endYear = startYear + 1;  
+                    endYearInput.value = endYear;
+                    idayearHidden.value = `${startYear}/${endYear}`;  
+                }
+            };
+
+            startYearInput.addEventListener('input', updateEndYear);
+
+            updateEndYear();
+        });
     </script>
 </body>
 </html>
