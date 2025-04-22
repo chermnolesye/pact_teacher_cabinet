@@ -12,52 +12,125 @@
     <div id="header-container"></div>
 
     <div class="group-container">    
-        <form method="post" id="edit-group-form">
+        <form method="post" id="edit-group-form" class="edit-group-form">
             {% csrf_token %}
-            {{ form.as_p}} 
-        
-            <div class="academic-year-fields">
-                <label for="start-year">Начало учебного года</label>
-                <input type="number" id="start-year" name="start_year" min="2000" max="2100" step="1" value="{{ group.idayear.title|slice:":4" }}" class="form-control">
-        
-                <label for="end-year">Конец учебного года</label>
-                <input type="text" id="end-year" class="form-control" readonly value="{{ group.idayear.title|slice:"5:" }}">
-        
-                <input type="hidden" name="idayear" id="idayear-hidden">
-            </div>
-        
-            <button type="submit" name="save_group">Сохранить</button>
-        </form>
-        <h2>Студенты в группе:</h2>
-        <ul id="student-list">
-            {% for student in students %}
-            <li data-student-id="{{ student.pk }}">
-                {{ student.iduser.firstname }} {{ student.iduser.lastname }}
-                <form method="post" style="display:inline;">
-                    {% csrf_token %}
-                    <input type="hidden" name="student_id" value="{{ student.pk }}">
-                    <button type="submit" name="delete_student" class="remove-student">Удалить</button>
-                </form>
-            </li>
-            {% empty %}
-            <li>В группе нет студентов.</li>
-            {% endfor %}
-        </ul>
-    
-        <h3>Добавить студента</h3>
-        <form method="post">
-            {% csrf_token %}
-            {{ add_form.as_p }}
-            <button type="submit" name="add_student">Добавить</button>
-        </form>
-    
-        <form method="post" onsubmit="return confirm('Удалить группу?');">
-            {% csrf_token %}
-            <button type="submit" name="delete_group">Удалить группу</button>
-        </form>
-    </div>
 
-    
+            <div class="g-header-card">
+                <svg class="bi me-2" xmlns="http://www.w3.org/2000/svg" height="1.6em" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-width="1.5" d="M10.5 14H17M7 14h.5M7 10.5h.5M7 17.5h.5M10.5 10.5H17M10.5 17.5H17"></path>
+                    <path stroke-width="1.5" d="M8 3.5C8 2.67 8.67 2 9.5 2h5c.83 0 1.5.67 1.5 1.5v1c0 .83-.67 1.5-1.5 1.5h-5A1.5 1.5 0 0 1 8 4.5v-1Z"></path>
+                    <path stroke-linecap="round" stroke-width="1.5" d="M21 16c0 2.83 0 4.24-.88 5.12-.88.88-2.3.88-5.12.88H9c-2.83 0-4.24 0-5.12-.88C3 20.24 3 18.82 3 16v-3m13-9c2.18.01 3.35.11 4.12.88.88.88.88 2.3.88 5.12v2M8 4c-2.18.01-3.35.11-4.12.88S3 6.83 3 9"></path>
+                </svg>
+                Информация о группе
+            </div>
+            <div class="g-body-card">
+
+                {{ form.groupname.label_tag }}
+                {{ form.groupname }}
+        
+                {{ form.studycourse.label_tag }}
+                {{ form.studycourse }}
+
+                <label for="start-year">Год обучения</label>
+                <div class="academic-year">
+                    <input type="number" id="start-year" name="start_year" min="2000" max="2100" step="1" value="{{ group.idayear.title|slice:":4" }}" class="form-control">
+                    <input type="text" id="end-year" class="form-control" readonly value="{{ group.idayear.title|slice:"5:" }}">
+                </div>
+                <input type="hidden" name="idayear" id="idayear-hidden">
+
+                <button type="submit" name="save_group" class="button">Сохранить</button>
+            </div>
+        </form>
+
+        <div class="students-in-group">
+            <div class="g-header-card">
+                <svg class="bi me-2" xmlns="http://www.w3.org/2000/svg" height="1.6em" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <circle cx="12" cy="6" r="4" stroke="#1C274C" stroke-width="1.5"></circle>
+                    <path stroke-linecap="round" stroke-width="1.5" d="M18 9c1.66 0 3-1.12 3-2.5S19.66 4 18 4M6 9C4.34 9 3 7.88 3 6.5S4.34 4 6 4M17.2 15c.5.59.8 1.27.8 2 0 2.2-2.69 4-6 4s-6-1.8-6-4 2.69-4 6-4a9 9 0 0 1 1 .06M20 19c1.75-.38 3-1.36 3-2.5s-1.25-2.12-3-2.5M4 19c-1.75-.38-3-1.36-3-2.5s1.25-2.12 3-2.5"></path>
+                </svg>
+                Список студентов
+            </div>
+
+            <div class="g-body-card">
+                <div class="header-card">
+                    <div class="student-id">
+                        ID
+                    </div>
+                    <div class="student-name">
+                        Фамилия
+                    </div>
+                    <div class="student-name">
+                        Имя
+                    </div>
+                    <div class="student-name">
+                        Отчество
+                    </div>
+                    <div class="student-login">
+                        Логин
+                    </div>
+                    <div class="student-login">
+                    </div>
+                </div>
+                {% for student in students %}
+                <div class="student-card">
+                    <div class="student-id">
+                        {{ student.idstudent }}
+                    </div>
+                    <div class="student-name">
+                        {{ student.iduser.firstname }}
+                    </div>
+                    <div class="student-name">
+                        {{ student.iduser.lastname }}
+                    </div>
+                    <div class="student-name">
+                        {{ student.iduser.firstname }}
+                    </div>
+                    <div class="student-login">
+                        {{ student.iduser.login }}
+                    </div>
+                    <div class="student-login">
+                        <form method="post" style="display:inline;">
+                            {% csrf_token %}
+                            <input type="hidden" name="student_id" value="{{ student.pk }}">
+                            <button type="submit" name="delete_student" class="remove-student">
+                                <svg class="bi" xmlns="http://www.w3.org/2000/svg" height="1.6em" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+                                    <circle cx="10" cy="6" r="4" stroke-width="1.5"></circle>
+                                    <path stroke-linecap="round" stroke-width="1.5" d="M21 10h-4M18 18v-.5c0-2.49-3.58-4.5-8-4.5s-8 2.01-8 4.5S2 22 10 22c2.23 0 3.84-.16 5-.44"></path>
+                                </svg>
+                            </button>
+                        </form>
+                    </div>                    
+                </div>
+                {% empty %}
+                <div class="no-results">В группе нет студентов</div>
+                {% endfor %}
+
+                <form method="post" class="add-student">
+                    {% csrf_token %}
+                    {{ add_form.as_p }}
+                    <button type="submit" name="add_student" class="button add-student-button">
+                        <svg class="bi" xmlns="http://www.w3.org/2000/svg" height="1.6em" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+                            <circle cx="10" cy="6" r="4" stroke-width="1.5"></circle>
+                            <path stroke-linecap="round" stroke-width="1.5" d="M21 10h-2m0 0h-2m2 0V8m0 2v2M18 18v-.5c0-2.49-3.58-4.5-8-4.5s-8 2.01-8 4.5S2 22 10 22c2.23 0 3.84-.16 5-.44"></path>
+                        </svg>
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div class="delete-group">
+            <form method="post" onsubmit="return confirm('Удалить группу?');">
+                {% csrf_token %}
+                <button type="submit" name="delete_group" class="remove-student">
+                    <svg class="bi me-2" xmlns="http://www.w3.org/2000/svg" height="1.6em" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-width="1.5" d="M20.5 6h-17M9.5 11l.5 5M14.5 11l-.5 5"></path>
+						<path stroke-width="1.5" d="M6.5 6h.1a2 2 0 0 0 1.84-1.32l.03-.1.1-.3c.08-.24.13-.37.18-.47a1.5 1.5 0 0 1 1.1-.8l.5-.01h3.3c.26 0 .39 0 .5.02.47.07.88.37 1.1.79.05.1.1.23.18.48l.1.29.03.1A2 2 0 0 0 17.5 6"></path>
+						<path stroke-linecap="round" stroke-width="1.5" d="M18.37 15.4c-.17 2.65-.26 3.98-1.13 4.8-.86.8-2.2.8-4.85.8h-.78c-2.66 0-3.99 0-4.85-.8-.87-.82-.96-2.15-1.13-4.8l-.46-6.9m13.66 0-.2 3"></path>
+					</svg>
+                    Удалить группу
+                </button>
+            </form>
+        </div>
 
     <!-- <div class="students-container">
         <div id="add-student-modal" class="modal-overlay">
