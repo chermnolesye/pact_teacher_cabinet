@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   {% load static %}
-  <link rel="stylesheet" href="{% static 'css/show_texts.css' %}" />
   <link rel="stylesheet" href="{% static 'css/base.css' %}">
+  <link rel="stylesheet" href="{% static 'css/show_texts.css' %}" />  
   <title>ПАКТ</title>
 </head>
 <body>
@@ -73,7 +73,7 @@
         <div class="grouping-options">
           <label>
             <input type="radio" name="grouping" value="category" {% if selected_grouping == "category" %}checked{% endif %}>
-            категориям текстов
+            Категориям текстов
           </label>
           <label>
             <input type="radio" name="grouping" value="fio" {% if selected_grouping == "fio" %}checked{% endif %}>
@@ -91,16 +91,14 @@
     </div>
   </form>
 
-  <div class="new-text-button button">
-    <a href="{% url 'teacher_load_text' %}">
-      <button>
-        <svg width="24" height="24" viewBox="0 0 54 54" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M34.5 27H27M27 27H19.5M27 27V19.5M27 27V34.5M14.5 5.34503C18.2988 3.14728 22.6113 1.99327 27 2.00003C40.8075 2.00003 52 13.1925 52 27C52 40.8075 40.8075 52 27 52C13.1925 52 2 40.8075 2 27C2 22.4475 3.2175 18.175 5.345 14.5" stroke="white" stroke-width="4" stroke-linecap="round"/>
-        </svg>      
-        Новый текст
-      </button>
-    </a>
-  </div>
+  <a href="{% url 'teacher_load_text' %}">
+    <button class="new-text-button button">
+      <svg width="24" height="24" viewBox="0 0 54 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M34.5 27H27M27 27H19.5M27 27V19.5M27 27V34.5M14.5 5.34503C18.2988 3.14728 22.6113 1.99327 27 2.00003C40.8075 2.00003 52 13.1925 52 27C52 40.8075 40.8075 52 27 52C13.1925 52 2 40.8075 2 27C2 22.4475 3.2175 18.175 5.345 14.5" stroke="white" stroke-width="4" stroke-linecap="round"/>
+      </svg>      
+      Новый текст
+    </button>
+  </a>
 
   <!-- Кнопка для скрытия/показа -->
   <div class="toggle-results-button" style="display: none;">
