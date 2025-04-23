@@ -41,6 +41,7 @@ def show_text_markup(request, text_id=2379):
             pos_tag_russian = None
             pos_tag_abbrev = None
             pos_tag_color = None
+            token_order_number = token.tokenordernumber
             if token.idpostag:
                 pos_tag = token.idpostag.tagtext
                 pos_tag_russian = token.idpostag.tagtextrussian
@@ -72,7 +73,6 @@ def show_text_markup(request, text_id=2379):
                             if error.comment
                             else "Не указано",
                             "all_errors": errors_list,  # Все ошибки для токена
-                            "token_order_number": token.tokenordernumber,
                             "error_reason": error.idreason.reasonname if error.idreason else "Не указано",
                         }
                     )
