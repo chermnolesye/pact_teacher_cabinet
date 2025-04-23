@@ -202,10 +202,9 @@
   background-color: rgba(0, 0, 0, 0.1);
 }
 
-.student-id {
-  width: 60px;
-  color: #6c757d;
-  flex-shrink: 0;
+.student-inf {
+  flex: 1;
+  text-align: center;
 }
 
 .student-name {
@@ -214,7 +213,7 @@
 }
 
 .student-login {
-  flex: 1;
+  flex: 2;
   text-align: left;
   margin-left: 0;
   color: black;
@@ -236,17 +235,17 @@
   color: #6c757d;
 }
 
-.text-type, .text-date, .text-errors {
+ .text-date {
   flex: 1;
   text-align: left;
 }
 
-.text-name {
+.text-name, .text-type {
   flex: 2;
   text-align: left;
 }
 
-.text-check, .text-grade {
+.text-check, .text-grade, .text-errors {
   flex: 1;
   text-align: center;
 }
@@ -298,13 +297,14 @@
 
 .group-name, .group-year {
   flex: 2;
-  text-align: center;
+  text-align: left;
+  margin-left: 20px;
 }
 
 .group-settings {
   display: flex;
   gap: 5px;
-  flex: 2;
+  flex: 3;
   color: var(--primary-color);
   text-align: center;
   justify-content: center;

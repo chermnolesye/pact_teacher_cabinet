@@ -30,12 +30,9 @@
                 </button>
             </div>
         </form>
-
+    
         <div class="groups-result">
             <div class="group-header-card">
-                <div class="group-id">
-                    ID
-                </div>
                 <div class="group-name">
                     Название
                 </div>
@@ -51,9 +48,6 @@
             </div>
             {% for group in groups %}
             <div class="group-card">
-                <div class="group-id">
-                    {{ group.idgroup }}
-                </div>
                 <div class="group-name">
                     {{ group.groupname }}
                 </div>

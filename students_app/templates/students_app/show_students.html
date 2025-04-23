@@ -42,14 +42,17 @@
 
         <div class="students-result">
             <div class="header-card">
-                <div class="student-id">
-                    ID
-                </div>
                 <div class="student-name">
                     Студент
                 </div>
-                <div class="student-login">
+                <div class="student-inf">
                     Группа
+                </div>
+                <div class="student-inf">
+                    Номер курса
+                </div>
+                <div class="student-inf">
+                    Год обучения
                 </div>
                 <div class="student-login">
                     Логин
@@ -57,7 +60,6 @@
             </div>
             {% for student in students %}
             <div class="student-card">
-                <div class="student-id">{{ student.idstudent }}</div>
                 <div class="student-name">
                     <p>
                         <a href="{% url 'student_info' student.idstudent %}">
@@ -68,7 +70,9 @@
                         </a>
                     </p>
                 </div>
-                <div class="student-login">{{ student.idgroup.groupname }}</div>
+                <div class="student-inf">{{ student.idgroup.groupname }}</div>                
+                <div class="student-inf">{{ student.idgroup.studycourse }}</div>
+                <div class="student-inf">{{ student.idgroup.idayear.title }}</div>
                 <div class="student-login">{{ student.iduser.login }}</div>
             </div>
             {% empty %}

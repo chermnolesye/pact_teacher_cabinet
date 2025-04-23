@@ -46,6 +46,12 @@
                 <div class="text-type">
                     Тип текста
                 </div>
+                <div class="text-grade">
+                    Группа
+                </div>
+                <div class="text-grade">
+                    Номер курса
+                </div>
                 <div class="text-date">
                     Дата создания
                 </div>
@@ -67,6 +73,12 @@
                 </div>
                 <div class="text-type">
                     {{ text.text_type }}
+                </div>
+                <div class="text-grade">
+                    {{ text.idstudent.idgroup.groupname }}
+                </div>
+                <div class="text-grade">
+                    {{ text.idstudent.idgroup.studycourse }}
                 </div>
                 {% if text.createdate %}
                     <div class="text-date">
