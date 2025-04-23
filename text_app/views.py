@@ -247,11 +247,13 @@ def annotate_text(request, text_id=2379):
     self_rating = text.selfrating
     assesment = text.selfassesment
 
-    if "grade-form" in request.POST:
-        grade_form = AddTextAnnotationForm(request.POST)
-        # if form.is_valid():
+    if request.method == "POST" and "grade-form" in request.POST:
+        grade_form = AddTextAnnotationForm(request.POST, instance=text)
+        if grade_form.is_valid():
+            grade_form.save()
+            return redirect(request.path + f"?text_id={text.idtext}&markup={selected_markup}")
     else:
-        grade_form = AddTextAnnotationForm()
+        grade_form = AddTextAnnotationForm(instance=text)
 
     if "annotation-form" in request.POST:
         annotation_form = AddErrorAnnotationForm(request.POST)
@@ -279,10 +281,15 @@ def annotate_text(request, text_id=2379):
         "self_rating": self_rating,
         "self_assesment": assesment,
         "fio": get_teacher_fio(request),
+        "textgrade": text.textgrade,
+        "completeness": text.completeness,
+        "structure": text.structure,
+        "coherence": text.coherence,
+        "poscheckflag": text.poscheckflag,
+        "errorcheckflag": text.errorcheckflag,
     }
 
     return render(request, "annotate_text.html", context)
-
 
 # Если вам  нужен доступ только для зарегестрированных пользователей
 # else:
