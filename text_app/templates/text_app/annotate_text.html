@@ -12,7 +12,7 @@
     <div id="header-container"></div>
     <!-- Всплывающее окно с информацией об ошибке -->
     <div class="error-popup" id="error-popup">
-        <span class="close-btn" id="close-popup">&#x2715;</span>
+        <!-- <span class="close-btn" id="close-popup">&#x2715;</span> -->
         <h3>
             <span id="error-tag"></span>
             <span id="error-tag-abbrev"></span>
@@ -27,48 +27,48 @@
 
         <div class="menu-container">
             <!-- Блоки меню -->
-            <div class="menu-block" data-target="view-content">
-                <span>
-                    Вид
-                    <svg width="10" height="10" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M13.5753 2L7.70808 10.5L1.84082 2" stroke="#0d6efd" stroke-width="3" stroke-linecap="round"/>
-                    </svg>         
-                </span>
-            </div>
-            <div class="menu-block" data-target="text-content">
-                <span>
-                    Текст
-                    <svg width="10" height="10" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M13.5753 2L7.70808 10.5L1.84082 2" stroke="#0d6efd" stroke-width="3" stroke-linecap="round"/>
-                    </svg>                         
-                </span>
-            </div>
-            <div class="menu-block" data-target="author-content">
-                <span>
-                    Автор
-                    <svg width="10" height="10" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M13.5753 2L7.70808 10.5L1.84082 2" stroke="#0d6efd" stroke-width="3" stroke-linecap="round"/>
-                    </svg>      
-                </span>
-            </div>
-            <div class="menu-block" data-target="grade-content">
-                <span>
-                    Оценка
-                    <svg width="10" height="10" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M13.5753 2L7.70808 10.5L1.84082 2" stroke="#0d6efd" stroke-width="3" stroke-linecap="round"/>
-                    </svg>     
-                </span>
-            </div>
-            <div class="menu-block" data-target="metadata-content">
-                <span>
-                    Метаданные
-                    <svg width="10" height="10" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M13.5753 2L7.70808 10.5L1.84082 2" stroke="#0d6efd" stroke-width="3" stroke-linecap="round"/>
-                    </svg>    
-                </span>
-            </div>
-            <button class="rate-btn">Оценить</button>
+        <div class="menu-block" data-target="view-content">
+            <span>
+                Вид
+                <svg width="10" height="10" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M13.5753 2L7.70808 10.5L1.84082 2" stroke="#0d6efd" stroke-width="3" stroke-linecap="round" />
+                </svg>
+            </span>
         </div>
+        <div class="menu-block" data-target="text-content">
+            <span>
+                Текст
+                <svg width="10" height="10" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M13.5753 2L7.70808 10.5L1.84082 2" stroke="#0d6efd" stroke-width="3" stroke-linecap="round" />
+                </svg>
+            </span>
+        </div>
+        <div class="menu-block" data-target="author-content">
+            <span>
+                Автор
+                <svg width="10" height="10" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M13.5753 2L7.70808 10.5L1.84082 2" stroke="#0d6efd" stroke-width="3" stroke-linecap="round" />
+                </svg>
+            </span>
+        </div>
+        <div class="menu-block" data-target="grade-content">
+            <span>
+                Оценка
+                <svg width="10" height="10" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M13.5753 2L7.70808 10.5L1.84082 2" stroke="#0d6efd" stroke-width="3" stroke-linecap="round" />
+                </svg>
+            </span>
+        </div>
+        <div class="menu-block" data-target="metadata-content">
+            <span>
+                Метаданные
+                <svg width="10" height="10" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M13.5753 2L7.70808 10.5L1.84082 2" stroke="#0d6efd" stroke-width="3" stroke-linecap="round" />
+                </svg>
+            </span>
+        </div>
+        <button class="rate-btn">Оценить</button>
+    </div>
 
 
             <!-- Контентные блоки -->
@@ -336,7 +336,7 @@
     <div class="watch-text">
         {% for sentence in sentence_data %}
             <div class="sentence">
-                <div class="tokens-container">
+                <div class="tokens-container" id_sentence="{{ sentence.id_sentence }}">
                     <p class="sentence-number">{{ sentence.sentence.ordernumber|add:1 }}:</p>
                     {% for token in sentence.tokens %}
 
@@ -344,6 +344,7 @@
                         <path d="M34.5 27H27M27 27H19.5M27 27V19.5M27 27V34.5M14.5 5.34503C18.2988 3.14728 22.6113 1.99327 27 2.00003C40.8075 2.00003 52 13.1925 52 27C52 40.8075 40.8075 52 27 52C13.1925 52 2 40.8075 2 27C2 22.4475 3.2175 18.175 5.345 14.5" stroke="#768088" stroke-width="4" stroke-linecap="round" />
                     </svg>
                     <span class="token"
+                          id_token="{{ token.token_id }}"
                           data-pos-tag="{{ token.pos_tag }}"
                           data-pos-tag-russian="{{ token.pos_tag_russian }}"
                           data-pos-tag-abbrev="{{ token.pos_tag_abbrev }}"
@@ -405,7 +406,7 @@
         {% endfor %}
     </div>
 
-     <!-- Окно для добавления аннотации -->
+     <!-- Окно для добавления аннотации ошибки -->
      <div id="annotation-modal" class="modal-overlay">
         <div class="modal-content">
 
@@ -476,6 +477,7 @@
     </script> -->
     <script>
         const chosen = [];
+        const chosen_ids = [];
 
         // Скрипт для отображения разметки (НЕ ДЫШАТЬ НА НЕГО!!!)
         document.addEventListener('DOMContentLoaded', function() {
@@ -596,13 +598,13 @@
             }
 
             // Закрытие окна с анимацией
-            closePopupBtn.addEventListener('click', function() {
+            /*closePopupBtn.addEventListener('click', function() {
                 const popup = document.getElementById('error-popup');
                 popup.classList.remove('show'); // Убираем класс для анимации исчезновения
                 setTimeout(() => {
                     popup.style.display = 'none'; // Скрываем окно после анимации
                 }, 300); // Задержка, соответствующая длительности перехода
-            });
+            });*/
     
             // Слушаем клик по токенам
             document.querySelectorAll('.error-tag').forEach(function(errorTagElement) {
@@ -612,6 +614,13 @@
                 });
                 errorTagElement.addEventListener('click', function (e) {
                     document.getElementById('annotation-modal').style.display = 'flex';
+                });
+                errorTagElement.addEventListener('mouseleave', function (e) {
+                    const popup = document.getElementById('error-popup');
+                    popup.classList.remove('show'); // Убираем класс для анимации исчезновения
+                    setTimeout(() => {
+                        popup.style.display = 'none'; // Скрываем окно после анимации
+                    }, 300); // Задержка, соответствующая длительности перехода
                 });
             });
 
@@ -641,7 +650,31 @@
                         });
                     }
                     word.classList.add('chosen_token');
+                    let token = word.parentElement;
                     chosen.push(word);
+                    if (token.hasAttribute('id_token')){
+                        chosen_ids.push(token.getAttribute('id_token'));
+                    };
+                }
+            }
+
+            function ChangePositions(tokens_container, el) {
+                var allChildren = tokens_container.getElementsByClassName("token")
+                console.log(allChildren)
+
+                //const allChildren = Array.from(tokens_container.children);
+                let position = 0;
+                if (el) {
+                    position = el.getAttribute("data-position");
+                }
+                //console.log(position);
+                for (var i = position; i < allChildren.length; i++) {
+                    var child = allChildren[i];
+                    if (child.hasAttribute("data-position")) {
+                        child.setAttribute('data-position', position);
+                        //console.log(child);
+                        position++;
+                    }
                 }
             }
 
@@ -657,6 +690,14 @@
                 innerSpan.addEventListener('click', () => {
                     ClickOnWord(innerSpan);
                 });
+
+                let token = icon.parentElement;
+                console.log(token);
+                let word = icon.previousElementSibling;
+                console.log(word);
+                
+                newToken.setAttribute('sentence_id', token.getAttribute('id_sentence'));
+                newToken.setAttribute('data-position', 0);
 
                 newToken.appendChild(innerSpan);
 
@@ -699,6 +740,16 @@
                     parent.appendChild(newToken);
                     parent.appendChild(newIcon);
                 }
+
+                let position = word.getAttribute('data-position')
+                if (position === null) {
+                    ChangePositions(token, null);
+                    position = 0;
+                }
+                else {
+                    position++;
+                    ChangePositions(token, word);
+                }
             }
 
             // добавление каждому пустому токену функции по клику
@@ -721,7 +772,11 @@
                         if (nextSibling.classList.contains('empty-token')) {
                             nextSibling.remove();
                         }
+                        let tokens_container = token.parentElement;
+                        //console.log(tokens_container);
+                        
                         token.remove();
+                        ChangePositions(tokens_container, null);
                     }
                 });
 
@@ -972,8 +1027,36 @@
             });
         });
 
-        function addErrorAnnotation() {
+        async function addErrorAnnotation() {
+            const sentence_ids = [];
+            const positions = [];
+            const sentencesMap = {};
+
+            chosen.forEach(word => {
+                if (word.classList.contains('empty-token')) {
+                    let token = word.parentElement;
+                    sentence_id = token.getAttribute('sentence_id');
+
+                    if (!sentencesMap[sentence_id]) {
+                        sentencesMap[sentence_id] = {
+                            id_sentence: sentence_id,
+                            empty_token_pos: [token.getAttribute('data-position')]
+                        };
+                    }
+                    else {
+                        let sentence = sentencesMap[sentence_id];
+                        let token_pos = sentence[empty_token_pos];
+                        token_pos.push(token.getAttribute('data-position'));
+                    }
+                }
+            });
+
+            const sentences = Object.values(sentencesMap);
+            
+
             const data = {
+                token_ids: chosen_ids,
+                sentences: sentences,
                 tag: document.getElementById('selected-tag-name').innerHTML,
                 reason: document.getElementById('id_idreason').value,
                 degree: document.getElementById('id_iderrorlevel').value,
@@ -981,6 +1064,14 @@
                 comment: document.getElementById('id_comment').value
             };
             console.log(data);
+
+            const response = fetch('/text/send_changes/', {
+                method: 'POST',
+                body: JSON.stringify(data),
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}', // CSRF-токен для Django
+                },
+            });
         }
 
         function addAnnotation() {

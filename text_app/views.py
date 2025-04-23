@@ -202,7 +202,6 @@ def annotate_text(request, text_id=2379):
                             if error.comment
                             else "Не указано",
                             "all_errors": errors_list,  # Все ошибки для токена
-                            "token_order_number": token.tokenordernumber,
                             "error_reason": error.idreason.reasonname if error.idreason else "Не указано",
                         }
                     )
@@ -212,6 +211,7 @@ def annotate_text(request, text_id=2379):
 
             tokens_data.append(
                 {
+                    "token_id": token.idtoken,
                     "token": token.tokentext,
                     "pos_tag": pos_tag,
                     "pos_tag_russian": pos_tag_russian,
@@ -225,11 +225,13 @@ def annotate_text(request, text_id=2379):
                     "error_correct": main_error.get("error_correct"),
                     "error_comment": main_error.get("error_comment"),
                     "all_errors": errors_list,  # Все ошибки для токена
+                    "token_order_number": token.tokenordernumber,
                 }
             )
 
         sentence_data.append(
             {
+                "id_sentence": sentence.idsentence,
                 "sentence": sentence,
                 "tokens": tokens_data,
             }
@@ -671,3 +673,11 @@ def has_teacher_rights(request):
             print("У вас нет прав доступа к этой странице.")
             return False
     return True
+
+def send_changes(request):
+    if request.method == 'POST':
+        try:
+            print('Raw Data:', request.body)
+            return JsonResponse({'status': 'success'})
+        except:
+            return JsonResponse({'error': 'Invalid JSON'}, status=400)
