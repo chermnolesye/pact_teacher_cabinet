@@ -63,11 +63,15 @@ def statistics_view(request):
 #     {% endfor %}
 # </ul>
 def error_stats(request):
-    tags = ErrorTag.objects.all().values(
-        "iderrortag",
-        "tagtext",
-        "tagtextrussian",
-        "idtagparent",
+    tags = (
+        ErrorTag.objects.all()
+        .values(
+            "iderrortag",
+            "tagtext",
+            "tagtextrussian",
+            "idtagparent",
+        )
+        .distinct()
     )
     grouped_tag = {}
 
