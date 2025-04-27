@@ -277,18 +277,18 @@ def annotate_text(request, text_id=2379):
         "write_tool": write_tool.writetoolname if write_tool else "Не указано",
         "text_type": text_type.texttypename if text_type else "Не указано",
         "emotion": emotion.emotionname if emotion else "Не указано",
-        "year_study_language": year_study_language
-        if text_type == None
-        else "Не указано",
-        "self_rating": self_rating,
-        "self_assesment": assesment,
+        "year_study_language": year_study_language if text_type == None else "Не указано",
+        "self_rating": text.get_selfrating_display() if text.selfrating else "Нет данных",
+        "self_assesment": text.get_selfassesment_display() if text.selfassesment else "Нет данных",
         "fio": get_teacher_fio(request),
-        "textgrade": text.textgrade,
-        "completeness": text.completeness,
-        "structure": text.structure,
-        "coherence": text.coherence,
+        "textgrade": text.get_textgrade_display() if text.textgrade else "Нет данных",
+        "completeness": text.get_completeness_display() if text.completeness else "Нет данных",
+        "structure": text.get_structure_display() if text.structure else "Нет данных",
+        "coherence": text.get_coherence_display() if text.coherence else "Нет данных",
         "poscheckflag": text.poscheckflag,
         "errorcheckflag": text.errorcheckflag,
+        "usererrorcheck": text.idusererrorcheck.get_full_name() if text.idusererrorcheck else "Не указано", 
+        "userteacher": text.iduserteacher.get_full_name() if text.iduserteacher else "Не указано", 
     }
 
     return render(request, "annotate_text.html", context)

@@ -52,6 +52,9 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.login
+    
+    def get_full_name(self):
+        return f"{self.lastname} {self.firstname} {self.middlename or ''}".strip()
 
 class AcademicYear(models.Model):
     idayear = models.AutoField(primary_key=True) 
