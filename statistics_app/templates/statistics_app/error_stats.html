@@ -46,34 +46,22 @@
             </tr>
           </thead>
           <tbody>
-            {% for row_item in error_data %}
-            <tr data-level="{{ row_item.error_level }}">
-              <!-- Убрал вывод ID -->
-              <td>{{ row_item.tag_name }} ({{ row_item.tag_desc }})</td>
-              <td>
-                {% if row_item.degree1_sample %}
-                  <a href="{% url 'search' %}?{{ row_item.degree1_sample }}">{{ row_item.degree1_count }}</a>
-                {% else %}
-                  {{ row_item.degree1_count }}
-                {% endif %}
-              </td>
-              <td>
-                {% if row_item.degree2_sample %}
-                  <a href="{% url 'search' %}?{{ row_item.degree2_sample }}">{{ row_item.degree2_count }}</a>
-                {% else %}
-                  {{ row_item.degree2_count }}
-                {% endif %}
-              </td>
-              <td>
-                {% if row_item.degree3_sample %}
-                  <a href="{% url 'search' %}?{{ row_item.degree3_sample }}">{{ row_item.degree3_count }}</a>
-                {% else %}
-                  {{ row_item.degree3_count }}
-                {% endif %}
-              </td>
-            </tr>
+            {% for parent_tag, child_tags in tags_error.items %}
+              {% for tag in child_tags %}
+                <tr style="background-color: {{ tag.color }};">
+                  <td>{{ tag.nametag }}</td>
+                  <td>{{ tag.level1 }}</td>
+                  <td>{{ tag.level2 }}</td>
+                  <td>{{ tag.level3 }}</td>
+                </tr>
+              {% endfor %}
+            {% empty %}
+              <tr>
+                <td colspan="4">Нет данных об ошибках</td>
+              </tr>
             {% endfor %}
           </tbody>
+          
         </table>
       </div>
     </main>

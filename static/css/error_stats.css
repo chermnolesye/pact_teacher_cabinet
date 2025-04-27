@@ -57,6 +57,16 @@
   .legend-box[data-level="lvl-2"] {
     background-color: #cfe2ff;
   }
+
+  .lvl-0 {
+    background-color: #ffffff;
+  }
+  .lvl-1 {
+    background-color: #e8f0fe;
+  }
+  .lvl-2 {
+    background-color: #cfe2ff;
+  }
   
   /* Таблица */
   .errors-table {
