@@ -14,7 +14,7 @@ from core_app.models import (
     User,
 )
 
-import dashboards
+#import dashboards
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.db.models import Count, Q
@@ -183,3 +183,4 @@ def chart_types_errors(request):
 
         return JsonResponse({"error": "Unknown flag_post"}, status=400)
 
+from django.shortcuts import render

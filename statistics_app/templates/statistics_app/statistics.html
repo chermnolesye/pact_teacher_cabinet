@@ -112,23 +112,22 @@
       <div class="section-content">
         <label for="category">Категория</label>
         <select id="category" onchange="window.location.href=this.value;">
-          <option value="{% url 'by_error_types' %}">Количество ошибок в разрезе типов ошибок</option>
-          <option value="{% url 'by_severity_levels' %}">Количество ошибок в разрезе степеней грубости ошибок</option>
-          <option value="{% url 'by_error_types_and_severity' %}">Количество ошибок в разрезе типов ошибок с распределением по степеням грубости ошибок</option>
-          <option value="{% url 'student_progress_by_error_type' %}">Динамика студента по текстам для заданного типа ошибки</option>
-          <option value="{% url 'error_count_by_type_and_groups' %}">Количество ошибок для заданного типа ошибки и выбранных групп</option>
-          <option value="{% url 'error_types_by_emotional_state' %}">Количество ошибок в разрезе типов ошибок для заданного эмоционально-физиологического состояния</option>
-          <option value="{% url 'error_types_by_self_assessment' %}">Количество ошибок в разрезе типов ошибок для заданной самооценки</option>
-          <option value="{% url 'evaluation_vs_self_assessment' %}">Взаимосвязь оценки и самооценки для заданного студента</option>
+          <option>Количество ошибок в разрезе типов ошибок</option>
+          <option >Количество ошибок в разрезе степеней грубости ошибок</option>
+          <option>Количество ошибок в разрезе типов ошибок с распределением по степеням грубости ошибок</option>
+          <option>Динамика студента по текстам для заданного типа ошибки</option>
+          <option>Количество ошибок для заданного типа ошибки и выбранных групп</option>
+          <option>Количество ошибок в разрезе типов ошибок для заданного эмоционально-физиологического состояния</option>
+          <option>Количество ошибок в разрезе типов ошибок для заданной самооценки</option>
+          <option>Взаимосвязь оценки и самооценки для заданного студента</option>
         </select>
         
         <label for="cut">Срез</label>
         <select id="cut" onchange="window.location.href=this.value;">
-            <option value="{% url 'by_error_types' %}">Количество ошибок в разрезе типов ошибок</option>
-            <option value="{% url 'emotional_state_vs_self_assessment' %}">Взаимосвязь эмоционально-физиологического состояния и самооценки</option>
-            <option value="{% url 'emotional_state_vs_evaluation' %}">Взаимосвязь эмоционально-физиологического состояния и оценки</option>
-            <option value="{% url 'self_assessment_vs_evaluation' %}">Взаимосвязь самооценки и оценки</option>
-            <option value="{% url 'year_of_study_vs_error_count' %}">Взаимосвязь года обучения и количества ошибок</option>
+            <option>Взаимосвязь эмоционально-физиологического состояния и самооценки</option>
+            <option>Взаимосвязь эмоционально-физиологического состояния и оценки</option>
+            <option>Взаимосвязь самооценки и оценки</option>
+            <option>Взаимосвязь года обучения и количества ошибок</option>
         </select>      
         <button class="button">Показать</button>
       </div>
