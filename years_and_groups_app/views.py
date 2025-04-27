@@ -30,10 +30,10 @@ def add_group(request):
     if request.method == 'POST':
         form = AddGroupForm(request.POST)
         if form.is_valid():
-            group = form.save(commit=False)
-            group.idayear = form.cleaned_data['idayear']
-            group.save()
-            return redirect('add_group')  
+            form.save()
+            return redirect('add_group')
+        else:
+            print(form.errors)  
     else:
         form = AddGroupForm()
 
@@ -56,11 +56,12 @@ def edit_group(request, group_id):
             student.idgroup = None
             student.save()
             return redirect('edit_group', group_id=group.idgroup)
-
+        
         elif 'add_student' in request.POST:
             add_form = AddStudentToGroupForm(request.POST)
             if add_form.is_valid():
-                student = add_form.cleaned_data['student']
+                user = add_form.cleaned_data['student']  
+                student = Student.objects.get(iduser=user) 
                 student.idgroup = group
                 student.save()
                 return redirect('edit_group', group_id=group.idgroup)

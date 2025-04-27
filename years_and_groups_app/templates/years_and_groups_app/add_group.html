@@ -63,7 +63,7 @@
             if (!isNaN(startYear)) {
                 const endYear = startYear + 1;
                 endYearInput.value = endYear;
-                hiddenInput.value = `${startYear}/${endYear}`;
+                hiddenInput.value = startYear; // Подправила тут (Саша)
             }
         }
 
