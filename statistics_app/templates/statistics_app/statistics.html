@@ -62,7 +62,12 @@
         <label for="group">Группа</label>
         <div class="row">
           <select id="group">
-            <option>Выберите группу</option>
+            <option value="">Все группы</option>
+            {% for group in groups %}
+              <option value="{{ group.id }}" {% if group.id|stringformat:"s" == selected_group %}selected{% endif %}>
+                {{ group.name }} ({{ group.year }})
+              </option>
+            {% endfor %}
           </select>
           <button class="button">Скачать</button>
         </div>
