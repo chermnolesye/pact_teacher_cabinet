@@ -13,7 +13,8 @@ from core_app.models import (
     Sentence,
     User,
 )
-import dashboards
+
+from dashboards
 
 from django.shortcuts import render
 from django.http import JsonResponse
@@ -182,3 +183,4 @@ def chart_types_errors(request):
             return JsonResponse({"data_type_errors": data}, status=200)
 
         return JsonResponse({"error": "Unknown flag_post"}, status=400)
+
