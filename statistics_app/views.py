@@ -14,6 +14,9 @@ from core_app.models import (
     User,
 )
 
+from collections import defaultdict
+
+
 # import dashboards
 from django.shortcuts import render
 from django.http import JsonResponse
@@ -46,45 +49,85 @@ def statistics_view(request):
 
 ##Пример для Юли
 # <h1>Теги ошибок</h1>
-
-
 # <ul>
-#     {% for tag_name, sub_tags in tags_error.items %}
+#     {% for parent_tag, sub_tags in tags_error.items %}
 #         <li>
-#             <strong>{{ tag_name }}</strong>
-#             {% if sub_tags %}
-#                 <ul>
-#                     {% for sub_tag in sub_tags %}
-#                         <li>{{ sub_tag.nametag }} (ID: {{ sub_tag.id }})</li>
-#                     {% endfor %}
-#                 </ul>
-#             {% endif %}
+#             <h2>{{ parent_tag }}</h2>
+#             <ul>
+#                 {% for tag in sub_tags %}
+#                     <li style="background-color: {{ tag.color }}; padding: 5px; margin: 5px; border-radius: 5px;">
+#                         <strong>{{ tag.nametag }}</strong> (ID: {{ tag.id }})<br>
+#                         Уровень 1: {{ tag.level1 }}<br>
+#                         Уровень 2: {{ tag.level2 }}<br>
+#                         Уровень 3: {{ tag.level3 }}
+#                     </li>
+#                 {% endfor %}
+#             </ul>
 #         </li>
 #     {% endfor %}
 # </ul>
+
+
 def error_stats(request):
-    tags = (
-        ErrorTag.objects.all()
-        .values(
-            "iderrortag",
-            "tagtext",
-            "tagtextrussian",
-            "idtagparent",
-        )
-        .distinct()
+    tags = ErrorTag.objects.all().values(
+        "iderrortag",
+        "tagtext",
+        "tagtextrussian",
+        "idtagparent",
     )
-    grouped_tag = {}
+
+    # Считаем ошибки по тегу и уровню сложности
+    error_counts = Error.objects.values("iderrortag", "iderrorlevel").annotate(
+        count=Count("iderror")
+    )
+
+    # Карта: id тэга -> { уровень -> количество ошибок }
+    error_count_map = defaultdict(lambda: defaultdict(int))
+    for item in error_counts:
+        tag_id = item["iderrortag"]
+        level_id = item["iderrorlevel"]
+        count = item["count"]
+        error_count_map[tag_id][level_id] = count
+
+    grouped_tags = defaultdict(list)
 
     for tag in tags:
-        nametag = tag["tagtext"]
-        if nametag not in grouped_tag:
-            grouped_tag[nametag] = []
-        else:
-            grouped_tag[nametag].append(
-                {"id": tag["iderrortag"], "nametag": tag["tagtext"]}
-            )
+        tag_id = tag["iderrortag"]
+        tag_name = tag["tagtext"]
+        parent_id = tag["idtagparent"]
 
-    context = {"tags_error": grouped_tag}
+        levels = error_count_map.get(tag_id, {})
+
+        # Считаем активные уровни (где количество > 0)
+        active_levels = [lvl for lvl, cnt in levels.items() if cnt > 0]
+        num_active_levels = len(active_levels)
+
+        # Определяем цвет
+        if num_active_levels == 0 or num_active_levels == 1:
+            color = "#ffffff"
+        elif num_active_levels == 2:
+            color = "#e8f0fe"
+        else:
+            color = "#cfe2ff"
+        tag_info = {
+            "id": tag_id,
+            "nametag": tag_name,
+            "color": color,
+        }
+
+        for level_num in range(1, 4):
+            tag_info[f"level{level_num}"] = levels.get(level_num, 0)
+
+        if parent_id:
+            parent_name = next(
+                (t["tagtext"] for t in tags if t["iderrortag"] == parent_id), None
+            )
+            if parent_name:
+                grouped_tags[parent_name].append(tag_info)
+        else:
+            grouped_tags[tag_name]
+
+    context = {"tags_error": dict(grouped_tags)}
     return render(request, "statistics_app/error_stats.html", context)
 
 
