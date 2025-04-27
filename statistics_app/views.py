@@ -14,7 +14,7 @@ from core_app.models import (
     User,
 )
 
-#import dashboards
+# import dashboards
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.db.models import Count, Q
@@ -44,8 +44,44 @@ def statistics_view(request):
     return render(request, "statistics_app/statistics.html", context)
 
 
+##Пример для Юли
+# <h1>Теги ошибок</h1>
+
+
+# <ul>
+#     {% for tag_name, sub_tags in tags_error.items %}
+#         <li>
+#             <strong>{{ tag_name }}</strong>
+#             {% if sub_tags %}
+#                 <ul>
+#                     {% for sub_tag in sub_tags %}
+#                         <li>{{ sub_tag.nametag }} (ID: {{ sub_tag.id }})</li>
+#                     {% endfor %}
+#                 </ul>
+#             {% endif %}
+#         </li>
+#     {% endfor %}
+# </ul>
 def error_stats(request):
-    return render(request, "statistics_app/error_stats.html")
+    tags = ErrorTag.objects.all().values(
+        "iderrortag",
+        "tagtext",
+        "tagtextrussian",
+        "idtagparent",
+    )
+    grouped_tag = {}
+
+    for tag in tags:
+        nametag = tag["tagtext"]
+        if nametag not in grouped_tag:
+            grouped_tag[nametag] = []
+        else:
+            grouped_tag[nametag].append(
+                {"id": tag["iderrortag"], "nametag": tag["tagtext"]}
+            )
+
+    context = {"tags_error": grouped_tag}
+    return render(request, "statistics_app/error_stats.html", context)
 
 
 def chart_types_errors(request):
@@ -182,5 +218,6 @@ def chart_types_errors(request):
             return JsonResponse({"data_type_errors": data}, status=200)
 
         return JsonResponse({"error": "Unknown flag_post"}, status=400)
+
 
 from django.shortcuts import render
