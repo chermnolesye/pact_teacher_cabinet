@@ -109,14 +109,16 @@ def error_stats(request):
             color = "#e8f0fe"
         else:
             color = "#cfe2ff"
+        
         tag_info = {
             "id": tag_id,
             "nametag": tag_name,
             "color": color,
+            "level1": levels.get(1, 0),
+            "level2": levels.get(2, 0),
+            "level3": levels.get(3, 0),
+            "parent_id": parent_id,  # Добавляем информацию о родителе
         }
-
-        for level_num in range(1, 4):
-            tag_info[f"level{level_num}"] = levels.get(level_num, 0)
 
         if parent_id:
             parent_name = next(
@@ -125,7 +127,7 @@ def error_stats(request):
             if parent_name:
                 grouped_tags[parent_name].append(tag_info)
         else:
-            grouped_tags[tag_name]
+            grouped_tags[tag_name].append(tag_info)  # Родительские теги
 
     context = {"tags_error": dict(grouped_tags)}
     return render(request, "statistics_app/error_stats.html", context)

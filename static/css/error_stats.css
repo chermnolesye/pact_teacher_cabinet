@@ -7,17 +7,17 @@
   
   .page {
     display: block;
-    width: 100%;
+    width: 80%;
     padding: 0 20px;
     box-sizing: border-box;
   }
   .stats-block {
-      width: 100%;
-      max-width: 1400px;
-      margin: 0 auto; /* если хочешь, чтобы при больших экранах была красивая центральная ограниченная ширина */
+      width: 80%;
+      max-width: 1100px;
+      margin: 0 auto; 
   }
   .errors-table {
-      width: 100%;
+      width: 80%;
   }
 
   

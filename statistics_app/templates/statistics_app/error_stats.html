@@ -5,7 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/base.css' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'css/error_stats.css' %}" />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{% static 'css/error_stats.css' %}"
+    />
     <title>Суммарная статистика по ошибкам</title>
   </head>
 
@@ -47,33 +51,40 @@
           </thead>
           <tbody>
             {% for parent_tag, child_tags in tags_error.items %}
-              {% for tag in child_tags %}
-                <tr style="background-color: {{ tag.color }};">
-                  <td>{{ tag.nametag }}</td>
-                  <td>{{ tag.level1 }}</td>
-                  <td>{{ tag.level2 }}</td>
-                  <td>{{ tag.level3 }}</td>
-                </tr>
-              {% endfor %}
-            {% empty %}
-              <tr>
-                <td colspan="4">Нет данных об ошибках</td>
-              </tr>
+            <tr
+              style="
+                background-color: #0077ffd2;
+                color: white;
+                font-weight: bold;
+              "
+            >
+              <td colspan="4">{{ parent_tag }}</td>
+            </tr>
+            {% for tag in child_tags %}
+            <tr style="background-color: {{ tag.color }};">
+              <td style="padding-left: 20px">{{ tag.nametag }}</td>
+              <td>{{ tag.level1 }}</td>
+              <td>{{ tag.level2 }}</td>
+              <td>{{ tag.level3 }}</td>
+            </tr>
+            {% endfor %} {% empty %}
+            <tr>
+              <td colspan="4">Нет данных об ошибках</td>
+            </tr>
             {% endfor %}
           </tbody>
-          
         </table>
       </div>
     </main>
 
     <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        fetch('/static/templates/base.html')
-          .then(response => response.text()) 
-          .then(data => {
-            document.getElementById('header-container').innerHTML = data;
-            let user_fio = "{{ fio|escapejs }}"; 
-            document.getElementById('user-link').textContent = user_fio;
+      document.addEventListener("DOMContentLoaded", function () {
+        fetch("/static/templates/base.html")
+          .then((response) => response.text())
+          .then((data) => {
+            document.getElementById("header-container").innerHTML = data;
+            let user_fio = "{{ fio|escapejs }}";
+            document.getElementById("user-link").textContent = user_fio;
           });
       });
     </script>
