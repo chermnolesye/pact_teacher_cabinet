@@ -14,8 +14,7 @@ from core_app.models import (
     User,
 )
 
-from dashboards
-
+import dashboards
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.db.models import Count, Q
