@@ -37,15 +37,13 @@ def get_levels_dfs(v, level, max_level, h, tags):
 
 
 def get_levels():
-    # Получаем все теги (ErrorTag) с их родителями
     tags = list(ErrorTag.objects.values("iderrortag", "idtagparent"))
 
     n = len(tags)
-    h = [0 for _ in range(n)]  # Вспомогательный массив для хранения высоты каждого узла
-    max_level = 0  # Максимальная глубина дерева тегов
+    h = [0 for _ in range(n)]
+    max_level = 0
 
     for i in range(n):
-        # Если тег ещё не посещён и он корневой (нет родителя)
         if h[i] == 0 and tags[i]["idtagparent"] is None:
             level = get_levels_dfs(i, 0, -1, h, tags)
             if level > max_level:
@@ -189,13 +187,11 @@ def get_data_errors_dfs(v, d, d_on_tokens, level, level_input, h, flags_levels, 
 
 def get_data_errors(data_count_errors, level, is_sorted):
     """Финальная сборка статистики по ошибкам"""
-    # Extract error tag IDs from input data
     list_tags_id_in_markup = [data["iderrortag"] for data in data_count_errors]
 
-    # Query tags not in data_count_errors, avoiding field name conflicts
     data_tags_not_in_errors = list(
         ErrorTag.objects.annotate(
-            tag_id=F("iderrortag"),  # Use distinct name to avoid conflict
+            tag_id=F("iderrortag"),
             parent_id=F("idtagparent"),
             text=F("tagtext"),
             text_russian=F("tagtextrussian"),
@@ -208,7 +204,6 @@ def get_data_errors(data_count_errors, level, is_sorted):
         )
     )
 
-    # Combine input data with zero-count tags, renaming keys for consistency
     data = [
         {
             "iderrortag": item.get("iderrortag", item["tag_id"]),
@@ -221,16 +216,14 @@ def get_data_errors(data_count_errors, level, is_sorted):
         for item in data_count_errors + data_tags_not_in_errors
     ]
 
-    # Hierarchical grouping using DFS
     n = len(data)
-    h = [0] * n  # Height/depth tracker
-    flags_levels = [False] * n  # Flags for level inclusion
+    h = [0] * n
+    flags_levels = [False] * n
 
     for i in range(n):
         if h[i] == 0 and data[i]["idtagparent"] is None:
             get_data_errors_dfs(i, 0, 0, -1, level, h, flags_levels, data)
 
-    # Collect grouped data
     data_grouped = []
     for i in range(n):
         if flags_levels[i]:
@@ -238,7 +231,6 @@ def get_data_errors(data_count_errors, level, is_sorted):
                 data[i]["idtagparent"] = -1
             data_grouped.append(data[i])
 
-    # Sort data based on is_sorted flag
     if is_sorted:
         data = sorted(data_grouped, key=lambda d: d["count_data"], reverse=True)
     else:
@@ -380,15 +372,12 @@ def get_filters_for_choice_group(list_filters):
 def get_filters_for_choice_student(list_filters):
     surname = list_filters["surname"]
     name = list_filters["name"]
-    text = list_filters.get("text")  # Опционально
-    text_type = list_filters.get("text_type")  # Опционально
-
-    # Базовый фильтр для студента через модель User (только фамилия и имя)
+    text = list_filters.get("text")
+    text_type = list_filters.get("text_type")
     user_filter = Q(idstudent__iduser__lastname=surname) & Q(
         idstudent__iduser__firstname=name
     )
 
-    # Получение типов текстов
     if text:
         text_types = list(
             TextType.objects.filter(
@@ -406,7 +395,6 @@ def get_filters_for_choice_student(list_filters):
             .order_by("idtexttype")
         )
 
-    # Получение текстов (только заголовок)
     if text_type:
         texts = list(
             Text.objects.filter(
@@ -427,13 +415,11 @@ def get_filters_for_choice_student(list_filters):
     return texts, text_types
 
 
-# Функция для фильтрации текстов и типов текстов по курсу
 def get_filters_for_choice_course(list_filters):
     course = list_filters["course"]
-    text = list_filters.get("text")  # Опционально
-    text_type = list_filters.get("text_type")  # Опционально
+    text = list_filters.get("text")
+    text_type = list_filters.get("text_type")
 
-    # Получение текстов (только заголовок)
     if text_type:
         texts = list(
             Text.objects.filter(
@@ -455,7 +441,6 @@ def get_filters_for_choice_course(list_filters):
             .order_by("header")
         )
 
-    # Получение типов текстов
     if text:
         text_types = list(
             TextType.objects.filter(
@@ -480,7 +465,6 @@ def get_filters_for_choice_course(list_filters):
     return texts, text_types
 
 
-# Функция для фильтрации групп, курсов и типов текстов по различным параметрам
 def get_filters_for_choice_text(list_filters):
     group = list_filters.get("group")
     date = list_filters.get("enrollment_date")
@@ -492,16 +476,13 @@ def get_filters_for_choice_text(list_filters):
     emotion = list_filters.get("emotion", "")
     self_rating = list_filters.get("self_rating", "")
 
-    # Преобразование даты поступления в заголовок учебного года
     academic_year_title = None
     if date:
         start_year = date.split(" \\ ")[0]
         academic_year_title = f"{start_year}/{int(start_year) + 1}"
 
-    # Базовый фильтр для типов текстов
     text_type_filter = Q(text__errorcheckflag=True)
 
-    # Применение фильтров на основе параметров
     if group and academic_year_title:
         text_type_filter &= Q(text__idstudent__idgroup__groupname=group) & Q(
             text__idstudent__idgroup__idayear__title=academic_year_title
@@ -528,7 +509,6 @@ def get_filters_for_choice_text(list_filters):
         .order_by("idtexttype")
     )
 
-    # Базовый фильтр для групп и курсов
     group_filter = Q(student__text__errorcheckflag=True)
     if text:
         group_filter &= Q(student__text__header=text)
@@ -539,7 +519,6 @@ def get_filters_for_choice_text(list_filters):
     if self_rating:
         group_filter &= Q(student__text__selfrating=self_rating)
 
-    # Получение групп (только название группы)
     groups = list(
         Group.objects.filter(group_filter)
         .values("groupname")
@@ -547,7 +526,6 @@ def get_filters_for_choice_text(list_filters):
         .order_by("groupname")
     )
 
-    # Получение курсов (только номер курса)
     courses = list(
         Group.objects.filter(group_filter, studycourse__gt=0)
         .values("studycourse")
@@ -559,7 +537,6 @@ def get_filters_for_choice_text(list_filters):
 
 
 def get_filters_for_choice_text_type(list_filters):
-    # Extract parameters from the input dictionary with .get() to handle missing keys
     group = list_filters.get("group")
     date = list_filters.get("enrollment_date")
     surname = list_filters.get("surname")
@@ -570,16 +547,13 @@ def get_filters_for_choice_text_type(list_filters):
     emotion = list_filters.get("emotion", "")
     self_rating = list_filters.get("self_rating", "")
 
-    # Convert enrollment date to academic year title (e.g., "2023/2024")
     academic_year_title = None
     if date:
         start_year = date.split(" \\ ")[0]
         academic_year_title = f"{start_year}/{int(start_year) + 1}"
 
-    # Base filter for texts: only those with errorcheckflag=True
     text_filter = Q(errorcheckflag=True)
 
-    # Apply filters based on provided parameters
     if group and academic_year_title:
         text_filter &= Q(idstudent__idgroup__groupname=group) & Q(
             idstudent__idgroup__idayear__title=academic_year_title
@@ -604,7 +578,6 @@ def get_filters_for_choice_text_type(list_filters):
         Text.objects.filter(text_filter).values("header").distinct().order_by("header")
     )
 
-    # Base filter for groups and courses
     group_filter = Q(student__text__errorcheckflag=True)
     if text:
         group_filter &= Q(student__text__header=text)
@@ -615,7 +588,6 @@ def get_filters_for_choice_text_type(list_filters):
     if self_rating:
         group_filter &= Q(student__text__selfrating=self_rating)
 
-    # Retrieve distinct group names
     groups = list(
         Group.objects.filter(group_filter)
         .values("groupname")
@@ -623,7 +595,6 @@ def get_filters_for_choice_text_type(list_filters):
         .order_by("groupname")
     )
 
-    # Retrieve distinct course numbers (excluding 0)
     courses = list(
         Group.objects.filter(group_filter, studycourse__gt=0)
         .values("studycourse")
@@ -635,12 +606,10 @@ def get_filters_for_choice_text_type(list_filters):
 
 
 def get_zero_count_grade_errors(data_count_errors):
-    # Extract error level IDs from the input data
     list_grades_id_in_markup = [
         data["errorlevel__iderrorlevel"] for data in data_count_errors
     ]
 
-    # Fetch error levels not in the markup, annotating with zero counts
     data_grades_not_in_errors = list(
         ErrorLevel.objects.filter(~Q(iderrorlevel__in=list_grades_id_in_markup))
         .annotate(
@@ -654,7 +623,6 @@ def get_zero_count_grade_errors(data_count_errors):
         )
     )
 
-    # Combine original data with zero-count entries
     data = data_count_errors + data_grades_not_in_errors
     return data
 
@@ -696,43 +664,33 @@ def get_stat(
     param_two_name,
     is_emotion,
 ):
-    # Retrieve assessment types from the new Text model
     asses_types = Text.TASK_RATES
 
-    # Retrieve emotions from the new Emotion model
     list_emotions = list(Emotion.objects.values("idemotion", "emotionname"))
 
-    # Initialize data structures
     param_one = []
     param_two = []
 
-    # Populate param_one and param_two with data from data_relation
     for data in data_relation:
         param_one.append(data[param_one_text])
         param_two.append(data[param_two_text])
 
-    # Convert to numpy arrays
     param_one = np.array(param_one)
     param_two = np.array(param_two)
 
-    # Create contingency table
     contingency_table = pd.crosstab(param_one, param_two, dropna=False, margins=True)
 
-    # Get dimensions
     num_rows = len(contingency_table) - 1
     num_col = len(contingency_table.columns) - 1
     N = contingency_table["All"].iloc[num_rows]
 
-    # Initialize expected values array
     except_values = np.zeros((num_rows, num_col))
 
-    # Prepare data for output
     data = []
     for row in range(num_rows):
         row_name = contingency_table.index[row]
 
         if is_emotion:
-            # Find emotion name based on idemotion
             emotion = next(
                 (
                     item["emotionname"]
@@ -748,9 +706,7 @@ def get_stat(
                     param_one_text: int(row_name),
                     param_two_text: int(col_name),
                     param_one_name: emotion,
-                    param_two_name: asses_types[col_name - 1][
-                        1
-                    ],  # Assuming asses_types is 1-indexed
+                    param_two_name: asses_types[col_name - 1][1],
                     "count": int(count),
                 }
                 data.append(dict_item)
@@ -766,9 +722,7 @@ def get_stat(
                 dict_item = {
                     param_one_text: int(row_name),
                     param_two_text: int(col_name),
-                    param_one_name: asses_types[row_name - 1][
-                        1
-                    ],  # Assuming asses_types is 1-indexed
+                    param_one_name: asses_types[row_name - 1][1],
                     param_two_name: asses_types[col_name - 1][1],
                     "count": int(count),
                 }
@@ -779,7 +733,6 @@ def get_stat(
                     / N
                 )
 
-    # Calculate the percentage of expected values less than 5
     count_less_than_5 = np.sum(except_values < 5)
     per_less = (
         (count_less_than_5 / (num_rows * num_col)) * 100
@@ -787,7 +740,6 @@ def get_stat(
         else 0
     )
 
-    # Determine the statistical test
     n = len(param_one)
     relation = {}
     data_fisher = []
@@ -798,7 +750,6 @@ def get_stat(
         relation = {"res": "-", "stat": "-", "pvalue": "-", "N": n}
     else:
         if N <= 20 or per_less > 20:
-            # Use Fisher's exact test for small samples or many small expected values
             sum_0_0 = sum_0_1 = sum_1_0 = sum_1_1 = 0
 
             for row in range(num_rows):
@@ -807,8 +758,8 @@ def get_stat(
                     count = contingency_table.iloc[row, col]
                     col_name = contingency_table.columns[col]
                     if is_emotion:
-                        if row_name in [3, 5]:  # Assuming these are negative emotions
-                            if col_name > 7:  # Assuming >7 is successful
+                        if row_name in [3, 5]:
+                            if col_name > 7:
                                 sum_0_0 += count
                             else:
                                 sum_0_1 += count
@@ -818,7 +769,7 @@ def get_stat(
                             else:
                                 sum_1_1 += count
                     else:
-                        if row_name > 7:  # Assuming >7 is successful
+                        if row_name > 7:
                             if col_name > 7:
                                 sum_0_0 += count
                             else:
@@ -833,7 +784,6 @@ def get_stat(
             result = scipy.stats.fisher_exact(table)
             method = "Fisher"
 
-            # Prepare data_fisher
             if is_emotion:
                 data_fisher.extend(
                     [
@@ -901,12 +851,8 @@ def get_stat(
                     ]
                 )
         else:
-            # Use chi-square test
-            result = scipy.stats.chi2_contingency(
-                contingency_table.iloc[:-1, :-1]
-            )  # Exclude margins
+            result = scipy.stats.chi2_contingency(contingency_table.iloc[:-1, :-1])
 
-        # Handle statistic and p-value
         stat = (
             "Inf"
             if math.isinf(result.statistic)
@@ -916,7 +862,6 @@ def get_stat(
         )
         pvalue = result.pvalue
 
-        # Determine relationship based on p-value
         if pvalue < critical_stat_level:
             relation = {
                 "result": "связь между признаками есть, они не независимы",

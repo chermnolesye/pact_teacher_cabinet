@@ -219,7 +219,6 @@ def chart_types_errors(request):
         list_filters = json.loads(request.body)
         flag_post = list_filters["flag_post"]
 
-        # Existing branches remain unchanged
         if flag_post == "enrollment_date":
             enrollment_date = dashboards.get_enrollment_date(list_filters)
             return JsonResponse({"enrollment_date": enrollment_date}, status=200)
@@ -258,7 +257,6 @@ def chart_types_errors(request):
             )
 
         if flag_post == "update_diagrams":
-            # Extract filter parameters
             group = list_filters.get("group")
             date = list_filters.get("enrollment_date")
             surname = list_filters.get("surname")
@@ -268,18 +266,15 @@ def chart_types_errors(request):
             text_type = list_filters.get("text_type")
             level = int(list_filters.get("level", 0))
 
-            # Convert enrollment date to academic year title
             academic_year_title = None
             if date:
                 start_year = date.split(" \\ ")[0]
                 academic_year_title = f"{start_year}/{int(start_year) + 1}"
 
-            # Base query for SentenceError
             base_filter = Q(iderrortag__markuptype=1) & Q(
                 idsentence__idtext__errorcheckflag=True
             )
 
-            # Apply filters based on conditions
             if surname and name and text and text_type:
                 base_filter &= (
                     Q(idsentence__idtext__idstudent__iduser__lastname=surname)
@@ -361,7 +356,6 @@ def chart_types_errors(request):
             elif text:
                 base_filter &= Q(idsentence__idtext__header=text)
 
-            # Execute query to get error counts
             data_count_errors = list(
                 Sentence.objects.filter(base_filter)
                 .values(
@@ -374,7 +368,6 @@ def chart_types_errors(request):
                 .annotate(count_data=Count("iderrortag__iderrortag"))
             )
 
-            # Process data using dashboard functions
             data_on_tokens = dashboards.get_data_on_tokens(
                 data_count_errors, "iderrortag__iderrortag", None, True, False
             )
