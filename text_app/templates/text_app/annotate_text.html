@@ -9,332 +9,332 @@
     <link rel="stylesheet" href="{% static 'css/text_markup.css' %}" />
 </head>
 <body>
-    <div id="header-container"></div>
-    <!-- Всплывающее окно с информацией об ошибке -->
-    <div class="error-popup" id="error-popup">
-        <!-- <span class="close-btn" id="close-popup">&#x2715;</span> -->
-        <h3>
-            <span id="error-tag"></span>
-            <span id="error-tag-abbrev"></span>
-        </h3>
-        <p><strong>Степень грубости:</strong> <span id="error-level"></span></p>
-        <p><strong>Причина ошибки:</strong> <span id="error-reason"></span></p>
-        <p><strong>Исправление:</strong> <span id="error-correct"></span></p>
-        <p><strong>Комментарий:</strong> <span id="error-comment"></span></p>
-    </div>
-
     <div class="text-app-container">
 
         <div class="menu-container">
             <!-- Блоки меню -->
-        <div class="menu-block" data-target="view-content">
-            <span>
-                Вид
-                <svg width="10" height="10" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M13.5753 2L7.70808 10.5L1.84082 2" stroke="#0d6efd" stroke-width="3" stroke-linecap="round" />
-                </svg>
-            </span>
+            <div class="menu-block" data-target="view-content">
+                <span>
+                    Вид
+                    <svg width="10" height="10" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M13.5753 2L7.70808 10.5L1.84082 2" stroke="#0d6efd" stroke-width="3" stroke-linecap="round" />
+                    </svg>
+                </span>
+            </div>
+            <div class="menu-block" data-target="text-content">
+                <span>
+                    Текст
+                    <svg width="10" height="10" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M13.5753 2L7.70808 10.5L1.84082 2" stroke="#0d6efd" stroke-width="3" stroke-linecap="round" />
+                    </svg>
+                </span>
+            </div>
+            <div class="menu-block" data-target="author-content">
+                <span>
+                    Автор
+                    <svg width="10" height="10" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M13.5753 2L7.70808 10.5L1.84082 2" stroke="#0d6efd" stroke-width="3" stroke-linecap="round" />
+                    </svg>
+                </span>
+            </div>
+            <div class="menu-block" data-target="grade-content">
+                <span>
+                    Оценка
+                    <svg width="10" height="10" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M13.5753 2L7.70808 10.5L1.84082 2" stroke="#0d6efd" stroke-width="3" stroke-linecap="round" />
+                    </svg>
+                </span>
+            </div>
+            <div class="menu-block" data-target="metadata-content">
+                <span>
+                    Метаданные
+                    <svg width="10" height="10" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M13.5753 2L7.70808 10.5L1.84082 2" stroke="#0d6efd" stroke-width="3" stroke-linecap="round" />
+                    </svg>
+                </span>
+            </div>
+            <button class="rate-btn">Оценить</button>
         </div>
-        <div class="menu-block" data-target="text-content">
-            <span>
-                Текст
-                <svg width="10" height="10" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M13.5753 2L7.70808 10.5L1.84082 2" stroke="#0d6efd" stroke-width="3" stroke-linecap="round" />
-                </svg>
-            </span>
+
+        <div id="header-container"></div>
+        <!-- Всплывающее окно с информацией об ошибке -->
+        <div class="error-popup" id="error-popup">
+            <!-- <span class="close-btn" id="close-popup">&#x2715;</span> -->
+            <h3>
+                <span id="error-tag"></span>
+                <span id="error-tag-abbrev"></span>
+            </h3>
+            <p><strong>Степень грубости:</strong> <span id="error-level"></span></p>
+            <p><strong>Причина ошибки:</strong> <span id="error-reason"></span></p>
+            <p><strong>Исправление:</strong> <span id="error-correct"></span></p>
+            <p><strong>Комментарий:</strong> <span id="error-comment"></span></p>
         </div>
-        <div class="menu-block" data-target="author-content">
-            <span>
-                Автор
-                <svg width="10" height="10" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M13.5753 2L7.70808 10.5L1.84082 2" stroke="#0d6efd" stroke-width="3" stroke-linecap="round" />
-                </svg>
-            </span>
-        </div>
-        <div class="menu-block" data-target="grade-content">
-            <span>
-                Оценка
-                <svg width="10" height="10" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M13.5753 2L7.70808 10.5L1.84082 2" stroke="#0d6efd" stroke-width="3" stroke-linecap="round" />
-                </svg>
-            </span>
-        </div>
-        <div class="menu-block" data-target="metadata-content">
-            <span>
-                Метаданные
-                <svg width="10" height="10" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M13.5753 2L7.70808 10.5L1.84082 2" stroke="#0d6efd" stroke-width="3" stroke-linecap="round" />
-                </svg>
-            </span>
-        </div>
-        <button class="rate-btn">Оценить</button>
-    </div>
 
 
-            <!-- Контентные блоки -->
-            <div class="menu-content" id="view-content">
-                <div class="menu-content-view">
+        <!-- Контентные блоки -->
+        <div class="menu-content" id="view-content">
+            <div class="menu-content-view">
 
-                    <div class="option-group">
-                        <p>Язык разметки</p>
-                        <div class="radio-group">
-                            <label class="radio-option">
-                                <input type="radio" name="language" value="deutsche" checked>
-                                <span class="radio-custom"></span>
-                                <span>Deutsche</span>
-                            </label>
-                            <label class="radio-option">
-                                <input type="radio" name="language" value="russian">
-                                <span class="radio-custom"></span>
-                                <span>Русский</span>
-                            </label>
-                        </div>
-                    </div>
-
-                    <div class="option-group">
-                        <p>Компактный вид</p>
-                        <label class="switch">
-                            <input type="checkbox">
-                            <span class="slider"></span>
+                <div class="option-group">
+                    <p>Язык разметки</p>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="language" value="deutsche" checked>
+                            <span class="radio-custom"></span>
+                            <span>Deutsche</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="language" value="russian">
+                            <span class="radio-custom"></span>
+                            <span>Русский</span>
                         </label>
                     </div>
+                </div>
 
-                    <div class="option-group">
-                        <p>Части речи</p>
-                        <label class="switch">
-                            <input type="checkbox">
-                            <span class="slider"></span>
-                        </label>
+                <div class="option-group">
+                    <p>Компактный вид</p>
+                    <label class="switch">
+                        <input type="checkbox">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <div class="option-group">
+                    <p>Части речи</p>
+                    <label class="switch">
+                        <input type="checkbox">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <div class="option-group">
+                    <p>Ошибки</p>
+                    <label class="switch">
+                        <input type="checkbox" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+            </div>
+        </div>
+        <div class="menu-content" id="text-content">
+            <div class="menu-content-data">
+                <p>Курс создания:</p>
+                <p class="p-dark"> {{ year_study_language }} </p>
+            </div>
+            <div class="menu-content-data">
+                <p>Дата создания:</p>
+                <p class="p-dark"> {{ create_date|default:"Нет данных" }} </p>
+            </div>
+        </div>
+        <div class="menu-content" id="author-content">
+
+            <div class="menu-content-data">
+                <p>Имя:</p>
+                <p class="p-dark"> {{ author|default:"Нет данных" }} </p>
+            </div>
+            <div class="menu-content-data">
+                <p>Группа:</p>
+                <p class="p-dark"> {{ group|default:"Нет данных" }} ({{ academic_year|default:"Нет данных" }}) </p>
+            </div>
+        </div>
+        <div class="menu-content" id="grade-content">
+            <div class="menu-content-grade">
+                <div class="menu-content-grade-col ">
+                    <p>Оценка работы</p>
+                    <div class="menu-content-data">
+                        <p>Оценка:</p>
+                        <p class="p-dark"> {{ textgrade }} </p>
                     </div>
-            
-                    <div class="option-group">
-                        <p>Ошибки</p>
-                        <label class="switch">
-                            <input type="checkbox" checked>
-                            <span class="slider"></span>
-                        </label>
+                    <div class="menu-content-data">
+                        <p>Полнота:</p>
+                        <p class="p-dark"> {{ completeness }} </p>
                     </div>
-
-                </div>
-            </div>
-            <div class="menu-content" id="text-content">
-                <div class="menu-content-data">
-                    <p>Курс создания:</p>
-                    <p class="p-dark"> {{ year_study_language }} </p>
-                </div>
-                <div class="menu-content-data">
-                    <p>Дата создания:</p>
-                    <p class="p-dark"> {{ create_date|default:"Нет данных" }} </p>
-                </div>
-            </div>
-            <div class="menu-content" id="author-content">
-
-                <div class="menu-content-data">
-                    <p>Имя:</p>
-                    <p class="p-dark"> {{ author|default:"Нет данных" }} </p>
-                </div>
-                <div class="menu-content-data">
-                    <p>Группа:</p>
-                    <p class="p-dark"> {{ group|default:"Нет данных" }} ({{ academic_year|default:"Нет данных" }}) </p>
-                </div>
-            </div>
-            <div class="menu-content" id="grade-content">
-                <div class="menu-content-grade">
-                    <div class="menu-content-grade-col ">
-                        <p>Оценка работы</p>
-                        <div class="menu-content-data">
-                            <p>Оценка:</p>
-                            <p class="p-dark"> {{ textgrade }} </p>
-                        </div>
-                        <div class="menu-content-data">
-                            <p>Полнота:</p>
-                            <p class="p-dark"> {{ completeness }} </p>
-                        </div>
-                        <div class="menu-content-data">
-                            <p>Структура:</p>
-                            <p class="p-dark"> {{ structure }} </p>
-                        </div>
-                        <div class="menu-content-data">
-                            <p>Связность:</p>
-                            <p class="p-dark"> {{ coherence }} </p>
-                        </div>
-                        <div class="menu-content-data">
-                            <p>Проверяющий:</p>
-                            <p class="p-dark"> {{userteacher}} </p>
-                        </div>
-
-                        <p>Частеречная разметка</p>
-                        <div class="menu-content-data">
-                            <p>Статус:</p>
-                            <p class="p-dark"> {{ poscheckflag }} </p>
-                        </div>
-                        <p>Разметка ошибок</p>
-                        <div class="menu-content-data">
-                            <p>Статус:</p>
-                            <p class="p-dark"> {{ errorcheckflag }} </p>
-                        </div>
-                        <div class="menu-content-data">
-                            <p>Проверяющий:</p>
-                            <p class="p-dark">  {{usererrorcheck}} </p>
-                        </div>
+                    <div class="menu-content-data">
+                        <p>Структура:</p>
+                        <p class="p-dark"> {{ structure }} </p>
+                    </div>
+                    <div class="menu-content-data">
+                        <p>Связность:</p>
+                        <p class="p-dark"> {{ coherence }} </p>
+                    </div>
+                    <div class="menu-content-data">
+                        <p>Проверяющий:</p>
+                        <p class="p-dark"> {{userteacher}} </p>
                     </div>
 
-                    <div class="menu-content-grade-col ">
-                        <p>Автооценка: Грамматика</p>
-                        <div class="menu-content-data">
-                            <p>Степень 1:</p>
-                            <p class="p-dark">  </p>
-                        </div>
-                        <div class="menu-content-data">
-                            <p>Степень 2:</p>
-                            <p class="p-dark">  </p>
-                        </div>
-                        <div class="menu-content-data">
-                            <p>Степень 3:</p>
-                            <p class="p-dark">  </p>
-                        </div>
-                        <div class="menu-content-data">
-                            <p>Оценка:</p>
-                            <p class="p-dark">  </p>
-                        </div>
+                    <p>Частеречная разметка</p>
+                    <div class="menu-content-data">
+                        <p>Статус:</p>
+                        <p class="p-dark"> {{ poscheckflag }} </p>
+                    </div>
+                    <p>Разметка ошибок</p>
+                    <div class="menu-content-data">
+                        <p>Статус:</p>
+                        <p class="p-dark"> {{ errorcheckflag }} </p>
+                    </div>
+                    <div class="menu-content-data">
+                        <p>Проверяющий:</p>
+                        <p class="p-dark">  {{usererrorcheck}} </p>
+                    </div>
+                </div>
 
-                        <p>Автооценка: Лексика</p>
-                        <div class="menu-content-data">
-                            <p>Степень 1:</p>
-                            <p class="p-dark">  </p>
-                        </div>
-                        <div class="menu-content-data">
-                            <p>Степень 2:</p>
-                            <p class="p-dark">  </p>
-                        </div>
-                        <div class="menu-content-data">
-                            <p>Степень 3:</p>
-                            <p class="p-dark">  </p>
-                        </div>
-                        <div class="menu-content-data">
-                            <p>Оценка:</p>
-                            <p class="p-dark">  </p>
-                        </div>
+                <div class="menu-content-grade-col ">
+                    <p>Автооценка: Грамматика</p>
+                    <div class="menu-content-data">
+                        <p>Степень 1:</p>
+                        <p class="p-dark">  </p>
+                    </div>
+                    <div class="menu-content-data">
+                        <p>Степень 2:</p>
+                        <p class="p-dark">  </p>
+                    </div>
+                    <div class="menu-content-data">
+                        <p>Степень 3:</p>
+                        <p class="p-dark">  </p>
+                    </div>
+                    <div class="menu-content-data">
+                        <p>Оценка:</p>
+                        <p class="p-dark">  </p>
+                    </div>
 
-                        <p>Автооценка: Орфография и пунктуация</p>
-                        <div class="menu-content-data">
-                            <p>Степень 1:</p>
-                            <p class="p-dark">  </p>
-                        </div>
-                        <div class="menu-content-data">
-                            <p>Степень 2:</p>
-                            <p class="p-dark">  </p>
-                        </div>
-                        <div class="menu-content-data">
-                            <p>Степень 3:</p>
-                            <p class="p-dark">  </p>
-                        </div>
-                        <div class="menu-content-data">
-                            <p>Оценка:</p>
-                            <p class="p-dark">  </p>
-                        </div>
+                    <p>Автооценка: Лексика</p>
+                    <div class="menu-content-data">
+                        <p>Степень 1:</p>
+                        <p class="p-dark">  </p>
+                    </div>
+                    <div class="menu-content-data">
+                        <p>Степень 2:</p>
+                        <p class="p-dark">  </p>
+                    </div>
+                    <div class="menu-content-data">
+                        <p>Степень 3:</p>
+                        <p class="p-dark">  </p>
+                    </div>
+                    <div class="menu-content-data">
+                        <p>Оценка:</p>
+                        <p class="p-dark">  </p>
+                    </div>
 
-                        <p>Автооценка: Подсчет ошибок</p>
-                        <div class="menu-content-data">
-                            <p>Дискурс:</p>
-                            <p class="p-dark">  </p>
-                        </div>
-                        <div class="menu-content-data">
-                            <p>Пропуски:</p>
-                            <p class="p-dark">  </p>
-                        </div>
-                        <div class="menu-content-data">
-                            <p>Лишние элементы:</p>
-                            <p class="p-dark">  </p>
-                        </div>
+                    <p>Автооценка: Орфография и пунктуация</p>
+                    <div class="menu-content-data">
+                        <p>Степень 1:</p>
+                        <p class="p-dark">  </p>
+                    </div>
+                    <div class="menu-content-data">
+                        <p>Степень 2:</p>
+                        <p class="p-dark">  </p>
+                    </div>
+                    <div class="menu-content-data">
+                        <p>Степень 3:</p>
+                        <p class="p-dark">  </p>
+                    </div>
+                    <div class="menu-content-data">
+                        <p>Оценка:</p>
+                        <p class="p-dark">  </p>
+                    </div>
+
+                    <p>Автооценка: Подсчет ошибок</p>
+                    <div class="menu-content-data">
+                        <p>Дискурс:</p>
+                        <p class="p-dark">  </p>
+                    </div>
+                    <div class="menu-content-data">
+                        <p>Пропуски:</p>
+                        <p class="p-dark">  </p>
+                    </div>
+                    <div class="menu-content-data">
+                        <p>Лишние элементы:</p>
+                        <p class="p-dark">  </p>
                     </div>
                 </div>
             </div>
-            <div class="menu-content" id="metadata-content">
-                <div class="menu-content-data">
-                    <p>Эмоционально-физиологическое состояние:</p>
-                    <p class="p-dark"> {{ emotion }} </p>
-                </div>
-                <div class="menu-content-data">
-                    <p>Место написания:</p>
-                    <p class="p-dark"> {{ write_place }} </p>
-                </div>
-                <div class="menu-content-data">
-                    <p>Год изучения языка:</p>
-                    <p class="p-dark"> {{ year_study_language }} </p>
-                </div>
-                <div class="menu-content-data">
-                    <p>Самооценивание:</p>
-                    <p class="p-dark"> {{ self_rating }} </p>
-                </div>
-                <div class="menu-content-data">
-                    <p>Оценка задания студентом:</p>
-                    <p class="p-dark"> {{ self_assesment }} </p>
-                </div>
-            </div>  
-        
+        </div>
+        <div class="menu-content" id="metadata-content">
+            <div class="menu-content-data">
+                <p>Эмоционально-физиологическое состояние:</p>
+                <p class="p-dark"> {{ emotion }} </p>
+            </div>
+            <div class="menu-content-data">
+                <p>Место написания:</p>
+                <p class="p-dark"> {{ write_place }} </p>
+            </div>
+            <div class="menu-content-data">
+                <p>Год изучения языка:</p>
+                <p class="p-dark"> {{ year_study_language }} </p>
+            </div>
+            <div class="menu-content-data">
+                <p>Самооценивание:</p>
+                <p class="p-dark"> {{ self_rating }} </p>
+            </div>
+            <div class="menu-content-data">
+                <p>Оценка задания студентом:</p>
+                <p class="p-dark"> {{ self_assesment }} </p>
+            </div>
+        </div>
+
 
         <!-- Модальное окно для оценки текста -->
         <div class="modal-overlay" id="modal">
             <div class="modal-content">
                 <div class="modal-head">
-                        <p>Оценить текст</p>
-                        <button class="close-modal">
-                            <svg width="30" height="30" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M27.101 17.0606L17.0606 27.101M17.0606 17.0606L27.101 27.101M12.0404 4.68683C15.0917 2.92153 18.5556 1.99459 22.0808 2.00002C33.1714 2.00002 42.1616 10.9902 42.1616 22.0808C42.1616 33.1714 33.1714 42.1616 22.0808 42.1616C10.9902 42.1616 2 33.1714 2 22.0808C2 18.4241 2.97794 14.9923 4.68681 12.0404" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
-                            </svg>
-                        </button>
+                    <p>Оценить текст</p>
+                    <button class="close-modal">
+                        <svg width="30" height="30" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M27.101 17.0606L17.0606 27.101M17.0606 17.0606L27.101 27.101M12.0404 4.68683C15.0917 2.92153 18.5556 1.99459 22.0808 2.00002C33.1714 2.00002 42.1616 10.9902 42.1616 22.0808C42.1616 33.1714 33.1714 42.1616 22.0808 42.1616C10.9902 42.1616 2 33.1714 2 22.0808C2 18.4241 2.97794 14.9923 4.68681 12.0404" stroke="white" stroke-width="2.5" stroke-linecap="round" />
+                        </svg>
+                    </button>
                 </div>
 
                 <form method="post" id="grade-form">
                     {% csrf_token %}
                     <div class="grade-form-selects">
                         <div class="grade-group">
-                                {{ grade_form.textgrade.label_tag }}
-                                {{ grade_form.textgrade }}
+                            {{ grade_form.textgrade.label_tag }}
+                            {{ grade_form.textgrade }}
                         </div>
 
                         <div class="horizontal-wrap">
-                                <div class="grade-group">
-                                    {{ grade_form.completeness.label_tag }}
-                                    {{ grade_form.completeness }}
-                                </div>
-                                <div class="grade-group">
-                                    {{ grade_form.structure.label_tag }}
-                                    {{ grade_form.structure }}
-                                </div>
-                                <div class="grade-group">
-                                    {{ grade_form.coherence.label_tag }}
-                                    {{ grade_form.coherence }}
-                                </div>
+                            <div class="grade-group">
+                                {{ grade_form.completeness.label_tag }}
+                                {{ grade_form.completeness }}
+                            </div>
+                            <div class="grade-group">
+                                {{ grade_form.structure.label_tag }}
+                                {{ grade_form.structure }}
+                            </div>
+                            <div class="grade-group">
+                                {{ grade_form.coherence.label_tag }}
+                                {{ grade_form.coherence }}
+                            </div>
                         </div>
 
                         <div class="horizontal-wrap">
-                                <div class="grade-group">
-                                    {{ grade_form.poscheckflag.label_tag }}
-                                    {{ grade_form.poscheckflag }}
-                                </div>
-                                <div class="grade-group">
-                                    {{ grade_form.errorcheckflag.label_tag }}
-                                    {{ grade_form.errorcheckflag }}
-                                </div>
+                            <div class="grade-group">
+                                {{ grade_form.poscheckflag.label_tag }}
+                                {{ grade_form.poscheckflag }}
+                            </div>
+                            <div class="grade-group">
+                                {{ grade_form.errorcheckflag.label_tag }}
+                                {{ grade_form.errorcheckflag }}
+                            </div>
                         </div>
                     </div>
 
                     <div class="grade-buttons">
                         <button type="submit" name="grade-form" class="button" onclick="addAnnotation()">Сохранить</button>
                         <button type="submit" class="button grey-button">Назад</button>
-                    </div>        
+                    </div>
                 </form>
             </div>
         </div>
 
-    <div class="text-header">
-        <h1 class="text-title">{{ text.header }}</h1>
-    </div>
+        <div class="text-header">
+            <h1 class="text-title">{{ text.header }}</h1>
+        </div>
 
-    <div class="watch-text">
-        {% for sentence in sentence_data %}
+        <div class="watch-text">
+            {% for sentence in sentence_data %}
             <div class="sentence">
                 <div class="tokens-container" id_sentence="{{ sentence.id_sentence }}">
                     <p class="sentence-number">{{ sentence.sentence.ordernumber|add:1 }}:</p>
@@ -356,6 +356,7 @@
                           data-error-tag-abbrev="{{ token.error_tag_abbrev }}"
                           data-error-level="{{ token.error_level }}"
                           data-error-color="{{ token.error_color }}"
+                          
                           {% endif %}>
 
                         <!-- Ошибки (изначально скрыты) -->
@@ -403,79 +404,80 @@
                     {% endfor %}
                 </div>
             </div>
-        {% endfor %}
-    </div>
-
-     <!-- Окно для добавления аннотации ошибки -->
-     <div id="annotation-modal" class="modal-overlay">
-        <div class="modal-content">
-
-            <div class="modal-head">
-                <p>Аннотация</p>
-                <button class="close-modal" id="close-modal">
-                    <svg width="30" height="30" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M27.101 17.0606L17.0606 27.101M17.0606 17.0606L27.101 27.101M12.0404 4.68683C15.0917 2.92153 18.5556 1.99459 22.0808 2.00002C33.1714 2.00002 42.1616 10.9902 42.1616 22.0808C42.1616 33.1714 33.1714 42.1616 22.0808 42.1616C10.9902 42.1616 2 33.1714 2 22.0808C2 18.4241 2.97794 14.9923 4.68681 12.0404" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
-                    </svg>
-                </button>
-            </div>
-
-            <form method="post" id="annotation-form">
-                {% csrf_token %}
-                <div class="annotation-modal-content">
-                    <label id="tags-label" for="id_iderrortag">Выберите тег:</label>
-                    <input type="text" id="tag-search" placeholder="Поиск тега" class="tag-search">
-                    <div id="tags-list" class="tags-list"></div>                    
-                    {{ annotation_form.iderrortag }}
-                    <div class="selected-tag-display">
-                        Выбранный тег: <span id="selected-tag-name">Не выбран</span>
-                    </div>
-                    
-                    {{ annotation_form.iderrortag.label_tag }}
-                    {{ annotation_form.iderrortag }}
-                
-                    {{ annotation_form.idreason.label_tag }}
-                    {{ annotation_form.idreason }}
-                
-                    {{ annotation_form.iderrorlevel.label_tag }}
-                    {{ annotation_form.iderrorlevel }}
-
-                    {{ annotation_form.correct.label_tag}}
-                    {{ annotation_form.correct }}
-                
-                    {{ annotation_form.comment.label_tag }}
-                    {{ annotation_form.comment }}
-
-                    <p>Создатель аннотации: <p>
-
-                    <div class="grade-buttons">
-                        <!-- Нужно написать функцию  для добавления в бд аннотации -->
-                        <button type="submit" name="annotation-form" class="button" id="save-annotation" onclick="addErrorAnnotation()">Сохранить</button>
-                        <button class="button red-button" id="delete-annotation">Удалить</button>
-                    </div>
-                </div>
-            </form>   
+            {% endfor %}
         </div>
-    </div>
-    
-    <div id="select-menu" class="hide">
-        <button class="button-menu-select" id="button-add-annotation">Добавить аннотацию</button>
-        <button class="button-menu-select" id="button-delete-tokens">Удалить выбранные пустые токены</button>
-        <button class="button-menu-select" id="button-remove-highlight">Снять выделение</button>
-    </div>
-    <!-- Шапка убрать коммент, если нужна  -->
-    <!-- <script> 
+
+        <!-- Окно для добавления аннотации ошибки -->
+        <div id="annotation-modal" class="modal-overlay">
+            <div class="modal-content">
+
+                <div class="modal-head">
+                    <p>Аннотация</p>
+                    <button class="close-modal" id="close-modal">
+                        <svg width="30" height="30" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M27.101 17.0606L17.0606 27.101M17.0606 17.0606L27.101 27.101M12.0404 4.68683C15.0917 2.92153 18.5556 1.99459 22.0808 2.00002C33.1714 2.00002 42.1616 10.9902 42.1616 22.0808C42.1616 33.1714 33.1714 42.1616 22.0808 42.1616C10.9902 42.1616 2 33.1714 2 22.0808C2 18.4241 2.97794 14.9923 4.68681 12.0404" stroke="white" stroke-width="2.5" stroke-linecap="round" />
+                        </svg>
+                    </button>
+                </div>
+
+                <form method="post" id="annotation-form">
+                    {% csrf_token %}
+                    <div class="annotation-modal-content">
+                        <label id="tags-label" for="id_iderrortag">Выберите тег:</label>
+                        <input type="text" id="tag-search" placeholder="Поиск тега" class="tag-search">
+                        <div id="tags-list" class="tags-list"></div>
+                        {{ annotation_form.iderrortag }}
+                        <!--{{annotation_form.iderrortag.idtagparent}}-->
+                        <div class="selected-tag-display">
+                            Выбранный тег: <span id="selected-tag-name">Не выбран</span>
+                        </div>
+
+                        {{ annotation_form.iderrortag.label_tag }}
+                        {{ annotation_form.iderrortag }}
+
+                        {{ annotation_form.idreason.label_tag }}
+                        {{ annotation_form.idreason }}
+
+                        {{ annotation_form.iderrorlevel.label_tag }}
+                        {{ annotation_form.iderrorlevel }}
+
+                        {{ annotation_form.correct.label_tag}}
+                        {{ annotation_form.correct }}
+
+                        {{ annotation_form.comment.label_tag }}
+                        {{ annotation_form.comment }}
+
+                        <p id="author_id">Создатель аннотации: <p>
+
+                            <div class="grade-buttons">
+                                <!-- Нужно написать функцию  для добавления в бд аннотации -->
+                                <button type="submit" name="annotation-form" class="button" id="save-annotation" onclick="addErrorAnnotation()">Сохранить</button>
+                                <button class="button red-button" id="delete-annotation">Удалить</button>
+                            </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div id="select-menu" class="hide">
+            <button class="button-menu-select" id="button-add-annotation">Добавить аннотацию</button>
+            <button class="button-menu-select" id="button-delete-tokens">Удалить выбранные пустые токены</button>
+            <button class="button-menu-select" id="button-remove-highlight">Снять выделение</button>
+        </div>
+        <!-- Шапка убрать коммент, если нужна  -->
+        <!-- <script>
         document.addEventListener('DOMContentLoaded', function() {
         fetch('/static/templates/base.html')
             .then(response => response.text())
             .then(data => {
             document.getElementById('header-container').innerHTML = data;
-            let user_fio = "{{ fio|escapejs }}"; 
+            let user_fio = "{{ fio|escapejs }}";
             document.getElementById('user-link').textContent = user_fio;
             });
         });
-    
+
     </script> -->
-    <script>
+        <script>
         const chosen = [];
         const chosen_ids = [];
 
@@ -507,10 +509,10 @@
                         if (posTag) {
                             posTag.style.display = 'inline';
                             if (isCompact) {
-                                posTag.textContent = posTag.dataset.posTagAbbrev || 
+                                posTag.textContent = posTag.dataset.posTagAbbrev ||
                                     (language === 'russian' ? posTag.dataset.posTagRussian : posTag.dataset.posTagAbbrev);
                             } else {
-                                posTag.textContent = language === 'russian' ? 
+                                posTag.textContent = language === 'russian' ?
                                     posTag.dataset.posTagRussian : posTag.dataset.posTag;
                             }
                         }
@@ -525,7 +527,7 @@
                                 if (isCompact) {
                                     tag.textContent = tag.dataset.errorTagAbbrev;
                                 } else {
-                                    tag.textContent = language === 'russian' ? 
+                                    tag.textContent = language === 'russian' ?
                                         tag.dataset.errorTagRussian : tag.dataset.errorTag;
                                 }
                             });
@@ -550,7 +552,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             const popup = document.getElementById('error-popup');
             const closePopupBtn = document.getElementById('close-popup');
-    
+
             // Функция для отображения всплывающего окна с информацией об ошибке
             function showPopup(tokenElement) {
                 const errorTag = tokenElement.dataset.errorTag;
@@ -597,6 +599,40 @@
                 popup.style.top = `${top}px`;
             }
 
+            function EditAnnotationForm(tokenElement) {
+                document.getElementById('selected-tag-name').innerHTML = tokenElement.dataset.errorTag;
+
+                const id_idreason = document.getElementById('id_idreason');
+                var options = id_idreason.options;
+                var chosen = 0;
+                for (var i = 0; i < options.length; i++) {
+                    var option = options[i];
+                    if (option.text === tokenElement.dataset.errorReason) {
+                        chosen = option.value;
+                    }
+                }
+                id_idreason.getElementsByTagName('option')[chosen].selected = 'selected';
+
+                const id_iderrorlevel = document.getElementById('id_iderrorlevel');
+                options = id_iderrorlevel.options;
+                chosen = 0;
+                for (var i = 0; i < options.length; i++) {
+                    var option = options[i];
+                    if (option.text === tokenElement.dataset.errorLevel) {
+                        chosen = option.value;
+                    }
+                } 
+                id_iderrorlevel.getElementsByTagName('option')[chosen].selected = 'selected';
+
+                if (tokenElement.dataset.errorComment !== "Не указано") {
+                    document.getElementById('id_comment').value = tokenElement.dataset.errorComment;
+                }
+
+                if (tokenElement.dataset.errorCorrect !== "Не указано") {
+                    document.getElementById('id_correct').value = tokenElement.dataset.errorCorrect;
+                }
+            }
+
             // Закрытие окна с анимацией
             /*closePopupBtn.addEventListener('click', function() {
                 const popup = document.getElementById('error-popup');
@@ -605,15 +641,16 @@
                     popup.style.display = 'none'; // Скрываем окно после анимации
                 }, 300); // Задержка, соответствующая длительности перехода
             });*/
-    
+
             // Слушаем клик по токенам
             document.querySelectorAll('.error-tag').forEach(function(errorTagElement) {
                 errorTagElement.addEventListener('mouseover', function(e) {
                     e.stopPropagation(); // Чтобы не всплывало до .token
-                    showPopup(this);     
+                    showPopup(this);
                 });
                 errorTagElement.addEventListener('click', function (e) {
                     document.getElementById('annotation-modal').style.display = 'flex';
+                    EditAnnotationForm(this);
                 });
                 errorTagElement.addEventListener('mouseleave', function (e) {
                     const popup = document.getElementById('error-popup');
@@ -695,7 +732,7 @@
                 console.log(token);
                 let word = icon.previousElementSibling;
                 console.log(word);
-                
+
                 newToken.setAttribute('sentence_id', token.getAttribute('id_sentence'));
                 newToken.setAttribute('data-position', 0);
 
@@ -774,7 +811,7 @@
                         }
                         let tokens_container = token.parentElement;
                         //console.log(tokens_container);
-                        
+
                         token.remove();
                         ChangePositions(tokens_container, null);
                     }
@@ -805,20 +842,20 @@
             menuBlocks.forEach(block => {
             block.addEventListener('click', function(e) {
                 e.stopPropagation();
-                
+
                 const contentId = this.getAttribute('data-target');
                 const content = document.getElementById(contentId);
                 if (!content) return;
 
                 const isAlreadyOpen = content.style.display === 'block';
-                                
+
                 // Скрываем все другие контенты
                 document.querySelectorAll('.menu-content').forEach(c => {
                     if (c !== content) {
                         c.style.display = 'none';
                     }
                 });
-            
+
                 if (isAlreadyOpen) {
                     content.style.display = 'none';
                 }
@@ -830,8 +867,8 @@
                     content.style.left = `${rect.left}px`;
                     content.style.top = `${rect.bottom}px`;
                     content.style.zIndex = '1001'; // Выше чем у меню
-                }              
-                
+                }
+
                 });
             });
 
@@ -861,14 +898,14 @@
                 const isClickInsideContent = Array.from(document.querySelectorAll('.menu-content, .menu-block')).some(
                     element => element.contains(e.target)
                 );
-                
+
                 if (!isClickInsideContent) {
                     document.querySelectorAll('.menu-content').forEach(c => {
                         c.style.display = 'none';
                     });
                 }
             });
-            
+
             // Закрытие при клике вне и по кнопке назад
             document.addEventListener('click', function() {
                 document.querySelectorAll('.menu-content').forEach(c => {
@@ -876,32 +913,32 @@
                 });
             });
 
-             // Обработчики для модального окна            
+             // Обработчики для модального окна
             if (backButton) {
                 backButton.addEventListener('click', function(e) {
                     e.preventDefault(); // Предотвращает отправку формы
                     modal.style.display = 'none';
                 });
             }
-           
+
             rateBtn.addEventListener('click', function(e) {
                 e.stopPropagation();
                 document.querySelectorAll('.menu-content').forEach(c => {
-                        c.style.display = 'none';                    
+                        c.style.display = 'none';
                 });
                 modal.style.display = 'flex';
             });
-            
+
             closeModal.addEventListener('click', function() {
                 modal.style.display = 'none';
             });
-            
+
             modal.addEventListener('click', function(e) {
                 if (e.target === modal) {
                 modal.style.display = 'none';
                 }
             });
-            
+
             // Закрытие при ресайзе окна (перепозиционирование)
             window.addEventListener('resize', function() {
                 document.querySelectorAll('.menu-content').forEach(content => {
@@ -919,10 +956,10 @@
                 { name: 'Tag2' },
                 { name: 'Tag3' }
             ];
-    
+
             const tagsList = document.getElementById('tags-list');
-            tagsList.innerHTML = '';  
-    
+            tagsList.innerHTML = '';
+
             // Создаем элементы для тегов
             tags.forEach(tag => {
                 const tagElement = document.createElement('div');
@@ -934,31 +971,31 @@
                 tagsList.appendChild(tagElement);
             });
             */
-    
+
             // Показать модальное окно
             document.getElementById('annotation-modal').style.display = 'flex';
         });
-    
+
         // Закрытие модального окна
         document.getElementById('close-modal').addEventListener('click', function() {
             document.getElementById('annotation-modal').style.display = 'none';
         });
-    
+
         // Закрытие модального окна, если кликнут вне окна
         window.addEventListener('click', function(event) {
             if (event.target === document.getElementById('annotation-modal')) {
                 document.getElementById('annotation-modal').style.display = 'none';
             }
         });
-    
+
         // Функция для выбора тега
         // function selectTag(tag) {
         //     document.getElementById('selected-tag').value = tag.name;
-    
+
         //     document.querySelectorAll('.tag').forEach(t => t.classList.remove('selected'));
         //     event.target.classList.add('selected');
         // }
-    
+
         // Удаление аннотации
         // document.getElementById('delete-annotation').addEventListener('click', function() {
         //     document.getElementById('selected-tag').value = '';
@@ -972,44 +1009,44 @@
             const select = document.getElementById('id_iderrortag');
             const tagsList = document.getElementById('tags-list');
             const selectedTagDisplay = document.getElementById('selected-tag-name');
-            
+
             function updateSelectedTagDisplay() {
                 const selectedOption = select.options[select.selectedIndex];
                 selectedTagDisplay.textContent = selectedOption ? selectedOption.text : 'Не выбран';
             }
-            
+
             function renderTags() {
                 tagsList.innerHTML = '';
-                
+
                 Array.from(select.options).forEach(option => {
                     if (option.value) {
                         const tagElement = document.createElement('div');
                         tagElement.classList.add('tag');
                         tagElement.textContent = option.text;
                         tagElement.dataset.value = option.value;
-                        
+
                         if (option.selected) {
                             tagElement.classList.add('selected');
                             updateSelectedTagDisplay();
                         }
-                        
+
                         tagElement.addEventListener('click', function() {
                             // Устанавливаем значение в оригинальном select
                             select.value = option.value;
-                            
+
                             // Обновляем выделение
                             document.querySelectorAll('.tag').forEach(t => t.classList.remove('selected'));
                             this.classList.add('selected');
-                            
+
                             // Обновляем отображение выбранного тега
                             updateSelectedTagDisplay();
                         });
-                        
+
                         tagsList.appendChild(tagElement);
                     }
                 });
             }
-            
+
             // Инициализация при загрузке
             renderTags();
 
@@ -1020,7 +1057,7 @@
                     tag.style.display = tagText.includes(searchTerm) ? 'block' : 'none';
                 });
             });
-            
+
             // Обновляем при изменении select (на случай, если он меняется программно)
             select.addEventListener('change', function() {
                 renderTags();
@@ -1052,7 +1089,7 @@
             });
 
             const sentences = Object.values(sentencesMap);
-            
+
 
             const data = {
                 token_ids: chosen_ids,
@@ -1085,7 +1122,7 @@
             };
             console.log(data);
         }
-    </script>
+        </script>
 
 </body>
 </html>

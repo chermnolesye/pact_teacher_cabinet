@@ -203,6 +203,7 @@ def annotate_text(request, text_id=2379):
                             else "Не указано",
                             "all_errors": errors_list,  # Все ошибки для токена
                             "error_reason": error.idreason.reasonname if error.idreason else "Не указано",
+                            "idtagparent": error.iderrortag.idtagparent,
                         }
                     )
 
