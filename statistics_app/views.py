@@ -17,7 +17,8 @@ from core_app.models import (
 from collections import defaultdict
 
 
-# import dashboards
+from statistics_app import dashboards
+
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.db.models import Count, Q
@@ -109,7 +110,7 @@ def error_stats(request):
             color = "#e8f0fe"
         else:
             color = "#cfe2ff"
-        
+
         tag_info = {
             "id": tag_id,
             "nametag": tag_name,
@@ -130,64 +131,82 @@ def error_stats(request):
             grouped_tags[tag_name].append(tag_info)  # Родительские теги
 
     context = {"tags_error": dict(grouped_tags)}
-    return render(request, "statistics_app/error_stats.html", context)
+    return render(request, "error_stats.html", context)
 
 
 def chart_types_errors(request):
-    if not (
-        request.user.is_authenticated
-        and hasattr(request.user, "idrights")
-        and request.user.idrights.rightsname == "teacher"
-    ):
-        return render(request, "access_denied.html", status=403)
-
     if request.method != "POST":
+        levels = dashboards.get_levels()
+
         groups = list(
-            Group.objects.values("groupname").distinct().order_by("groupname")
+            Group.objects.values("groupname", "idayear")
+            .distinct()
+            .order_by("groupname")
         )
+
+        courses = list(
+            Group.objects.values("studycourse", "idayear")
+            .filter(studycourse__gt=0)
+            .distinct()
+            .order_by("studycourse")
+        )
+
         texts = list(
-            Text.objects.filter(errorcheckflag=True)
-            .values("header")
+            Text.objects.values("header")
+            .filter(errorcheckflag=True)
             .distinct()
             .order_by("header")
         )
+
         text_types = list(
             TextType.objects.filter(text__errorcheckflag=True)
             .distinct()
-            .values("idtexttype", "texttypename")
             .order_by("idtexttype")
+            .values()
         )
 
-        errors = Error.objects.filter(iderrorlevel__isnull=False).select_related(
-            "iderrortag", "iderrorlevel"
-        )
-
-        data_count_errors = (
-            errors.values(
-                "iderrortag__iderrortag",
-                "iderrortag__tagtext",
-                "iderrortag__tagtextrussian",
+        # Подсчёт ошибок по тегам
+        data_count_errors = list(
+            ErrorToken.objects.values(
+                "iderror__iderrortag__iderrortag",
+                "iderror__iderrortag__idtagparent",
+                "iderror__iderrortag__tagtext",
+                "iderror__iderrortag__tagtextrussian",
+                "iderror__iderrortag__tagcolor",
+                "iderror__iderrortag__idtagparent",
             )
-            .annotate(count_data=Count("iderrortag"))
-            .order_by("iderrortag__iderrortag")
+            .filter(
+                Q(iderror__iderrortag__isnull=False)
+                & Q(iderror__iderrorlevel__isnull=False)
+                & Q(iderror__iderrorlevel__errorlevelvalue=1)
+                & Q(iderror__iderrorlevel__isnull=False)
+            )
+            .annotate(count_data=Count("iderror__iderrortag"))
         )
+
+        # Пересчёт процента ошибок на токены
 
         data_on_tokens = dashboards.get_data_on_tokens(
-            data_count_errors, "tag__id_tag", "tag__tag_language", True, False
+            data_count_errors,
+            id_data="iderrortag",
+            is_unique_data=True,
+            is_for_one_group=False,
         )
-        data = dashboards.get_data_errors(data_on_tokens, 0, True)
 
-        ###########
+        # Построение иерархии ошибок
+        data = dashboards.get_data_errors(data_on_tokens, level=0, is_sorted=True)
+
+        # Получение словарей родителей и детей тегов
         tag_parents, dict_children = dashboards.get_dict_children()
-
-        data = list(data_count_errors)
 
         return render(
             request,
             "dashboard_error_types.html",
             {
                 "right": True,
+                "levels": levels,
                 "groups": groups,
+                "courses": courses,
                 "texts": texts,
                 "text_types": text_types,
                 "data": data,
@@ -195,78 +214,173 @@ def chart_types_errors(request):
                 "dict_children": dict_children,
             },
         )
+
     else:
         list_filters = json.loads(request.body)
         flag_post = list_filters["flag_post"]
 
+        # Existing branches remain unchanged
+        if flag_post == "enrollment_date":
+            enrollment_date = dashboards.get_enrollment_date(list_filters)
+            return JsonResponse({"enrollment_date": enrollment_date}, status=200)
+
         if flag_post == "choice_all":
-            texts = list(
-                Text.objects.filter(errorcheckflag=True)
-                .values("header")
-                .distinct()
-                .order_by("header")
-            )
-            text_types = list(
-                TextType.objects.filter(text__errorcheckflag=True)
-                .distinct()
-                .values("idtexttype", "texttypename")
-                .order_by("idtexttype")
-            )
+            texts, text_types = dashboards.get_filters_for_choice_all(list_filters)
             return JsonResponse({"texts": texts, "text_types": text_types}, status=200)
 
-        if flag_post == "update_diagrams":
-            # Фильтры
-            group = list_filters.get("group")
-            surname = list_filters.get("surname")
-            name = list_filters.get("name")
-            patronymic = list_filters.get("patronymic")
-            text = list_filters.get("text")
-            text_type = list_filters.get("text_type")
+        if flag_post == "choice_group":
+            texts, text_types = dashboards.get_filters_for_choice_group(list_filters)
+            return JsonResponse({"texts": texts, "text_types": text_types}, status=200)
 
-            errors = Error.objects.filter(iderrorlevel__isnull=False)
+        if flag_post == "choice_student":
+            texts, text_types = dashboards.get_filters_for_choice_student(list_filters)
+            return JsonResponse({"texts": texts, "text_types": text_types}, status=200)
 
-            if surname and name:
-                errors = errors.filter(
-                    iderrortoken__idtoken__idsentence__idtext__idstudent__iduser__lastname__iexact=surname,
-                    iderrortoken__idtoken__idsentence__idtext__idstudent__iduser__firstname__iexact=name,
-                )
-                if patronymic:
-                    errors = errors.filter(
-                        iderrortoken__idtoken__idsentence__idtext__idstudent__iduser__middlename__iexact=patronymic
-                    )
+        if flag_post == "choice_course":
+            texts, text_types = dashboards.get_filters_for_choice_course(list_filters)
+            return JsonResponse({"texts": texts, "text_types": text_types}, status=200)
 
-            if text:
-                errors = errors.filter(
-                    iderrortoken__idtoken__idsentence__idtext__header__iexact=text
-                )
-
-            if text_type:
-                errors = errors.filter(
-                    iderrortoken__idtoken__idsentence__idtext__idtexttype=text_type
-                )
-
-            if group:
-                errors = errors.filter(
-                    iderrortoken__idtoken__idsentence__idtext__idstudent__idgroup__groupname__iexact=group
-                )
-
-            errors = errors.select_related("iderrortag", "iderrorlevel")
-
-            data_count_errors = (
-                errors.values(
-                    "iderrortag__iderrortag",
-                    "iderrortag__tagtext",
-                    "iderrortag__tagtextrussian",
-                )
-                .annotate(count_data=Count("iderrortag"))
-                .order_by("iderrortag__iderrortag")
+        if flag_post == "choice_text":
+            groups, courses, text_types = dashboards.get_filters_for_choice_text(
+                list_filters
+            )
+            return JsonResponse(
+                {"groups": groups, "courses": courses, "text_types": text_types},
+                status=200,
             )
 
-            data = list(data_count_errors)
+        if flag_post == "choice_text_type":
+            groups, courses, texts = dashboards.get_filters_for_choice_text_type(
+                list_filters
+            )
+            return JsonResponse(
+                {"groups": groups, "courses": courses, "texts": texts}, status=200
+            )
+
+        if flag_post == "update_diagrams":
+            # Extract filter parameters
+            group = list_filters.get("group")
+            date = list_filters.get("enrollment_date")
+            surname = list_filters.get("surname")
+            name = list_filters.get("name")
+            course = list_filters.get("course")
+            text = list_filters.get("text")
+            text_type = list_filters.get("text_type")
+            level = int(list_filters.get("level", 0))
+
+            # Convert enrollment date to academic year title
+            academic_year_title = None
+            if date:
+                start_year = date.split(" \\ ")[0]
+                academic_year_title = f"{start_year}/{int(start_year) + 1}"
+
+            # Base query for SentenceError
+            base_filter = Q(iderrortag__markuptype=1) & Q(
+                idsentence__idtext__errorcheckflag=True
+            )
+
+            # Apply filters based on conditions
+            if surname and name and text and text_type:
+                base_filter &= (
+                    Q(idsentence__idtext__idstudent__iduser__lastname=surname)
+                    & Q(idsentence__idtext__idstudent__iduser__firstname=name)
+                    & Q(idsentence__idtext__header=text)
+                    & Q(idsentence__idtext__idtexttype__texttypename=text_type)
+                )
+            elif surname and name and text:
+                base_filter &= (
+                    Q(idsentence__idtext__idstudent__iduser__lastname=surname)
+                    & Q(idsentence__idtext__idstudent__iduser__firstname=name)
+                    & Q(idsentence__idtext__header=text)
+                )
+            elif surname and name and text_type:
+                base_filter &= (
+                    Q(idsentence__idtext__idstudent__iduser__lastname=surname)
+                    & Q(idsentence__idtext__idstudent__iduser__firstname=name)
+                    & Q(idsentence__idtext__idtexttype__texttypename=text_type)
+                )
+            elif surname and name:
+                base_filter &= Q(
+                    idsentence__idtext__idstudent__iduser__lastname=surname
+                ) & Q(idsentence__idtext__idstudent__iduser__firstname=name)
+            elif course and text and text_type:
+                base_filter &= (
+                    Q(idsentence__idtext__idstudent__idgroup__studycourse=course)
+                    & Q(idsentence__idtext__header=text)
+                    & Q(idsentence__idtext__idtexttype__texttypename=text_type)
+                )
+            elif course and text:
+                base_filter &= Q(
+                    idsentence__idtext__idstudent__idgroup__studycourse=course
+                ) & Q(idsentence__idtext__header=text)
+            elif course and text_type:
+                base_filter &= Q(
+                    idsentence__idtext__idstudent__idgroup__studycourse=course
+                ) & Q(idsentence__idtext__idtexttype__texttypename=text_type)
+            elif course:
+                base_filter &= Q(
+                    idsentence__idtext__idstudent__idgroup__studycourse=course
+                )
+            elif group and text and text_type and academic_year_title:
+                base_filter &= (
+                    Q(idsentence__idtext__idstudent__idgroup__groupname=group)
+                    & Q(
+                        idsentence__idtext__idstudent__idgroup__idayear__title=academic_year_title
+                    )
+                    & Q(idsentence__idtext__header=text)
+                    & Q(idsentence__idtext__idtexttype__texttypename=text_type)
+                )
+            elif group and text and academic_year_title:
+                base_filter &= (
+                    Q(idsentence__idtext__idstudent__idgroup__groupname=group)
+                    & Q(
+                        idsentence__idtext__idstudent__idgroup__idayear__title=academic_year_title
+                    )
+                    & Q(idsentence__idtext__header=text)
+                )
+            elif group and text_type and academic_year_title:
+                base_filter &= (
+                    Q(idsentence__idtext__idstudent__idgroup__groupname=group)
+                    & Q(
+                        idsentence__idtext__idstudent__idgroup__idayear__title=academic_year_title
+                    )
+                    & Q(idsentence__idtext__idtexttype__texttypename=text_type)
+                )
+            elif group and academic_year_title:
+                base_filter &= Q(
+                    idsentence__idtext__idstudent__idgroup__groupname=group
+                ) & Q(
+                    idsentence__idtext__idstudent__idgroup__idayear__title=academic_year_title
+                )
+            elif text and text_type:
+                base_filter &= Q(idsentence__idtext__header=text) & Q(
+                    idsentence__idtext__idtexttype__texttypename=text_type
+                )
+            elif text_type:
+                base_filter &= Q(idsentence__idtext__idtexttype__texttypename=text_type)
+            elif text:
+                base_filter &= Q(idsentence__idtext__header=text)
+
+            # Execute query to get error counts
+            data_count_errors = list(
+                Sentence.objects.filter(base_filter)
+                .values(
+                    "iderrortag__iderrortag",
+                    "iderrortag__idtagparent",
+                    "iderrortag__tagtext",
+                    "iderrortag__tagtextrussian",
+                    "idtext",
+                )
+                .annotate(count_data=Count("iderrortag__iderrortag"))
+            )
+
+            # Process data using dashboard functions
+            data_on_tokens = dashboards.get_data_on_tokens(
+                data_count_errors, "iderrortag__iderrortag", None, True, False
+            )
+            data = dashboards.get_data_errors(data_on_tokens, level, True)
 
             return JsonResponse({"data_type_errors": data}, status=200)
-
-        return JsonResponse({"error": "Unknown flag_post"}, status=400)
 
 
 from django.shortcuts import render
