@@ -17,7 +17,20 @@ class TeacherLoadTextForm(forms.ModelForm):
         widget=forms.SelectDateWidget,
         label="Дата создания"
     )
-    
+
+    selfrating = forms.TypedChoiceField(
+        choices=Text.TASK_RATES,
+        coerce=int,
+        label="Самооценка",
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+    selfassesment = forms.TypedChoiceField(
+        choices=Text.RATES,
+        coerce=int,
+        label="Оценка",
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+
     class Meta:
         model = Text
         fields = [
@@ -29,10 +42,10 @@ class TeacherLoadTextForm(forms.ModelForm):
             'idwriteplace',
             'idwritetool',
             'educationlevel',
-            'selfrating',
-            'selfassesment',
+            'selfrating',      
+            'selfassesment',   
         ]
-    
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if 'group' in self.data:
@@ -41,40 +54,8 @@ class TeacherLoadTextForm(forms.ModelForm):
                 self.fields['student'].queryset = Student.objects.filter(idgroup=group_id)
             except (ValueError, TypeError):
                 self.fields['student'].queryset = Student.objects.none()
-
-    def clean_selfrating(self):
-        value = self.cleaned_data.get('selfrating')
-        if value is not None:
-            if value < 1:
-                raise forms.ValidationError('Самооценка не может быть меньше 1.')
-            if value > 10:
-                raise forms.ValidationError('Самооценка не может быть больше 10.')
-        return value
-
-    def clean_selfassesment(self):
-        value = self.cleaned_data.get('selfassesment')
-        if value is not None:
-            if value < 1:
-                raise forms.ValidationError('Оценка не может быть меньше 1.')
-            if value > 10:
-                raise forms.ValidationError('Оценка не может быть больше 10.')
-        return value
-
-    selfrating = forms.IntegerField(
-        label="Самооценка",
-        min_value=1,
-        max_value=10,
-        required=True,
-        widget=forms.NumberInput(attrs={'min': 1, 'max': 10, 'step': 1})  
-    )
-
-    selfassesment = forms.IntegerField(
-        label="Оценка",
-        min_value=1,
-        max_value=10,
-        required=True,
-        widget=forms.NumberInput(attrs={'min': 1, 'max': 10, 'step': 1}) 
-    )
+        else:
+            self.fields['student'].queryset = Student.objects.none()
 
 
 class AddTextAnnotationForm(forms.ModelForm):
