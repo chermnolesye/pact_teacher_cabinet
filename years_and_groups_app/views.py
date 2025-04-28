@@ -61,9 +61,10 @@ def edit_group(request, group_id):
             add_form = AddStudentToGroupForm(request.POST)
             if add_form.is_valid():
                 user = add_form.cleaned_data['student']  
-                student = Student.objects.get(iduser=user) 
-                student.idgroup = group
-                student.save()
+                Student.objects.create(
+                    iduser=user,
+                    idgroup=group
+                )
                 return redirect('edit_group', group_id=group.idgroup)
 
         elif 'delete_group' in request.POST:

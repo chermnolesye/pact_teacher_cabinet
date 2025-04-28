@@ -77,7 +77,7 @@
                         {{ student.iduser.lastname }}
                     </div>
                     <div class="student-name">
-                        {{ student.iduser.firstname }}
+                        {{ student.iduser.middlename|default_if_none:"" }}
                     </div>
                     <div class="student-login">
                         {{ student.iduser.login }}
