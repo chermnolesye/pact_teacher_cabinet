@@ -45,7 +45,7 @@ def statistics_view(request):
 
     context = {"groups": group_data, "selected_group": group_id}
 
-    return render(request, "statistics_app/statistics.html", context)
+    return render(request, "statistics.html", context)
 
 
 ##Пример для Юли
