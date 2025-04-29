@@ -15,6 +15,42 @@
             {{ student.full_name }}
         </h2>
 
+        <div class="edit-student-info">
+            <button>
+                <svg width="33" height="33" viewBox="0 0 33 33" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M20.0221 5.03366L21.3725 3.68032C22.4477 2.6047 23.9062 2.00027 25.4271 2C26.948 1.99973 28.4067 2.60363 29.4823 3.67886C30.5579 4.7541 31.1623 6.21258 31.1626 7.73346C31.1629 9.25434 30.559 10.713 29.4837 11.7887L28.1333 13.142M20.0221 5.03366C20.0221 5.03366 20.1912 7.90366 22.7258 10.4382C25.2604 12.9728 28.1333 13.142 28.1333 13.142M20.0221 5.03366L7.59708 17.4587C6.75124 18.2987 6.33124 18.7216 5.96958 19.1853C5.54374 19.7337 5.17916 20.3228 4.87874 20.9528C4.62499 21.4837 4.43833 22.0466 4.06208 23.1753L2.85749 26.792L2.46666 27.9616M28.1333 13.142L15.7083 25.567C14.8625 26.4128 14.4425 26.8328 13.9787 27.1945C13.4304 27.6203 12.8412 27.9849 12.2112 28.2853C11.6804 28.5391 11.1175 28.7257 9.98874 29.102L6.37208 30.3066L5.20249 30.6974M2.46666 27.9616L2.07874 29.1341C1.98839 29.4062 1.97551 29.6982 2.04157 29.9772C2.10762 30.2563 2.24999 30.5114 2.45277 30.7142C2.65554 30.917 2.91072 31.0594 3.18977 31.1254C3.46882 31.1915 3.76075 31.1786 4.03291 31.0882L5.20249 30.6974M2.46666 27.9616L5.20249 30.6974" stroke="white" stroke-width="2.5"/>
+                </svg>                    
+                Редактировать информацию о студенте
+            </button>
+
+            <form id="edit-student-form">
+                {% csrf_token %}
+
+                <div class="horizontal-wrap">
+                    <div class="vertical-level">
+                        {{ form.firstname.label_tag }}
+                        {{ form.firstname }}
+
+                        {{ form.lastname.label_tag }}
+                        {{ form.lastname }}
+
+                        {{ form.middlename.label_tag }}
+                        {{ form.middlename }}
+                    </div>
+
+                    <div class="vertical-level">
+                        {{ form.birthdate.label_tag }}
+                        {{ form.birthdate }}
+        
+                        {{ form.gender.label_tag }}
+                        {{ form.gender }}
+                    </div>
+                </div>
+                <button type="submit" class="button">Сохранить</button>
+                <button type="reset" class="button gre">Отменить</button>
+            </form>
+        </div>
+
         <form method="get" id="text-search-form">
             <div class="search-bar">
                 <input type="text" name="q" placeholder="Поиск по названию" value="{{ query }}">
@@ -25,10 +61,10 @@
                     </svg>
                 </button>
             </div>
-        </form>
+        </form>      
 
         <div class="new-text-button">
-            <a href="{% url 'teacher_load_text' %}">
+            <a href="{% url 'teacher_load_text' %}?student_id={{ idstudent }}">
               <button>
                 <svg width="24" height="24" viewBox="0 0 54 54" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M34.5 27H27M27 27H19.5M27 27V19.5M27 27V34.5M14.5 5.34503C18.2988 3.14728 22.6113 1.99327 27 2.00003C40.8075 2.00003 52 13.1925 52 27C52 40.8075 40.8075 52 27 52C13.1925 52 2 40.8075 2 27C2 22.4475 3.2175 18.175 5.345 14.5" stroke="white" stroke-width="4" stroke-linecap="round"/>
@@ -119,5 +155,11 @@
             {% endfor %}
         </div>
     </div>
+
+    <script>
+
+        // document.addEventListener('OnDocumentLoaded', function())
+
+    </script>
 </body>
 </html>

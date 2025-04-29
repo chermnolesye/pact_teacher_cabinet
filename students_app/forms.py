@@ -24,3 +24,9 @@ class EditStudentForm(forms.ModelForm):
         widgets = {
             'birthdate': forms.DateInput(attrs={'type': 'date'}),
         }
+        labels = {
+            'lastname': 'Фамилия',
+            'firstname': 'Имя',
+            'middlename': 'Отчество',
+            'birthdate': 'Дата рождения'
+        }
