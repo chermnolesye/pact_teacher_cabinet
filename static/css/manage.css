@@ -390,14 +390,21 @@
 }
 
 .edit-student-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   margin: 0px 3px;
   padding: 5px;
-  height: 45px;
-  width: 45px;
+  height: 30px;
+  width: 30px;
   border-radius: var(--border-radius);
   background-color: var(--grey-color);
   border: none;
   cursor: pointer;
+}
+
+.edit-student-button:hover {
+  background-color: var(--secondary-grey-color);
 }
 
 .edit-student-info {
@@ -407,20 +414,30 @@
   border: 1px solid var(--secondary-grey-color);
 }
 
+.view-mode {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 10px 0px;
+  padding: 10px;
+}
+
 #edit-student-form {
   display: flex;
   flex-direction: column;
   align-items: center;
   margin: 10px 0px;
   padding: 10px;
-  
+  display: none;
 }
 
-#edit-student-form div {
+#edit-student-form div,
+.view-mode div {
   margin: 0px 10px;
 }
 
-#edit-student-form label {
+#edit-student-form label,
+.view-mode label {
   color: var(--grey-color);
   margin: 5px 0px;  
 }
