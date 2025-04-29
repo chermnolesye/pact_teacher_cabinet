@@ -166,12 +166,20 @@
                     <p>Частеречная разметка</p>
                     <div class="menu-content-data">
                         <p>Статус:</p>
-                        <p class="p-dark"> {{ poscheckflag }} </p>
+                        {% if poscheckflag %}
+                        <p class="p-green"> Проверено </p>
+                        {% else %}
+                        <p class="p-red"> Не проверено </p>
+                        {% endif %}
                     </div>
                     <p>Разметка ошибок</p>
                     <div class="menu-content-data">
                         <p>Статус:</p>
-                        <p class="p-dark"> {{ errorcheckflag }} </p>
+                        {% if errorcheckflag %}
+                        <p class="p-green"> Проверено </p>
+                        {% else %}
+                        <p class="p-red"> Не проверено </p>
+                        {% endif %}
                     </div>
                     <div class="menu-content-data">
                         <p>Проверяющий:</p>
@@ -355,11 +363,9 @@
                           data-error-tag-russian="{{ token.error_tag_russian }}"
                           data-error-tag-abbrev="{{ token.error_tag_abbrev }}"
                           data-error-level="{{ token.error_level }}"
-                          data-error-color="{{ token.error_color }}"
-                          
+                          data-error-color="{{ token.error_color }}"                          
                           {% endif %}>
 
-                        <!-- Ошибки (изначально скрыты) -->
                         {% if token.all_errors %}
                         {% for error in token.all_errors %}
                         <span class="error-tag"
@@ -377,7 +383,6 @@
                         {% endfor %}
                         {% endif %}
 
-                        <!-- Часть речи (изначально скрыта) -->
                         {% if token.pos_tag %}
                         <span class="abbr"
                               style="background-color: {{ token.pos_tag_color }}; display: none;"
@@ -385,11 +390,9 @@
                               data-pos-tag-russian="{{ token.pos_tag_russian }}"
                               data-pos-tag-abbrev="{{ token.pos_tag_abbrev }}">
                             {{ token.pos_tag }}
-
                         </span>
                         {% endif %}
 
-                        <!-- Само слово -->
                         {% if token.token == '-EMPTY-' %}
                         <span class="word">&loz;</span>
                         {% else %}

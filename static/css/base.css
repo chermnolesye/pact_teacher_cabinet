@@ -27,6 +27,8 @@
     --secondary-grey-color: #768088;
     --red-color: #E87C86;
     --red-secondary-color: #e5979f;
+    --green-color: #00c94d;
+    --red-bright-color: #e20017;
 }
 
 body {
@@ -49,6 +51,16 @@ html, body {
 
 .no-highlight {
 	color: var(--grey-color);
+}
+
+.p-green {
+   color: var(--green-color); 
+   margin-left: 5px;
+}
+
+.p-red {
+    color: var(--red-bright-color);
+    margin-left: 5px;
 }
 
 .horizontal-level {

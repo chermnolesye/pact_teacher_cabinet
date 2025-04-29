@@ -143,39 +143,46 @@
                         <p>Оценка работы</p>
                         <div class="menu-content-data">
                             <p>Оценка:</p>
-                            <p class="p-dark">  </p>
+                            <p class="p-dark"> {{ textgrade }} </p>
                         </div>
                         <div class="menu-content-data">
                             <p>Полнота:</p>
-                            <p class="p-dark">  </p>
+                            <p class="p-dark"> {{ completeness }} </p>
                         </div>
                         <div class="menu-content-data">
                             <p>Структура:</p>
-                            <p class="p-dark">  </p>
+                            <p class="p-dark"> {{ structure }} </p>
                         </div>
                         <div class="menu-content-data">
                             <p>Связность:</p>
-                            <p class="p-dark">  </p>
+                            <p class="p-dark"> {{ coherence }} </p>
                         </div>
                         <div class="menu-content-data">
                             <p>Проверяющий:</p>
-                            <p class="p-dark">  </p>
+                            <p class="p-dark"> {{userteacher}} </p>
                         </div>
-
+    
                         <p>Частеречная разметка</p>
                         <div class="menu-content-data">
                             <p>Статус:</p>
-                            <p class="p-dark">  </p>
+                            {% if poscheckflag %}
+                            <p class="p-green"> Проверено </p>
+                            {% else %}
+                            <p class="p-red"> Не проверено </p>
+                            {% endif %}
                         </div>
-
                         <p>Разметка ошибок</p>
                         <div class="menu-content-data">
                             <p>Статус:</p>
-                            <p class="p-dark">  </p>
+                            {% if errorcheckflag %}
+                            <p class="p-green"> Проверено </p>
+                            {% else %}
+                            <p class="p-red"> Не проверено </p>
+                            {% endif %}
                         </div>
                         <div class="menu-content-data">
                             <p>Проверяющий:</p>
-                            <p class="p-dark">  </p>
+                            <p class="p-dark">  {{usererrorcheck}} </p>
                         </div>
                     </div>
 
