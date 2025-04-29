@@ -1,6 +1,7 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.http import JsonResponse
 from django.db.models import Count, Q, F
+from .forms import EditStudentForm
 from core_app.models import (
     Student,
     Error,
@@ -54,9 +55,9 @@ def student_info(request, student_id):
     query = request.GET.get('q', '').strip()
 
     student = get_object_or_404(Student.objects.select_related('iduser'), pk=student_id)
+    user = student.iduser
 
-    all_student_records = Student.objects.filter(iduser=student.iduser)
-
+    all_student_records = Student.objects.filter(iduser=user)
     texts = Text.objects.filter(idstudent__in=all_student_records).annotate(
         error_count=Count('sentence__tokens__errortoken__iderror', distinct=True),
         text_type=F('idtexttype__texttypename')
@@ -65,14 +66,22 @@ def student_info(request, student_id):
     if query:
         texts = texts.filter(header__icontains=query)
 
-    full_name = student.get_full_name()
+    if request.method == 'POST':
+        form = EditStudentForm(request.POST, instance=user)
+        if form.is_valid():
+            form.save()
+            return redirect('student_info', student_id=student.idstudent)
+    else:
+        form = EditStudentForm(instance=user)
+
     context = {
         'student': {
             'id': student.idstudent,
-            'full_name': full_name,
+            'full_name': user.get_full_name(),
         },
         'texts': texts,
         'query': query,
+        'form': form,
     }
 
     return render(request, 'student_info.html', context)
