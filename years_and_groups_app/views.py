@@ -7,6 +7,7 @@ from core_app.models import (
     AcademicYear,
     Student,
     User,
+    Text
 )
 from .forms import (
     AddGroupForm,
@@ -18,12 +19,41 @@ from .forms import (
 from django.forms import formset_factory
 
 def show_groups(request):
-    query = request.GET.get('q', '')  
-    groups = Group.objects.filter(groupname__icontains=query)  
+    query = request.GET.get('q', '')
+    course = request.GET.get('course')
+    year_str = request.GET.get('year')
+
+    # Получаем все группы, потом фильтруем
+    groups = Group.objects.all()
+
+    # Поиск по названию группы
+    if query:
+        groups = groups.filter(groupname__icontains=query)
+
+    # Фильтрация по курсу
+    if course:
+        groups = groups.filter(studycourse=course)
+
+    # Фильтрация по учебному году
+    year = None
+    if year_str:
+        try:
+            year = int(year_str)
+            groups = groups.filter(idayear=year)  # ✅ работает, если ForeignKey
+        except ValueError:
+            pass
+
+    # Получаем список всех курсов и учебных годов для фильтров
+    course_numbers = Group.objects.values_list('studycourse', flat=True).distinct().order_by('studycourse')
+    academic_years = AcademicYear.objects.all()
 
     return render(request, 'show_groups.html', {
-        'groups': groups,  
-        'query': query  
+        'groups': groups,
+        'query': query,
+        'selected_course': course,
+        'selected_year': year,
+        'course_numbers': course_numbers,
+        'academic_years': academic_years,
     })
 
 def add_group(request):
@@ -53,14 +83,19 @@ def edit_group(request, group_id):
         elif 'delete_student' in request.POST:
             student_id = request.POST.get('student_id')
             student = get_object_or_404(Student, idstudent=student_id)
-            student.idgroup = None
-            student.save()
-            return redirect('edit_group', group_id=group.idgroup)
-        
+
+            has_texts = Text.objects.filter(idstudent=student).exists()
+
+            if has_texts:
+                return JsonResponse({'status': 'error', 'message': 'Студент имеет связанные тексты и не может быть удалён.'})
+            else:
+                student.delete()
+                return JsonResponse({'status': 'success'})
+
         elif 'add_student' in request.POST:
             add_form = AddStudentToGroupForm(request.POST)
             if add_form.is_valid():
-                user = add_form.cleaned_data['student']  
+                user = add_form.cleaned_data['student']
                 Student.objects.create(
                     iduser=user,
                     idgroup=group
@@ -78,7 +113,7 @@ def edit_group(request, group_id):
     return render(request, 'edit_group.html', {
         'group': group,
         'form': form,
-        'students': students, 
+        'students': students,
         'add_form': add_form,
     })
 
