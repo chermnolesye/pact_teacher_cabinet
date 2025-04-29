@@ -379,9 +379,32 @@
   width: 100%;
 }
 
+.student-info-header {
+  color: var(--grey-color);
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 50px;
+  font-size: 20px;
+}
+
+.edit-student-button {
+  margin: 0px 3px;
+  padding: 5px;
+  height: 45px;
+  width: 45px;
+  border-radius: var(--border-radius);
+  background-color: var(--grey-color);
+  border: none;
+  cursor: pointer;
+}
+
 .edit-student-info {
   /* width: 100%; */
   margin: 10px 0px;
+  border-radius: var(--border-radius);
+  border: 1px solid var(--secondary-grey-color);
 }
 
 #edit-student-form {
@@ -390,8 +413,7 @@
   align-items: center;
   margin: 10px 0px;
   padding: 10px;
-  border-radius: var(--border-radius);
-  border: 1px solid var(--secondary-grey-color);
+  
 }
 
 #edit-student-form div {
@@ -403,8 +425,7 @@
   margin: 5px 0px;  
 }
 
-.new-text-button button,
-.edit-student-info button {
+.new-text-button button {
   width: 200px;
   background-color: var(--primary-color);
   color: white;
@@ -418,13 +439,11 @@
   align-items: center; 
 }
 
-.new-text-button button:hover,
-.edit-student-info button:hover {
+.new-text-button button:hover {
   background-color: var(--secondary-color);
 }
 
-.new-text-button button svg,
-.edit-student-info button svg {
+.new-text-button button svg {
   margin-right: 8px; 
 }
 
