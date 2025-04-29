@@ -11,9 +11,19 @@
 <body>
     <div id="header-container"></div>
     <div class="students-container">
-        <h2 class="highlighted-header">
-            {{ student.full_name }}
-        </h2>
+        
+        <div class="horizontal-wrap">
+            <h2 class="highlighted-header">
+                {{ student.full_name }}
+            </h2>
+            <div class="header-actions">
+                <button class="toggle-container-button">
+                    <svg class="toggle-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M5 15L12 8L19 15" stroke="var(--primary-color)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
 
         <div class="edit-student-info">
             <div class="student-info-header">
@@ -33,20 +43,20 @@
                 <div class="horizontal-wrap">
                     <div class="vertical-level">
                         {{ form.firstname.label_tag }}
-                        <p>{{ id.firstname }}</p>
+                        <p>{{ firstname }}</p>
 
                         {{ form.lastname.label_tag }} 
-                        <p>{{ student.lastname }}</p>
+                        <p>{{ lastname }}</p>
 
                         {{ form.middlename.label_tag }}
-                        <p>{{ student.middlename }}</p>
+                        <p>{{ middlename }}</p>
                     </div>
                     <div class="vertical-level">
                         {{ form.birthdate.label_tag }}
-                        <p>{{ student.birthdate|date:"Y-m-d" }}</p>
+                        <p>{{ birthdate }}</p>
 
                         {{ form.gender.label_tag }}
-                        <p>{{ student.iduser.gender }}</p>
+                        <p>{{ gender }}</p>
                     </div>
                 </div>
             </div>
@@ -207,14 +217,30 @@
                 }
             });
 
-            editForm.querySelector('button[type="reset"]').addEventListener('click', function() {
-                viewMode.style.display = 'flex';
-                editForm.style.display = 'none';
-                editIcon.style.display = 'flex';
-                backIcon.style.display = 'none';
-            });
+            // editForm.querySelector('button[type="reset"]').addEventListener('click', function() {
+            //     viewMode.style.display = 'flex';
+            //     editForm.style.display = 'none';
+            //     editIcon.style.display = 'flex';
+            //     backIcon.style.display = 'none';
+            // });
         });
 
+        document.addEventListener('DOMContentLoaded', function() {
+            const toggleContainerBtn = document.querySelector('.toggle-container-button');
+            const toggleIcon = toggleContainerBtn.querySelector('.toggle-icon');
+            const editStudentInfo = document.querySelector('.edit-student-info');
+
+            toggleContainerBtn.addEventListener('click', function() {
+                editStudentInfo.classList.toggle('hidden');
+                toggleIcon.classList.toggle('rotated');
+
+                if (editStudentInfo.style.display === 'none') {
+                    editStudentInfo.style.display = 'flex';
+                } else {
+                    editStudentInfo.style.display = 'none';
+                }
+            });
+        });
     </script>
 </body>
 </html>

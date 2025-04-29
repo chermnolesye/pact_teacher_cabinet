@@ -75,9 +75,14 @@ def student_info(request, student_id):
         form = EditStudentForm(instance=user)
 
     context = {
+        'user_id': user.iduser,
+        'lastname': user.lastname,
+        'firstname': user.firstname,
+        'middlename': user.middlename,
+        'birthdate': user.birthdate if user.birthdate else 'Не указано',
+        'gender': 'Мужской' if user.gender == 1 else 'Женский',
         'student': {
             'id': student.idstudent,
-            'user_id': user.iduser,  # КАТЯ ДЕРЖИ
             'full_name': user.get_full_name(),
         },
         'texts': texts,

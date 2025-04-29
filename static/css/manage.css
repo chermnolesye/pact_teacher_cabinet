@@ -387,6 +387,7 @@
   justify-content: center;
   height: 50px;
   font-size: 20px;
+  font-size: 24px;
 }
 
 .edit-student-button {
@@ -408,10 +409,24 @@
 }
 
 .edit-student-info {
-  /* width: 100%; */
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 500px;
+  height: 400px;
   margin: 10px 0px;
   border-radius: var(--border-radius);
   border: 1px solid var(--secondary-grey-color);
+  font-size: 18px;
+}
+
+.edit-student-info .horizontal-wrap {
+  width: 100%;
+}
+
+.edit-student-info .vertical-level {
+  width: 100%;
+  max-width: 250px;
 }
 
 .view-mode {
@@ -433,7 +448,7 @@
 
 #edit-student-form div,
 .view-mode div {
-  margin: 0px 10px;
+  margin: 5px 10px;
 }
 
 #edit-student-form label,
@@ -441,6 +456,44 @@
   color: var(--grey-color);
   margin: 5px 0px;  
 }
+
+.view-mode p {
+  height: 35px;
+  width: 100%;
+}
+
+.edit-mode input,
+.edit-mode select {
+  width: 100%;
+}
+
+.header-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.toggle-container-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  transition: transform 0.2s ease;
+}
+
+.toggle-container-button:hover {
+  transform: scale(1.1);
+}
+
+.toggle-icon {
+  transition: transform 0.3s ease;
+}
+
+/* Класс для перевернутой иконки (когда контейнер открыт) */
+.toggle-icon.rotated {
+  transform: rotate(180deg);
+}
+
 
 .new-text-button button {
   width: 200px;
