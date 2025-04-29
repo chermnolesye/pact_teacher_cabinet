@@ -13,24 +13,32 @@ from core_app.models import (
 )
 
 def show_students(request):
-    query = request.GET.get('q', '').strip() 
-    group_id = request.GET.get('group', '').strip()  
+    query = request.GET.get('q', '').strip()
+    group_id = request.GET.get('group', '').strip()
 
-    students = Student.objects.select_related('iduser', 'idgroup')
+    students_qs = Student.objects.select_related('iduser', 'idgroup')
 
     if group_id.isdigit():
-        students = students.filter(idgroup__idgroup=int(group_id))
+        students_qs = students_qs.filter(idgroup__idgroup=int(group_id))
 
     if query:
-        students = students.filter(
-            iduser__lastname__icontains=query
-        ) | students.filter(
-            iduser__firstname__icontains=query
-        ) | students.filter(
-            iduser__middlename__icontains=query
-        ) | students.filter(
-            iduser__login__icontains=query
+        students_qs = students_qs.filter(
+            Q(iduser__lastname__icontains=query) |
+            Q(iduser__firstname__icontains=query) |
+            Q(iduser__middlename__icontains=query) |
+            Q(iduser__login__icontains=query)
         )
+
+    unique_users = students_qs.values('iduser').distinct()
+
+    from django.db.models import OuterRef, Subquery
+
+    first_student = Student.objects.filter(iduser=OuterRef('pk')).order_by('pk')
+    users = User.objects.filter(iduser__in=[u['iduser'] for u in unique_users])
+    users = users.annotate(student_id=Subquery(first_student.values('idstudent')[:1]))
+
+    students = Student.objects.select_related('iduser', 'idgroup').filter(idstudent__in=[u.student_id for u in users])
+
     groups = Group.objects.all()
 
     context = {
@@ -39,22 +47,23 @@ def show_students(request):
         'group_id': group_id,
         'groups': groups,
     }
-    
-    return render(request, "show_students.html", context)
 
+    return render(request, "show_students.html", context)
 
 def student_info(request, student_id):
     query = request.GET.get('q', '').strip()
 
     student = get_object_or_404(Student.objects.select_related('iduser'), pk=student_id)
 
-    texts = Text.objects.filter(idstudent=student).annotate(
+    all_student_records = Student.objects.filter(iduser=student.iduser)
+
+    texts = Text.objects.filter(idstudent__in=all_student_records).annotate(
         error_count=Count('sentence__tokens__errortoken__iderror', distinct=True),
         text_type=F('idtexttype__texttypename')
     )
 
     if query:
-        texts = texts.filter(header__icontains=query)  
+        texts = texts.filter(header__icontains=query)
 
     full_name = student.get_full_name()
     context = {
