@@ -2,6 +2,7 @@ from django import forms
 from core_app.models import User, Student, Group, Rights
 from datetime import date
 from core_app.models import Text, TextType, WritePlace, WriteTool, Emotion, Group, Student, Error, ErrorTag, ErrorLevel, Reason
+from django.utils.translation import gettext_lazy as _
 
 class TeacherLoadTextForm(forms.ModelForm):
     group = forms.ModelChoiceField(
@@ -14,7 +15,9 @@ class TeacherLoadTextForm(forms.ModelForm):
     )
     createdate = forms.DateField(
         initial=date.today,
-        widget=forms.SelectDateWidget,
+        widget=forms.DateInput(
+            attrs={'type': 'date', 'class': 'form-control'}
+        ),
         label="Дата создания"
     )
 
@@ -48,15 +51,33 @@ class TeacherLoadTextForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+        # Если есть 'group' в данных (POST)
         if 'group' in self.data:
             try:
                 group_id = int(self.data.get('group'))
                 self.fields['student'].queryset = Student.objects.filter(idgroup=group_id)
-            except (ValueError, TypeError):
+                group = Group.objects.get(idgroup=group_id)
+                self.initial['educationlevel'] = group.studycourse  
+            except (ValueError, TypeError, Group.DoesNotExist):
                 self.fields['student'].queryset = Student.objects.none()
+
+        #Если есть student в initial (GET)
+        elif 'student' in self.initial:
+            try:
+                student = Student.objects.select_related('idgroup').get(idstudent=self.initial['student'])
+                self.fields['student'].queryset = Student.objects.filter(idgroup=student.idgroup)
+                self.initial['group'] = student.idgroup.idgroup  
+                self.initial['educationlevel'] = student.idgroup.studycourse  
+            except Student.DoesNotExist:
+                self.fields['student'].queryset = Student.objects.none()
+
+        # По умолчанию 
         else:
             self.fields['student'].queryset = Student.objects.none()
 
+        self.fields['student'].queryset = Student.objects.all().order_by('iduser__lastname')
+        self.fields['student'].label_from_instance = lambda obj: obj.get_full_name()
 
 class AddTextAnnotationForm(forms.ModelForm):
     textgrade = forms.ChoiceField(

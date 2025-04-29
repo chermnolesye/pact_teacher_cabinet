@@ -77,6 +77,7 @@ def student_info(request, student_id):
     context = {
         'student': {
             'id': student.idstudent,
+            'user_id': user.iduser,  # КАТЯ ДЕРЖИ
             'full_name': user.get_full_name(),
         },
         'texts': texts,
