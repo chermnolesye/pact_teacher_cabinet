@@ -61,7 +61,7 @@
                 </div>
             </div>
 
-            <form id="edit-student-form">
+            <form method="post" id="edit-student-form">
                 {% csrf_token %}
 
                 <div class="horizontal-wrap">
@@ -84,8 +84,10 @@
                         {{ form.gender }}
                     </div>
                 </div>
-                <button type="submit" class="button">Сохранить</button>
-                <button type="reset" class="button grey-button">Отменить</button>
+                <div class="horizontal-level">
+                    <button type="submit" class="button">Сохранить</button>
+                    <button type="reset" class="button grey-button">Отменить</button>   
+                </div>                
             </form>
         </div>
 
@@ -166,12 +168,12 @@
                 <div class="text-check">
                     {% if text.errorcheckflag %}
                         <svg class="bi text-success" xmlns="http://www.w3.org/2000/svg" height="1.6em" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                            <path stroke="#28a745" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m8.5 12.5 2 2 5-5"></path>
-                            <path stroke="#28a745" stroke-linecap="round" stroke-width="1.5" d="M7 3.34A10 10 0 1 1 3.34 7"></path>
+                            <path stroke="#00c94d" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.0" d="m8.5 12.5 2 2 5-5"></path>
+                            <path stroke="#00c94d" stroke-linecap="round" stroke-width="2.0" d="M7 3.34A10 10 0 1 1 3.34 7"></path>
                         </svg>
                     {% else %}
                         <svg class="bi text-secondary" xmlns="http://www.w3.org/2000/svg" height="1.6em" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-width="1.5" d="m14.5 9.5-5 5m0-5 5 5M7 3.34A10 10 0 1 1 3.34 7"></path>
+                            <path stroke="#6C757D" stroke-linecap="round" stroke-width="2.0" d="m14.5 9.5-5 5m0-5 5 5M7 3.34A10 10 0 1 1 3.34 7"></path>
                         </svg>
                     {% endif %}
                 </div>
