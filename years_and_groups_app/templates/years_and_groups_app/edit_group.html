@@ -13,7 +13,7 @@
 
     <div class="show-groups-container">    
 
-        <a href="{% url 'show_groups' %}" class="button grey-button">Вернуться к списку групп</a>
+        <a href="{% url 'show_groups' %}" class="button grey-button horizontal-level">Вернуться к списку групп</a>
 
         <form method="post" id="edit-group-form" class="edit-group-form">
             {% csrf_token %}
@@ -97,7 +97,7 @@
                         <form method="post" style="display:inline;">
                             {% csrf_token %}
                             <input type="hidden" name="student_id" value="{{ student.pk }}">
-                            <button type="button" name="delete_student" class="remove-student" data-student-id="{{ student.pk }}" data-delete-url="{% url 'remove_student' %}">
+                            <button type="button" name="delete_student" class="remove-student" data-student-id="{{ student.pk }}">
                                 <svg class="bi" xmlns="http://www.w3.org/2000/svg" height="1.6em" stroke="currentColor" fill="none" viewBox="0 0 24 24">
                                     <circle cx="10" cy="6" r="4" stroke-width="1.5"></circle>
                                     <path stroke-linecap="round" stroke-width="1.5" d="M21 10h-4M18 18v-.5c0-2.49-3.58-4.5-8-4.5s-8 2.01-8 4.5S2 22 10 22c2.23 0 3.84-.16 5-.44"></path>
@@ -124,17 +124,14 @@
         </div>
 
         <div class="delete-group">
-            <form method="post" onsubmit="return confirm('Удалить группу?');">
-                {% csrf_token %}
-                <button type="submit" name="delete_group" class="remove-student">
-                    <svg class="bi me-2" xmlns="http://www.w3.org/2000/svg" height="1.6em" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-						<path stroke-linecap="round" stroke-width="1.5" d="M20.5 6h-17M9.5 11l.5 5M14.5 11l-.5 5"></path>
-						<path stroke-width="1.5" d="M6.5 6h.1a2 2 0 0 0 1.84-1.32l.03-.1.1-.3c.08-.24.13-.37.18-.47a1.5 1.5 0 0 1 1.1-.8l.5-.01h3.3c.26 0 .39 0 .5.02.47.07.88.37 1.1.79.05.1.1.23.18.48l.1.29.03.1A2 2 0 0 0 17.5 6"></path>
-						<path stroke-linecap="round" stroke-width="1.5" d="M18.37 15.4c-.17 2.65-.26 3.98-1.13 4.8-.86.8-2.2.8-4.85.8h-.78c-2.66 0-3.99 0-4.85-.8-.87-.82-.96-2.15-1.13-4.8l-.46-6.9m13.66 0-.2 3"></path>
-					</svg>
-                    Удалить группу
-                </button>
-            </form>
+            <button type="button" id="deleteGroupButton" class="remove-group">
+                <svg class="bi me-2" xmlns="http://www.w3.org/2000/svg" height="1.6em" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-width="1.5" d="M20.5 6h-17M9.5 11l.5 5M14.5 11l-.5 5"></path>
+                    <path stroke-width="1.5" d="M6.5 6h.1a2 2 0 0 0 1.84-1.32l.03-.1.1-.3c.08-.24.13-.37.18-.47a1.5 1.5 0 0 1 1.1-.8l.5-.01h3.3c.26 0 .39 0 .5.02.47.07.88.37 1.1.79.05.1.1.23.18.48l.1.29.03.1A2 2 0 0 0 17.5 6"></path>
+                    <path stroke-linecap="round" stroke-width="1.5" d="M18.37 15.4c-.17 2.65-.26 3.98-1.13 4.8-.86.8-2.2.8-4.85.8h-.78c-2.66 0-3.99 0-4.85-.8-.87-.82-.96-2.15-1.13-4.8l-.46-6.9m13.66 0-.2 3"></path>
+                </svg>
+                Удалить группу
+            </button>
         </div>
 
         <div id="confirmGroupModal" class="modal-overlay">
@@ -147,11 +144,14 @@
                         </svg>
                     </button>
                 </div>
-                <p>Вы уверены, что хотите удалить эту группу?</p>
-                <div class="modal-buttons">
-                    <button id="confirmDeleteGroup" class="button danger">Да</button>
-                    <button id="cancelDeleteGroup" class="button grey-button">Отмена</button>
-                </div>
+                <p class="modal-message">Вы уверены, что хотите удалить эту группу?</p>
+                <form method="post" id="deleteGroupForm">
+                        {% csrf_token %}
+                    <div class="horizontal-level">
+                        <button type="submit" name="delete_group" id="confirmDeleteGroup" class="button danger">Да</button>
+                        <button type="button" id="cancelDeleteGroup" class="button grey-button">Отмена</button>
+                    </div>
+                </form>
             </div>
         </div>
 
@@ -165,10 +165,12 @@
                         </svg>
                     </button>
                 </div>
-                <p>Вы уверены, что хотите удалить этого студента из группы?</p>
-                <div class="modal-buttons">
-                    <button id="confirmDelete" class="button danger">Да</button>
-                    <button id="cancelDelete" class="button grey-button">Отмена</button>
+                <div class="modal-message">
+                    <p>Вы уверены, что хотите удалить этого студента из группы?</p>
+                    <div class="horizontal-level">
+                        <button id="confirmDelete" class="button danger">Да</button>
+                        <button id="cancelDelete" class="button grey-button">Отмена</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -183,13 +185,14 @@
                         </svg>
                     </button>
                 </div>
-                <p id="resultMessage"></p>
+                <p id="resultMessage" class="modal-message"></p>
             </div>
         </div>
 
     </div>
 
     <script>
+        // --- СКРИПТ ДЛЯ УЧЕБНОГО ГОДА ---
         document.addEventListener('DOMContentLoaded', function () {
                 const startYearInput = document.getElementById('start-year');
                 const endYearInput = document.getElementById('end-year');
@@ -209,31 +212,45 @@
                 updateEndYear();
             });
 
+            // --- СКРИПТ ДЛЯ МОДАЛЬНОГО ОКНА С ПОДВЕРЖДЕНИЕМ УДАЛЕНИЯ ГРУППЫ ---
+            // ФОРМА ДЛЯ УДАЛЕНИЯ ГУРППЫ В МОДАЛЬНОМ ОКНЕ!!!!
+
+            document.addEventListener('DOMContentLoaded', function() {
+                const deleteBtn = document.getElementById('deleteGroupButton');
+                const confirmModal = document.getElementById('confirmGroupModal');
+                const confirmDelete = document.getElementById('confirmDeleteGroup');
+                const cancelDelete = document.getElementById('cancelDeleteGroup');
+                const closeModal = document.querySelector('.close-modal')
+                
+                if (deleteBtn && confirmModal) {
+                    deleteBtn.addEventListener('click', function() {
+                        confirmModal.style.display = 'flex';
+                    });
+                    
+                    confirmDelete.addEventListener('click', function() {
+                        confirmModal.style.display = 'none';
+                    });
+                    cancelDelete.addEventListener('click', function() {
+                        confirmModal.style.display = 'none';
+                    });
+                    closeModal.addEventListener('click', function() {
+                        confirmModal.style.display = 'none';
+                    });
+                }
+            });
+
+        // --- СКРИПТ ДЛЯ УДАЛЕНИЯ СТУДЕНТА ИЗ ГРУППЫ С AJAX-запросом ---
         document.addEventListener('DOMContentLoaded', function() {
             const deleteButtons = document.querySelectorAll('.remove-student');
-            const confirmModal = document.querySelector('#confirmModal.modal-overlay');
-            const resultModal = document.querySelector('#resultModal.modal-overlay');
+            const confirmModal = document.getElementById('confirmModal');
+            const resultModal = document.getElementById('resultModal');
             const confirmDelete = document.getElementById('confirmDelete');
             const cancelDelete = document.getElementById('cancelDelete');
-            const closeModalButtons = document.querySelectorAll('.close-modal');
             const resultMessage = document.getElementById('resultMessage');
-            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
-
-            const checkElements = [
-                confirmModal, resultModal, confirmDelete, 
-                cancelDelete, resultMessage, csrfToken
-            ];
-            
-            if (checkElements.some(el => !el)) {
-                console.error('Не найдены элементы:', checkElements.map((el, i) => 
-                    !el ? ['confirmModal', 'resultModal', 'confirmDelete', 
-                        'cancelDelete', 'resultMessage', 'csrfToken'][i] : null
-                ).filter(Boolean));
-                return;
-            }
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            const currentGroupId = {{ group.idgroup }};
 
             let currentStudentId = null;
-            let currentDeleteUrl = null;
 
             // Функции управления модальными окнами
             const showModal = (modal) => {
@@ -250,45 +267,33 @@
                 hideModal(confirmModal);
                 hideModal(resultModal);
                 currentStudentId = null;
-                currentDeleteUrl = null;
             };
 
-            // Обработчики для кнопок удаления
+            // Обработчик кнопок удаления
             deleteButtons.forEach(button => {
                 button.addEventListener('click', function(e) {
                     e.preventDefault();
-                    e.stopPropagation();
-                    
                     currentStudentId = this.getAttribute('data-student-id');
-                    currentDeleteUrl = this.getAttribute('data-delete-url');
-                    
-                    if (!currentStudentId || !currentDeleteUrl) {
-                        console.error('Missing data attributes:', {
-                            studentId: currentStudentId,
-                            deleteUrl: currentDeleteUrl
-                        });
-                        return;
-                    }
-
                     showModal(confirmModal);
                 });
             });
 
             // Подтверждение удаления
             confirmDelete.addEventListener('click', async function() {
-                if (!currentStudentId || !currentDeleteUrl) return;
-                
-                hideModal(confirmModal);
+                if (!currentStudentId) return;
                 
                 try {
-                    const response = await fetch("{% url 'remove_student' %}", {
+                    const formData = new FormData();
+                    formData.append('student_id', currentStudentId);
+                    formData.append('delete_student', 'true');
+                    formData.append('csrfmiddlewaretoken', csrfToken);
+
+                    const response = await fetch(window.location.href, {
                         method: 'POST',
                         headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded',
-                            'X-Requested-With': 'XMLHttpRequest',
-                            'X-CSRFToken': csrfToken
+                            'X-Requested-With': 'XMLHttpRequest'
                         },
-                        body: `student_id=${currentStudentId}`
+                        body: formData
                     });
 
                     const data = await response.json();
@@ -296,28 +301,23 @@
                     if (data.status === 'success') {
                         window.location.reload();
                     } else {
-                        resultMessage.textContent = data.message || 'Ошибка при удалении студента';
+                        resultMessage.textContent = data.message || 'Ошибка при удалении';
+                        hideModal(confirmModal);
                         showModal(resultModal);
                     }
                 } catch (error) {
-                    resultMessage.textContent = `Ошибка: ${error.message}`;
+                    resultMessage.textContent = 'Ошибка соединения';
+                    hideModal(confirmModal);
                     showModal(resultModal);
                 }
             });
 
-            // Отмена удаления
-            cancelDelete.addEventListener('click', closeAllModals);
-
-            // Закрытие модальных окон
-            closeModalButtons.forEach(button => {
-                button.addEventListener('click', closeAllModals);
-            });
-
-            // Закрытие по клику вне модального окна
-            window.addEventListener('click', function(event) {
-                if (event.target === confirmModal || event.target === resultModal) {
-                    closeAllModals();
-                }
+            cancelDelete.addEventListener('click', () => hideModal(confirmModal));
+            document.querySelectorAll('.close-modal').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    hideModal(confirmModal);
+                    hideModal(resultModal);
+                });
             });
         });
     </script>

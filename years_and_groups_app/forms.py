@@ -66,6 +66,21 @@ class EditGroupForm(forms.ModelForm):
         return f"{start_year}/{end_year}" 
 
 
+# class AddStudentToGroupForm(forms.Form):
+#     student = forms.ModelChoiceField(
+#         queryset=User.objects.none(), 
+#         label="Добавить студента",
+#         empty_label="Выберите студента"
+#     )
+
+#     def __init__(self, *args, **kwargs):
+#         super().__init__(*args, **kwargs)
+#         student_users = User.objects.filter(iduser__in=Student.objects.values_list('iduser', flat=True))
+#         self.fields['student'].queryset = student_users
+#         self.fields['student'].widget = forms.Select(
+#             choices=[(user.iduser, f"{user.lastname} {user.firstname} {user.middlename or ''} ({user.login})") for user in student_users]
+#         )
+
 class AddStudentToGroupForm(forms.Form):
     student = forms.ModelChoiceField(
         queryset=User.objects.none(), 
@@ -74,13 +89,23 @@ class AddStudentToGroupForm(forms.Form):
     )
 
     def __init__(self, *args, **kwargs):
+        group = kwargs.pop('group', None)
         super().__init__(*args, **kwargs)
-        student_users = User.objects.filter(iduser__in=Student.objects.values_list('iduser', flat=True))
+        student_users = User.objects.filter(
+            iduser__in=Student.objects.values_list('iduser', flat=True)
+        )        
+        # Если указана группа, исключаем студентов этой группы
+        if group:
+            current_group_students = Student.objects.filter(idgroup=group)
+            student_users = student_users.exclude(
+                iduser__in=current_group_students.values_list('iduser', flat=True)
+            )
+        
         self.fields['student'].queryset = student_users
         self.fields['student'].widget = forms.Select(
-            choices=[(user.iduser, f"{user.lastname} {user.firstname} {user.middlename or ''} ({user.login})") for user in student_users]
+            choices=[(user.iduser, f"{user.lastname} {user.firstname} {user.middlename or ''} ({user.login})") 
+                    for user in student_users]
         )
-
 
 class AddAcademicYearForm(forms.Form):
     current_year = datetime.datetime.now().year

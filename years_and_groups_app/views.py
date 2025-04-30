@@ -76,17 +76,25 @@ def edit_group(request, group_id):
                 form.save()
                 return redirect('edit_group', group_id=group.idgroup)
 
-        elif 'delete_student' in request.POST:
+        elif 'delete_student' in request.POST and request.headers.get('X-Requested-With') == 'XMLHttpRequest':
             student_id = request.POST.get('student_id')
-            student = get_object_or_404(Student, idstudent=student_id)
-
-            has_texts = Text.objects.filter(idstudent=student).exists()
-
-            if has_texts:
-                return JsonResponse({'status': 'error', 'message': 'Студент имеет связанные тексты и не может быть удалён.'})
-            else:
-                student.delete()
-                return JsonResponse({'status': 'success'})
+            try:
+                student = get_object_or_404(Student, idstudent=student_id)
+                has_texts = Text.objects.filter(idstudent=student).exists()
+                print(student_id)
+                if has_texts:
+                    return JsonResponse({
+                        'status': 'error', 
+                        'message': 'Студент имеет связанные тексты и не может быть удалён.'
+                        })
+                else:
+                    student.delete()
+                    return JsonResponse({'status': 'success'})
+            except Student.DoesNotExist:
+                return JsonResponse({
+                    'status': 'error',
+                    'message': 'Студент не найден'
+                }, status=404)
 
         elif 'add_student' in request.POST:
             add_form = AddStudentToGroupForm(request.POST)
@@ -104,7 +112,7 @@ def edit_group(request, group_id):
 
     else:
         form = EditGroupForm(instance=group)
-        add_form = AddStudentToGroupForm()
+        add_form = AddStudentToGroupForm(group=group)
 
     return render(request, 'edit_group.html', {
         'group': group,

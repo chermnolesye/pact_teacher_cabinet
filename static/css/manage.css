@@ -346,7 +346,8 @@
   background-color: #e6e7e8;
 }
 
-.remove-student {
+.remove-student,
+.remove-group {
   all: unset;
   border: none;
   background-color: none;
@@ -520,3 +521,14 @@
   margin-right: 8px; 
 }
 
+.modal-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+}
+
+.modal-message p {
+  margin-bottom: 10px;
+}

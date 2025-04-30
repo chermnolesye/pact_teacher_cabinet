@@ -12,5 +12,4 @@ urlpatterns = [
     path('edit_group/delete_group/<int:group_id>/', views.delete_group, name=' delete_group'), 
     path('show_groups/', views.show_groups, name='show_groups'),
     path('edit_group/<int:group_id>/', views.edit_group, name='edit_group'),
-    path('students/remove/', views.remove_student_from_group, name='remove_student'),
 ]
