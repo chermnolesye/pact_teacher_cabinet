@@ -1,5 +1,5 @@
 
-.students-container, .show-groups-container {
+.students-container, .show-groups-container, .edit-group-container {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -62,8 +62,11 @@
   flex-direction: column;
   align-items: flex-start;
   justify-content: center;
-  width: 50%;
-  margin-right: 50%;
+  min-width: 400px;
+}
+
+.vertical-level {
+  margin: 0px 10px;
 }
 
 .edit-group-form button {

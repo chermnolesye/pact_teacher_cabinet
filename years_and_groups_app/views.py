@@ -17,6 +17,8 @@ from .forms import (
     AddStudentToGroupForm
 )
 from django.forms import formset_factory
+from django.views.decorators.http import require_POST
+from django.views.decorators.csrf import csrf_protect
 
 def show_groups(request):
     query = request.GET.get('q', '')
@@ -154,12 +156,15 @@ def add_academic_year(request):
 
 ####### не работает в связи с невозможностью поставить null пока изменяет группу на 95, хз есть ли такая у вас, если нет создайте или поменяйте id 
 # скорее всего придется создавть url для него хз
+@require_POST
+# @csrf_protect
 def remove_student_from_group(request):
     if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':  
-        student_id = request.POST.get('student_id')
         try:
+            student_id = request.POST.get('student_id')
+            print(student_id)
             student = Student.objects.get(pk=student_id)
-            # так как нельзя установить null проверяем по изменению руппы - хз как иначе
+            # так как нельзя установить null проверяем по изменению группы - хз как иначе
             group = Group.objects.get(pk=95)
             student.idgroup = group  # Удаляем студента из группы (или student.delete() для полного удаления)
             student.save()

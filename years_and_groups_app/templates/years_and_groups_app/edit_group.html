@@ -11,7 +11,10 @@
 <body>
     <div id="header-container"></div>
 
-    <div class="group-container">    
+    <div class="show-groups-container">    
+
+        <a href="{% url 'show_groups' %}" class="button grey-button">Вернуться к списку групп</a>
+
         <form method="post" id="edit-group-form" class="edit-group-form">
             {% csrf_token %}
 
@@ -25,18 +28,26 @@
             </div>
             <div class="g-body-card">
 
-                {{ form.groupname.label_tag }}
-                {{ form.groupname }}
-        
-                {{ form.studycourse.label_tag }}
-                {{ form.studycourse }}
+                <div class="horizontal-wrap">
+                    <div class="vertical-level">
+                        {{ form.groupname.label_tag }}
+                        {{ form.groupname }}
+                    </div>
 
-                <label for="start-year">Год обучения</label>
-                <div class="academic-year">
-                    <input type="number" id="start-year" name="start_year" min="2000" max="2100" step="1" value="{{ group.idayear.title|slice:":4" }}" class="form-control">
-                    <input type="text" id="end-year" class="form-control" readonly value="{{ group.idayear.title|slice:"5:" }}">
+                    <div class="vertical-level">
+                        {{ form.studycourse.label_tag }}
+                        {{ form.studycourse }}
+                    </div>
                 </div>
-                <input type="hidden" name="idayear" id="idayear-hidden">
+
+                <div class="vertical-level">
+                    <label for="start-year">Год обучения:</label>
+                    <div class="academic-year">
+                        <input type="number" id="start-year" name="start_year" min="2000" max="2100" step="1" value="{{ group.idayear.title|slice:":4" }}" class="form-control">
+                        <input type="text" id="end-year" class="form-control" readonly value="{{ group.idayear.title|slice:"5:" }}">
+                    </div>
+                    <input type="hidden" name="idayear" id="idayear-hidden">
+                </div>
 
                 <button type="submit" name="save_group" class="button">Сохранить</button>
             </div>
@@ -86,7 +97,7 @@
                         <form method="post" style="display:inline;">
                             {% csrf_token %}
                             <input type="hidden" name="student_id" value="{{ student.pk }}">
-                            <button type="submit" name="delete_student" class="remove-student">
+                            <button type="button" name="delete_student" class="remove-student" data-student-id="{{ student.pk }}" data-delete-url="{% url 'remove_student' %}">
                                 <svg class="bi" xmlns="http://www.w3.org/2000/svg" height="1.6em" stroke="currentColor" fill="none" viewBox="0 0 24 24">
                                     <circle cx="10" cy="6" r="4" stroke-width="1.5"></circle>
                                     <path stroke-linecap="round" stroke-width="1.5" d="M21 10h-4M18 18v-.5c0-2.49-3.58-4.5-8-4.5s-8 2.01-8 4.5S2 22 10 22c2.23 0 3.84-.16 5-.44"></path>
@@ -126,42 +137,7 @@
             </form>
         </div>
 
-    <!-- <div class="students-container">
-        <div id="add-student-modal" class="modal-overlay">
-            <div class="modal-content">
-                <div class="modal-head">
-                    <p>Добавить студента</p>
-                    <button class="close-modal" id="close-modal">
-                        <svg width="30" height="30" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M27.101 17.0606L17.0606 27.101M17.0606 17.0606L27.101 27.101M12.0404 4.68683C15.0917 2.92153 18.5556 1.99459 22.0808 2.00002C33.1714 2.00002 42.1616 10.9902 42.1616 22.0808C42.1616 33.1714 33.1714 42.1616 22.0808 42.1616C10.9902 42.1616 2 33.1714 2 22.0808C2 18.4241 2.97794 14.9923 4.68681 12.0404" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
-                        </svg>
-                    </button>
-                </div>
-
-                <p>
-                    Вы уверены, что хотите удалить студента ______, из группы ____?
-                </p>
-                <div>
-                    <button class="button" type="submit">Да</button>
-                    <button class="button">Нет</button>
-                </div>
-            </div>
-        </div>
-
-        <div id="edit-student-modal" class="modal-overlay">
-            <div class="modal-content">
-                <div class="modal-head">
-                    <p>Редактировать профиль студента</p>
-                    <button class="close-modal" id="close-modal">
-                        <svg width="30" height="30" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M27.101 17.0606L17.0606 27.101M17.0606 17.0606L27.101 27.101M12.0404 4.68683C15.0917 2.92153 18.5556 1.99459 22.0808 2.00002C33.1714 2.00002 42.1616 10.9902 42.1616 22.0808C42.1616 33.1714 33.1714 42.1616 22.0808 42.1616C10.9902 42.1616 2 33.1714 2 22.0808C2 18.4241 2.97794 14.9923 4.68681 12.0404" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
-                        </svg>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <div id="delete-student-modal" class="modal-overlay">
+        <div id="confirmGroupModal" class="modal-overlay">
             <div class="modal-content">
                 <div class="modal-head">
                     <p>Подтвердите действие</p>
@@ -171,39 +147,178 @@
                         </svg>
                     </button>
                 </div>
-
-                <p>
-                    Вы уверены, что хотите удалить студента ______, из группы ____?
-                </p>
-                <div>
-                    <button class="button" type="submit">Да</button>
-                    <button class="button">Нет</button>
+                <p>Вы уверены, что хотите удалить эту группу?</p>
+                <div class="modal-buttons">
+                    <button id="confirmDeleteGroup" class="button danger">Да</button>
+                    <button id="cancelDeleteGroup" class="button grey-button">Отмена</button>
                 </div>
             </div>
-        </div> -->
+        </div>
 
-        <!--В добаление студента желательно сделать ограничение на добавление студнтов по уол-ву их без группы, но оно все равно работать не будет-->
-    <!--Если что у меня (Лиза есть какие-то скрипты js для добавления/удаления студентов, если надо скину, но они выкидывают какие-то непонятные ошибки, я хз как их исправить)-->
-    
-    <script> 
-    
-    document.addEventListener('DOMContentLoaded', function () {
-            const startYearInput = document.getElementById('start-year');
-            const endYearInput = document.getElementById('end-year');
-            const idayearHidden = document.getElementById('idayear-hidden');
+        <div id="confirmModal" class="modal-overlay">
+            <div class="modal-content">
+                <div class="modal-head">
+                    <p>Подтвердите действие</p>
+                    <button class="close-modal" id="close-modal">
+                        <svg width="30" height="30" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M27.101 17.0606L17.0606 27.101M17.0606 17.0606L27.101 27.101M12.0404 4.68683C15.0917 2.92153 18.5556 1.99459 22.0808 2.00002C33.1714 2.00002 42.1616 10.9902 42.1616 22.0808C42.1616 33.1714 33.1714 42.1616 22.0808 42.1616C10.9902 42.1616 2 33.1714 2 22.0808C2 18.4241 2.97794 14.9923 4.68681 12.0404" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+                        </svg>
+                    </button>
+                </div>
+                <p>Вы уверены, что хотите удалить этого студента из группы?</p>
+                <div class="modal-buttons">
+                    <button id="confirmDelete" class="button danger">Да</button>
+                    <button id="cancelDelete" class="button grey-button">Отмена</button>
+                </div>
+            </div>
+        </div>
 
-            const updateEndYear = () => {
-                const startYear = parseInt(startYearInput.value);
-                if (!isNaN(startYear)) {
-                    const endYear = startYear + 1;  
-                    endYearInput.value = endYear;
-                    idayearHidden.value = `${startYear}/${endYear}`;  
-                }
+        <div id="resultModal" class="modal-overlay">
+            <div class="modal-content">
+                <div class="modal-head">
+                    <p>Удаление студента</p>
+                    <button class="close-modal" id="close-modal">
+                        <svg width="30" height="30" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M27.101 17.0606L17.0606 27.101M17.0606 17.0606L27.101 27.101M12.0404 4.68683C15.0917 2.92153 18.5556 1.99459 22.0808 2.00002C33.1714 2.00002 42.1616 10.9902 42.1616 22.0808C42.1616 33.1714 33.1714 42.1616 22.0808 42.1616C10.9902 42.1616 2 33.1714 2 22.0808C2 18.4241 2.97794 14.9923 4.68681 12.0404" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+                        </svg>
+                    </button>
+                </div>
+                <p id="resultMessage"></p>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+                const startYearInput = document.getElementById('start-year');
+                const endYearInput = document.getElementById('end-year');
+                const idayearHidden = document.getElementById('idayear-hidden');
+
+                const updateEndYear = () => {
+                    const startYear = parseInt(startYearInput.value);
+                    if (!isNaN(startYear)) {
+                        const endYear = startYear + 1;  
+                        endYearInput.value = endYear;
+                        idayearHidden.value = `${startYear}/${endYear}`;  
+                    }
+                };
+
+                startYearInput.addEventListener('input', updateEndYear);
+
+                updateEndYear();
+            });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const deleteButtons = document.querySelectorAll('.remove-student');
+            const confirmModal = document.querySelector('#confirmModal.modal-overlay');
+            const resultModal = document.querySelector('#resultModal.modal-overlay');
+            const confirmDelete = document.getElementById('confirmDelete');
+            const cancelDelete = document.getElementById('cancelDelete');
+            const closeModalButtons = document.querySelectorAll('.close-modal');
+            const resultMessage = document.getElementById('resultMessage');
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
+
+            const checkElements = [
+                confirmModal, resultModal, confirmDelete, 
+                cancelDelete, resultMessage, csrfToken
+            ];
+            
+            if (checkElements.some(el => !el)) {
+                console.error('Не найдены элементы:', checkElements.map((el, i) => 
+                    !el ? ['confirmModal', 'resultModal', 'confirmDelete', 
+                        'cancelDelete', 'resultMessage', 'csrfToken'][i] : null
+                ).filter(Boolean));
+                return;
+            }
+
+            let currentStudentId = null;
+            let currentDeleteUrl = null;
+
+            // Функции управления модальными окнами
+            const showModal = (modal) => {
+                modal.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
             };
 
-            startYearInput.addEventListener('input', updateEndYear);
+            const hideModal = (modal) => {
+                modal.style.display = 'none';
+                document.body.style.overflow = '';
+            };
 
-            updateEndYear();
+            const closeAllModals = () => {
+                hideModal(confirmModal);
+                hideModal(resultModal);
+                currentStudentId = null;
+                currentDeleteUrl = null;
+            };
+
+            // Обработчики для кнопок удаления
+            deleteButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    currentStudentId = this.getAttribute('data-student-id');
+                    currentDeleteUrl = this.getAttribute('data-delete-url');
+                    
+                    if (!currentStudentId || !currentDeleteUrl) {
+                        console.error('Missing data attributes:', {
+                            studentId: currentStudentId,
+                            deleteUrl: currentDeleteUrl
+                        });
+                        return;
+                    }
+
+                    showModal(confirmModal);
+                });
+            });
+
+            // Подтверждение удаления
+            confirmDelete.addEventListener('click', async function() {
+                if (!currentStudentId || !currentDeleteUrl) return;
+                
+                hideModal(confirmModal);
+                
+                try {
+                    const response = await fetch("{% url 'remove_student' %}", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'X-CSRFToken': csrfToken
+                        },
+                        body: `student_id=${currentStudentId}`
+                    });
+
+                    const data = await response.json();
+                    
+                    if (data.status === 'success') {
+                        window.location.reload();
+                    } else {
+                        resultMessage.textContent = data.message || 'Ошибка при удалении студента';
+                        showModal(resultModal);
+                    }
+                } catch (error) {
+                    resultMessage.textContent = `Ошибка: ${error.message}`;
+                    showModal(resultModal);
+                }
+            });
+
+            // Отмена удаления
+            cancelDelete.addEventListener('click', closeAllModals);
+
+            // Закрытие модальных окон
+            closeModalButtons.forEach(button => {
+                button.addEventListener('click', closeAllModals);
+            });
+
+            // Закрытие по клику вне модального окна
+            window.addEventListener('click', function(event) {
+                if (event.target === confirmModal || event.target === resultModal) {
+                    closeAllModals();
+                }
+            });
         });
     </script>
 </body>
