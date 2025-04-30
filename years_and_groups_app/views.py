@@ -22,28 +22,22 @@ def show_groups(request):
     query = request.GET.get('q', '')
     course = request.GET.get('course')
     year_str = request.GET.get('year')
-
-    # Получаем все группы, потом фильтруем
     groups = Group.objects.all()
 
-    # Поиск по названию группы
     if query:
         groups = groups.filter(groupname__icontains=query)
 
-    # Фильтрация по курсу
     if course:
         groups = groups.filter(studycourse=course)
 
-    # Фильтрация по учебному году
     year = None
     if year_str:
         try:
             year = int(year_str)
-            groups = groups.filter(idayear=year)  # ✅ работает, если ForeignKey
+            groups = groups.filter(idayear=year)  
         except ValueError:
             pass
-
-    # Получаем список всех курсов и учебных годов для фильтров
+        
     course_numbers = Group.objects.values_list('studycourse', flat=True).distinct().order_by('studycourse')
     academic_years = AcademicYear.objects.all()
 

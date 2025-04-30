@@ -32,7 +32,6 @@
         </div>
     </form>
 
-    <!-- Фильтры -->
     <form method="get" class="filter-form">
         <label for="course">Курс:</label>
         <select name="course" id="course" onchange="this.form.submit()">
@@ -45,10 +44,10 @@
         </select>
     
         <label for="year">Год:</label>
-        <select name="year" id="year" onchange="document.getElementById('year-filter-form').submit();">
+        <select name="year" id="year" onchange="this.form.submit()">
             <option value="">Все</option>
             {% for y in academic_years %}
-                <option value="{{ y.idyear }}" {% if y.idyear == selected_year %}selected{% endif %}>
+                <option value="{{ y.idayear }}" {% if y.idayear == selected_year %}selected{% endif %}>
                     {{ y.title }}
                 </option>
             {% endfor %}
