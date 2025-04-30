@@ -20,6 +20,9 @@
             {% csrf_token %}
         
             <div class="add-group-fields">
+                {{ form.copy_from_group.label_tag }}
+                {{ form.copy_from_group }}
+
                 {{ form.groupname.label_tag }}
                 {{ form.groupname }}
         

@@ -15,6 +15,13 @@ class AddGroupForm(forms.ModelForm):
         })
     )
 
+    copy_from_group = forms.ModelChoiceField(
+        label='Скопировать студентов из группы (необязательно)',
+        queryset=Group.objects.all(),
+        required=False,
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+
     class Meta:
         model = Group
         fields = ['groupname', 'studycourse'] 
@@ -47,6 +54,14 @@ class AddGroupForm(forms.ModelForm):
         group.idayear = AcademicYear.objects.get(title=title)  
         if commit:
             group.save()
+
+            copy_from = self.cleaned_data.get('copy_from_group')
+            if copy_from:
+                students_to_copy = Student.objects.filter(idgroup=copy_from)
+                Student.objects.bulk_create([
+                    Student(idgroup=group, iduser=s.iduser) for s in students_to_copy
+                ])
+
         return group
     
     
@@ -66,21 +81,6 @@ class EditGroupForm(forms.ModelForm):
         return f"{start_year}/{end_year}" 
 
 
-# class AddStudentToGroupForm(forms.Form):
-#     student = forms.ModelChoiceField(
-#         queryset=User.objects.none(), 
-#         label="Добавить студента",
-#         empty_label="Выберите студента"
-#     )
-
-#     def __init__(self, *args, **kwargs):
-#         super().__init__(*args, **kwargs)
-#         student_users = User.objects.filter(iduser__in=Student.objects.values_list('iduser', flat=True))
-#         self.fields['student'].queryset = student_users
-#         self.fields['student'].widget = forms.Select(
-#             choices=[(user.iduser, f"{user.lastname} {user.firstname} {user.middlename or ''} ({user.login})") for user in student_users]
-#         )
-
 class AddStudentToGroupForm(forms.Form):
     student = forms.ModelChoiceField(
         queryset=User.objects.none(), 
@@ -94,7 +94,6 @@ class AddStudentToGroupForm(forms.Form):
         student_users = User.objects.filter(
             iduser__in=Student.objects.values_list('iduser', flat=True)
         )        
-        # Если указана группа, исключаем студентов этой группы
         if group:
             current_group_students = Student.objects.filter(idgroup=group)
             student_users = student_users.exclude(

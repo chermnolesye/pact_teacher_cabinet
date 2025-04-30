@@ -28,7 +28,7 @@
             <div class="divider"></div>
 
             <select name="course" id="course" onchange="this.form.submit()">
-                <option value="">Все</option>
+                <option value="">Все курсы</option>
                 {% for num in course_numbers %}
                     <option value="{{ num }}" {% if num|stringformat:"s" == selected_course|stringformat:"s" %}selected{% endif %}>
                         {{ num }}
@@ -39,7 +39,7 @@
             <div class="divider"></div>
 
             <select name="year" id="year" onchange="this.form.submit()">
-                <option value="">Все</option>
+                <option value="">Все года</option>
                 {% for y in academic_years %}
                     <option value="{{ y.idayear }}" {% if y.idayear == selected_year %}selected{% endif %}>
                         {{ y.title }}
@@ -84,7 +84,6 @@
 </div>
 
 <script>
-    // загрузка шапки, если нужно
     document.addEventListener('DOMContentLoaded', function () {
         fetch('/static/templates/base.html')
             .then(response => response.text())

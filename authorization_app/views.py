@@ -8,15 +8,11 @@ def register_student(request):
     if request.method == 'POST':
         form = StudentRegistrationForm(request.POST)
         if form.is_valid():
-            # Проверяем, существует ли пользователь с таким логином
             if User.objects.filter(login=form.cleaned_data['login']).exists():
                 messages.error(request, 'Пользователь с таким логином уже существует')
                 return render(request, 'authorization/register_student.html', {'form': form})
-
-            # Получаем права студента
             student_right = Rights.objects.get(rightsname='Студент')  
 
-            # Создаем объект User
             user = User(
                 login=form.cleaned_data['login'],
                 lastname=form.cleaned_data['lastname'],
@@ -29,7 +25,6 @@ def register_student(request):
             user.set_password(form.cleaned_data['password'])  
             user.save()  
 
-            # Создаем запись в таблице Student
             Student.objects.create(
                 iduser=user, 
                 idgroup=form.cleaned_data['group']
@@ -47,15 +42,12 @@ def register_teacher(request):
     if request.method == 'POST':
         form = TeacherRegistrationForm(request.POST)
         if form.is_valid():
-            # Проверяем, существует ли пользователь с таким логином
             if User.objects.filter(login=form.cleaned_data['login']).exists():
                 messages.error(request, 'Пользователь с таким логином уже существует')
                 return render(request, 'authorization/register_teacher.html', {'form': form})
 
-            # Получаем права преподавателя
-            teacher_right = Rights.objects.get(rightsname='Преподаватель')  # Убедитесь, что такое право существует
+            teacher_right = Rights.objects.get(rightsname='Преподаватель')  
 
-            # Создаем объект User
             user = User(
                 login=form.cleaned_data['login'],
                 lastname=form.cleaned_data['lastname'],
