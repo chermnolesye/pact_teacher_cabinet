@@ -70,7 +70,7 @@ def edit_group(request, group_id):
 
     form = EditGroupForm(instance=group)
     add_form = AddStudentToGroupForm(group=group)
-    transfer_form = TransferStudentForm(current_course=group.studycourse)
+    transfer_form = TransferStudentForm(current_course=group.studycourse, current_group=group)
     same_course_groups = Group.objects.filter(studycourse=group.studycourse).exclude(idgroup=group.idgroup)
 
     if request.method == 'POST':

@@ -7,16 +7,20 @@ from django.forms import formset_factory
 class TransferStudentForm(forms.Form):
     student_id = forms.IntegerField(widget=forms.HiddenInput())
     new_group = forms.ModelChoiceField(
-        queryset=Group.objects.none(),  
+        queryset=Group.objects.none(),
         label="Перевести в группу",
         widget=forms.Select(attrs={'class': 'form-control'})
     )
 
     def __init__(self, *args, **kwargs):
         current_course = kwargs.pop('current_course', None)
+        current_group = kwargs.pop('current_group', None)
         super().__init__(*args, **kwargs)
         if current_course is not None:
-            self.fields['new_group'].queryset = Group.objects.filter(studycourse=current_course)
+            queryset = Group.objects.filter(studycourse=current_course)
+            if current_group is not None:
+                queryset = queryset.exclude(idgroup=current_group.idgroup)
+            self.fields['new_group'].queryset = queryset
 
 class AddGroupForm(forms.ModelForm):
     idayear = forms.IntegerField(
