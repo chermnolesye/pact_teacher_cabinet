@@ -43,18 +43,23 @@ class AddGroupForm(forms.ModelForm):
     def clean_idayear(self):
         year = self.cleaned_data['idayear']
         title = f"{year}/{year + 1}"
-        if not AcademicYear.objects.filter(title=title).exists():
-            raise forms.ValidationError("Такого учебного года нет в системе.")
         return year
 
     def save(self, commit=True):
-        group = super().save(commit=False)
         year = self.cleaned_data['idayear']
         title = f"{year}/{year + 1}"
-        group.idayear = AcademicYear.objects.get(title=title)  
+        
+        academic_year, created = AcademicYear.objects.get_or_create(
+            title=title
+        )
+
+        group = super().save(commit=False)
+        group.idayear = academic_year
+        
         if commit:
             group.save()
 
+            # Копирование студентов из существующей группы
             copy_from = self.cleaned_data.get('copy_from_group')
             if copy_from:
                 students_to_copy = Student.objects.filter(idgroup=copy_from)
@@ -95,10 +100,9 @@ class EditGroupForm(forms.ModelForm):
             raise forms.ValidationError("Год должен быть в формате ГГГГ/ГГГГ")
 
         title = f"{start_year}/{end_year}"
-        try:
-            return AcademicYear.objects.get(title=title)
-        except AcademicYear.DoesNotExist:
-            raise forms.ValidationError("Такой учебный год не найден")
+
+        academicyear, _ = AcademicYear.objects.get_or_create(title=title)
+        return academicyear
 
 
 class AddStudentToGroupForm(forms.Form):
