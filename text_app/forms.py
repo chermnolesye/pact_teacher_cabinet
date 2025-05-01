@@ -1,8 +1,10 @@
 from django import forms
-from core_app.models import User, Student, Group, Rights
+from core_app.models import ErrorTag, User, Student, Group, Rights
+#from text_app.models import ErrorTagHierarcal
 from datetime import date
 from core_app.models import Text, TextType, WritePlace, WriteTool, Emotion, Group, Student, Error, ErrorTag, ErrorLevel, Reason
 from django.utils.translation import gettext_lazy as _
+#from mptt.forms import TreeNodeChoiceField
 
 class TeacherLoadTextForm(forms.ModelForm):
     group = forms.ModelChoiceField(
@@ -156,7 +158,7 @@ class AddErrorAnnotationForm(forms.ModelForm):
 
     comment = forms.CharField(
         label="Комментарий",
-        widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+        widget=forms.Textarea(attrs={'class': 'form-control', "style": "height:50px; min-height:10px;"}),
         required=False
     )
 

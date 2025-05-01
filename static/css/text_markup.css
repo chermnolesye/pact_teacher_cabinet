@@ -161,11 +161,9 @@ form {
     font-size: 14px;
     padding: 15px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-    z-index: 1000;
     border-radius: var(--border-radius);
     display: flex;
     flex-direction: column;
-
     /* Для плавного появления и исчезновения */
     opacity: 0; /* Начальная непрозрачность */
     transition: opacity 0.3s ease, transform 0.3s ease;
@@ -174,6 +172,7 @@ form {
 
 .error-popup.show {
     display: flex;
+    z-index: 1000;
     opacity: 1; /* Конечная непрозрачность */
     transform: translateY(0); /* Сбрасываем смещение */
 }
@@ -648,7 +647,7 @@ label[for="id_iderrortag"] {
 .annotation-modal-content {
     display: flex;
     flex-direction: column;
-    padding: 10px;
+    padding: 10px 10px 0 10px;
     justify-content: center;
     overflow-y: auto;
 }

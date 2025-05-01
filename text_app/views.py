@@ -785,3 +785,39 @@ def send_changes(request):
             return JsonResponse({'status': 'success'})
         except:
             return JsonResponse({'error': 'Invalid JSON'}, status=400)
+
+#функция для получения тэгов
+def get_tags(request):
+    # Получаем все теги из базы данных
+    tags = ErrorTag.objects.all().values(
+        'iderrortag', 
+        'tagtext', 
+        'tagtextrussian', 
+        'tagcolor',
+        'idtagparent'
+    )
+    
+    tags_info = []
+    if tags.exists():
+        for element in tags:
+            parent_id = element['idtagparent'] if element['idtagparent'] else 0
+            
+            # Проверяем, есть ли у тега дочерние элементы
+            has_children = tags.filter(idtagparent=element['iderrortag']).exists()
+            
+            tags_info.append({
+                'has_children': has_children,
+                'tag_id': element['iderrortag'],
+                'tag_text': element['tagtext'],
+                'tag_text_russian': element['tagtextrussian'],
+                'parent_id': parent_id,
+                'tag_color': element['tagcolor']
+            })
+    
+    context = {
+        'tags_info': list(tags_info),  # преобразуем QuerySet в список
+    }
+
+    print(context)
+    
+    return JsonResponse(context)
