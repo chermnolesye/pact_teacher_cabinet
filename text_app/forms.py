@@ -14,7 +14,7 @@ class TeacherLoadTextForm(forms.ModelForm):
         label="Студент"
     )
     createdate = forms.DateField(
-        initial=date.today,
+        initial=date.today(),
         widget=forms.DateInput(
             attrs={'type': 'date', 'class': 'form-control'}
         ),

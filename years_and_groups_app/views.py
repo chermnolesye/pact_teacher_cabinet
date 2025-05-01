@@ -11,9 +11,7 @@ from core_app.models import (
 )
 from .forms import (
     AddGroupForm,
-    AddAcademicYearForm,
     EditGroupForm,
-    EditAcademicYearForm,
     AddStudentToGroupForm
 )
 from django.forms import formset_factory
@@ -69,6 +67,10 @@ def edit_group(request, group_id):
     group = get_object_or_404(Group, idgroup=group_id)
     students = Student.objects.filter(idgroup=group)
 
+    # Создаем формы заранее
+    form = EditGroupForm(instance=group)
+    add_form = AddStudentToGroupForm(group=group)
+
     if request.method == 'POST':
         if 'save_group' in request.POST:
             form = EditGroupForm(request.POST, instance=group)
@@ -81,12 +83,11 @@ def edit_group(request, group_id):
             try:
                 student = get_object_or_404(Student, idstudent=student_id)
                 has_texts = Text.objects.filter(idstudent=student).exists()
-                print(student_id)
                 if has_texts:
                     return JsonResponse({
-                        'status': 'error', 
+                        'status': 'error',
                         'message': 'Студент имеет связанные тексты и не может быть удалён.'
-                        })
+                    })
                 else:
                     student.delete()
                     return JsonResponse({'status': 'success'})
@@ -97,22 +98,15 @@ def edit_group(request, group_id):
                 }, status=404)
 
         elif 'add_student' in request.POST:
-            add_form = AddStudentToGroupForm(request.POST)
+            add_form = AddStudentToGroupForm(request.POST, group=group)
             if add_form.is_valid():
                 user = add_form.cleaned_data['student']
-                Student.objects.create(
-                    iduser=user,
-                    idgroup=group
-                )
+                Student.objects.create(iduser=user, idgroup=group)
                 return redirect('edit_group', group_id=group.idgroup)
 
         elif 'delete_group' in request.POST:
             group.delete()
             return redirect('show_groups')
-
-    else:
-        form = EditGroupForm(instance=group)
-        add_form = AddStudentToGroupForm(group=group)
 
     return render(request, 'edit_group.html', {
         'group': group,
@@ -120,7 +114,7 @@ def edit_group(request, group_id):
         'students': students,
         'add_form': add_form,
     })
-
+    
 # def add_academic_year(request):
 #     if request.method == "POST":
 #         form = AddAcademicYearForm(request.POST)
