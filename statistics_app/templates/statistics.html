@@ -144,6 +144,25 @@
             
         });
 
+        fetch('/static/templates/base.html')
+          .then(response => response.text()) 
+          .then(data => {
+            document.getElementById('header-container').innerHTML = data;
+            let user_fio = "{{ fio|escapejs }}"; 
+            document.getElementById('user-link').textContent = user_fio;
+          });
+
+        // Добавляем обработчик кнопки "Скачать"
+        document.querySelector('.button').addEventListener('click', function() {
+          const groupId = document.getElementById('group').value;
+          if (!groupId) {
+            alert('Пожалуйста, выберите группу');
+            return;
+          }
+          // Переход на URL скачивания
+          window.location.href = `/statistics/export_group_error_stats?group=${groupId}`;
+        });
+
     </script>
   </body>
 </html>
