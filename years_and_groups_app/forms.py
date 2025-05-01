@@ -3,6 +3,21 @@ from core_app.models import Group, AcademicYear, Student, User
 import datetime
 from django.forms import formset_factory
 
+
+class TransferStudentForm(forms.Form):
+    student_id = forms.IntegerField(widget=forms.HiddenInput())
+    new_group = forms.ModelChoiceField(
+        queryset=Group.objects.none(),  
+        label="Перевести в группу",
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+
+    def __init__(self, *args, **kwargs):
+        current_course = kwargs.pop('current_course', None)
+        super().__init__(*args, **kwargs)
+        if current_course is not None:
+            self.fields['new_group'].queryset = Group.objects.filter(studycourse=current_course)
+
 class AddGroupForm(forms.ModelForm):
     idayear = forms.IntegerField(
         label='Учебный год (начало, типа 2024)',
