@@ -363,7 +363,7 @@
                           data-error-tag-russian="{{ token.error_tag_russian }}"
                           data-error-tag-abbrev="{{ token.error_tag_abbrev }}"
                           data-error-level="{{ token.error_level }}"
-                          data-error-color="{{ token.error_color }}"                          
+                          data-error-color="{{ token.error_color }}"
                           {% endif %}>
 
                         {% if token.all_errors %}
@@ -394,17 +394,17 @@
                         {% endif %}
 
                         {% if token.token == '-EMPTY-' %}
-                        <span class="word">&loz;</span>
+                        <span class="word">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="bi" height="1em" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-width="1.5" d="m14.36 4.079.927-.927a3.932 3.932 0 0 1 5.561 5.561l-.927.927m-5.56-5.561s.115 1.97 1.853 3.707C17.952 9.524 19.92 9.64 19.92 9.64m-5.56-5.561L12 6.439m7.921 3.2-5.26 5.262L11.56 18l-.16.161c-.578.577-.867.866-1.185 1.114a6.554 6.554 0 0 1-1.211.749c-.364.173-.751.302-1.526.56l-3.281 1.094m0 0-.802.268a1.06 1.06 0 0 1-1.342-1.342l.268-.802m1.876 1.876-1.876-1.876m0 0 1.094-3.281c.258-.775.387-1.162.56-1.526.205-.43.456-.836.749-1.211.248-.318.537-.607 1.114-1.184L8.5 9.939"></path></svg>
+                        </span>
                         {% else %}
                         <span class="word">{{ token.token }}</span>
                         {% endif %}
                     </span>
-                    {% if token.token == '.' %}
+                    {% endfor %}
                     <svg class="clickable-icon" width="20" height="20" viewBox="0 0 54 54" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M34.5 27H27M27 27H19.5M27 27V19.5M27 27V34.5M14.5 5.34503C18.2988 3.14728 22.6113 1.99327 27 2.00003C40.8075 2.00003 52 13.1925 52 27C52 40.8075 40.8075 52 27 52C13.1925 52 2 40.8075 2 27C2 22.4475 3.2175 18.175 5.345 14.5" stroke="#768088" stroke-width="4" stroke-linecap="round" />
                     </svg>
-                    {% endif %}
-                    {% endfor %}
                 </div>
             </div>
             {% endfor %}
@@ -430,10 +430,7 @@
                             <label id="tags-label" for="id_iderrortag" style="width: 120px; float: left; margin-top:15px;">Выберите тег:</label>
                             <input type="text" id="tag-search" placeholder="Поиск тега" class="tag-search" style="width: 420px;">
                         </div>
-                        
-                        <div id="tags-list" class="tags-list"></div>
-                        {{ annotation_form.iderrortag }}
-                        <!--{{annotation_form.iderrortag.idtagparent}}-->
+
                         <div class="selected-tag-display">
                             Выбранный тег: <span id="selected-tag-name">Не выбран</span>
                         </div>
@@ -487,14 +484,11 @@
         const chosen = [];
         const chosen_ids = [];
 
-        const response = fetch('/text/get_tags/');
-        if (response.ok) {
-            let json = response.json();
-            console.log(json);
-        } else {
-            alert("Ошибка HTTP: " + response.status);
-            console.log(response);
-        }
+        const response = fetch('/text/get_tags/')
+            .then(res => res.json())
+            .then(out =>
+                console.log(out))
+            .catch(err => console.log(err));
 
         // Скрипт для отображения разметки (НЕ ДЫШАТЬ НА НЕГО!!!)
         document.addEventListener('DOMContentLoaded', function() {
@@ -567,6 +561,15 @@
         document.addEventListener('DOMContentLoaded', function() {
             const popup = document.getElementById('error-popup');
             const closePopupBtn = document.getElementById('close-popup');
+
+            function createSelect() {
+                const parent = document.getElementsByClassName('annotation-modal-content')[0]; 
+                const newToken = document.createElement('div');
+                const nextElement = document.getElementsByClassName('selected-tag-display')[0];
+                console.log(nextElement);
+                console.log(parent.children);
+                parent.insertBefore(newToken, nextElement);
+            }
 
             // Функция для отображения всплывающего окна с информацией об ошибке
             function showPopup(tokenElement) {
@@ -664,6 +667,7 @@
                     showPopup(this);
                 });
                 errorTagElement.addEventListener('click', function (e) {
+                    createSelect();
                     document.getElementById('annotation-modal').style.display = 'flex';
                     EditAnnotationForm(this);
                 });
