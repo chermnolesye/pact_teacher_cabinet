@@ -49,7 +49,11 @@
                         <p>{{ lastname }}</p>
 
                         {{ form.middlename.label_tag }}
-                        <p>{{ middlename }}</p>
+                        {% if middlename %}                            
+                            <p>{{ middlename }}</p>
+                        {% else %}
+                            <p>Нет</p>
+                        {% endif %}
                     </div>
                     <div class="vertical-level">
                         {{ form.birthdate.label_tag }}

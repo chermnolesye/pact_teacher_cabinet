@@ -15,15 +15,59 @@ from core_app.models import (
 )
 
 from collections import defaultdict
-
-
 from statistics_app import dashboards
-
 from django.shortcuts import render
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.db.models import Count, Q
 import json
+import openpyxl
+from openpyxl.styles import Font
 
+def export_group_error_stats(request):
+    group_id = request.GET.get('group')
+    if not group_id:
+        return HttpResponse("Группа не выбрана", status=400)
+
+    student_ids = Student.objects.filter(idgroup=group_id).values_list('idstudent', flat=True)
+
+    text_ids = Text.objects.filter(idstudent__in=student_ids).values_list('idtext', flat=True)
+
+    error_counts = Error.objects.filter(
+        errortoken__idtoken__idsentence__idtext__in=text_ids
+    ).values("iderrortag", "iderrorlevel").annotate(
+        count=Count("iderror")
+    )
+
+    tags = ErrorTag.objects.all().values("iderrortag", "tagtext", "tagtextrussian", "idtagparent")
+
+    error_map = defaultdict(lambda: defaultdict(int))
+    for e in error_counts:
+        error_map[e["iderrortag"]][e["iderrorlevel"]] = e["count"]
+
+    wb = openpyxl.Workbook()
+    ws = wb.active
+    ws.title = "Статистика ошибок"
+
+    ws.append(["Тег", "Уровень 1", "Уровень 2", "Уровень 3", "Всего"])
+    for cell in ws[1]:
+        cell.font = Font(bold=True)
+
+    for tag in tags:
+        tid = tag["iderrortag"]
+        name = tag["tagtextrussian"] or tag["tagtext"]
+        l1 = error_map[tid].get(1, 0)
+        l2 = error_map[tid].get(2, 0)
+        l3 = error_map[tid].get(3, 0)
+        total = l1 + l2 + l3
+        if total > 0:
+            ws.append([name, l1, l2, l3, total])
+
+    response = HttpResponse(
+        content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    )
+    response['Content-Disposition'] = 'attachment; filename=group_error_stats.xlsx'
+    wb.save(response)
+    return response
 
 def statistics_view(request):
     groups = (

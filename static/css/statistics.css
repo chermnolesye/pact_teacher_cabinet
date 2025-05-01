@@ -27,7 +27,7 @@ h1 {
     margin: 5px auto;
     max-width: 600px;
     background: white;
-    border: 1px solid #908d8d; /* Темная обводка */
+    border: 1px solid var(--grey-color);
     box-shadow: 0 0 4px rgba(11, 0, 0, 0.1);
     padding: 0;
     width: 100%;
@@ -43,12 +43,12 @@ h1 {
     align-items: center;
     gap: 10px;
     font-size: 16px;
+    width: 100%;
 }
 
 .section-content {
     padding: 15px;
 }
-
 
 label {
     display: block;
@@ -58,19 +58,20 @@ label {
 
 .row {
     display: flex;
-    gap: 10px; /* Расстояние между элементами */
-    align-items: center; /* Вертикальное выравнивание по центру */
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
 }
 
 select, .button {
-    flex-shrink: 0; /* Запрещаем сжатие элементов */
-    height: 40px; /* Устанавливаем одинаковую высоту для всех элементов */
-    display: flex; /* Убедитесь, что кнопка и селект имеют одинаковый тип отображения */
-    align-items: center; /* Центрируем содержимое по вертикали */
+    flex-shrink: 0;
+    height: 40px;
+    display: flex;
+    align-items: center;
 }
 
 select {
-    flex-grow: 1; /* Позволяет селекту расширяться */
+    flex-grow: 1;
 }
 
 #group {
@@ -86,16 +87,8 @@ select, input {
 }
 
 .button {
-    margin: 10px auto; /* Центрируем кнопку по горизонтали */
-    display: block; /* Делаем кнопку блочным элементом */
-    background-color: var(--primary-color);
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: var(--border-radius);
-    cursor: pointer;
-    font-weight: bold;
-    font-size: 14px;
+    margin: 0px auto;
+    display: block;
 }
 
 .button:hover {
