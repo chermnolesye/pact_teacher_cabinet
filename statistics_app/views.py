@@ -15,10 +15,7 @@ from core_app.models import (
 )
 
 from collections import defaultdict
-
-
 from statistics_app import dashboards
-
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.db.models import Count, Q
