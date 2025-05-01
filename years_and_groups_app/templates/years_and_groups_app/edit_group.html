@@ -285,21 +285,16 @@
 
          // --- СКРИПТ ДЛЯ МОДАЛЬНОГО ОКНА С ПОДВЕРЖДЕНИЕМ ПЕРЕВОДА В ДРУГУЮ ГРУППУ ---
             // ФОРМА ДЛЯ ПЕРЕВОДА В МОДАЛЬНОМ ОКНЕ!!!!
-
             document.addEventListener('DOMContentLoaded', function() {
-                // Находим все кнопки перевода (теперь по классу, не по ID)
                 const transferBtns = document.querySelectorAll('.transfer-student');
                 const confirmModal = document.getElementById('confirmTransferModal');
                 const transferForm = document.getElementById('transferGroupForm');
-                const closeModal = document.getElementById('close-modal');
                 const cancelTransfer = document.getElementById('cancelTransfer');
                 
                 if (transferBtns.length && confirmModal) {
                     transferBtns.forEach(btn => {
                         btn.addEventListener('click', function() {
-                            // Получаем student_id из data-атрибута
-                            const studentId = this.getAttribute('data-student-id');
-                            
+                            const studentId = this.getAttribute('data-student-id');                            
                             // Добавляем hidden input с student_id в форму
                             let studentIdInput = transferForm.querySelector('input[name="student_id"]');
                             if (!studentIdInput) {
@@ -309,8 +304,6 @@
                                 transferForm.prepend(studentIdInput);
                             }
                             studentIdInput.value = studentId;
-                            
-                            // Показываем модальное окно
                             confirmModal.style.display = 'flex';
                         });
                     });
@@ -319,13 +312,8 @@
                     function closeModalFunc() {
                         confirmModal.style.display = 'none';
                     }
-
-                    closeModal.addEventListener('click', function() {
-                        confirmModal.style.display = 'none';
-                    });
-                    
-                    closeModal.addEventListener('click', closeModalFunc);
                     cancelTransfer.addEventListener('click', closeModalFunc);
+                    document.querySelector('#confirmTransferModal .close-modal').addEventListener('click', closeModalFunc);
                     
                     // Закрытие при клике вне модального окна
                     confirmModal.addEventListener('click', function(e) {
@@ -335,30 +323,6 @@
                     });
                 }
             });
-
-            // document.addEventListener('DOMContentLoaded', function() {
-            //     const transferBtn = document.getElementById('transfer-student');
-            //     const confirmModal = document.getElementById('confirmTransferModal');
-            //     const confirmTransfer = document.getElementById('confirmTransferStudent');
-            //     const cancelTransfer = document.getElementById('cancelTransferStudent');
-            //     const closeModal = document.querySelector('.close-modal')
-                
-            //     if (transferBtn && confirmModal) {
-            //         transferBtn.addEventListener('click', function() {
-            //             confirmModal.style.display = 'flex';
-            //         });
-                    
-            //         confirmTransfer.addEventListener('click', function() {
-            //             confirmModal.style.display = 'none';
-            //         });
-            //         cancelTransfer.addEventListener('click', function() {
-            //             confirmModal.style.display = 'none';
-            //         });
-            //         closeModal.addEventListener('click', function() {
-            //             confirmModal.style.display = 'none';
-            //         });
-            //     }
-            // });
 
         // --- СКРИПТ ДЛЯ УДАЛЕНИЯ СТУДЕНТА ИЗ ГРУППЫ С AJAX-запросом ---
         document.addEventListener('DOMContentLoaded', function() {
