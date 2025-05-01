@@ -91,7 +91,9 @@
                         {{ student.iduser.middlename|default_if_none:"" }}
                     </div>
                     <div class="student-login">
-                        {{ student.iduser.login }}
+                        <a href="{% url 'student_info' student.idstudent %}">
+                            {{ student.iduser.login }}
+                        </a>
                     </div>
                     <div class="student-login">
                         <form method="post" style="display:inline;">
