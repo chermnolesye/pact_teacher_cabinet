@@ -352,11 +352,16 @@
 }
 
 .remove-student,
-.remove-group {
+.remove-group,
+.transfer-student {
   all: unset;
   border: none;
   background-color: none;
   cursor: pointer;
+}
+
+#transferGroupForm .horizontal-level {
+  margin-top: 15px;
 }
 
 .add-student {

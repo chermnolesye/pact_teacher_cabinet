@@ -3,6 +3,25 @@ from core_app.models import Group, AcademicYear, Student, User
 import datetime
 from django.forms import formset_factory
 
+
+class TransferStudentForm(forms.Form):
+    student_id = forms.IntegerField(widget=forms.HiddenInput())
+    new_group = forms.ModelChoiceField(
+        queryset=Group.objects.none(),
+        label="Перевести в группу",
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+
+    def __init__(self, *args, **kwargs):
+        current_course = kwargs.pop('current_course', None)
+        current_group = kwargs.pop('current_group', None)
+        super().__init__(*args, **kwargs)
+        if current_course is not None:
+            queryset = Group.objects.filter(studycourse=current_course)
+            if current_group is not None:
+                queryset = queryset.exclude(idgroup=current_group.idgroup)
+            self.fields['new_group'].queryset = queryset
+
 class AddGroupForm(forms.ModelForm):
     idayear = forms.IntegerField(
         label='Учебный год (начало, типа 2024)',
@@ -43,18 +62,23 @@ class AddGroupForm(forms.ModelForm):
     def clean_idayear(self):
         year = self.cleaned_data['idayear']
         title = f"{year}/{year + 1}"
-        if not AcademicYear.objects.filter(title=title).exists():
-            raise forms.ValidationError("Такого учебного года нет в системе.")
         return year
 
     def save(self, commit=True):
-        group = super().save(commit=False)
         year = self.cleaned_data['idayear']
         title = f"{year}/{year + 1}"
-        group.idayear = AcademicYear.objects.get(title=title)  
+        
+        academic_year, created = AcademicYear.objects.get_or_create(
+            title=title
+        )
+
+        group = super().save(commit=False)
+        group.idayear = academic_year
+        
         if commit:
             group.save()
 
+            # Копирование студентов из существующей группы
             copy_from = self.cleaned_data.get('copy_from_group')
             if copy_from:
                 students_to_copy = Student.objects.filter(idgroup=copy_from)
@@ -95,10 +119,9 @@ class EditGroupForm(forms.ModelForm):
             raise forms.ValidationError("Год должен быть в формате ГГГГ/ГГГГ")
 
         title = f"{start_year}/{end_year}"
-        try:
-            return AcademicYear.objects.get(title=title)
-        except AcademicYear.DoesNotExist:
-            raise forms.ValidationError("Такой учебный год не найден")
+
+        academicyear, _ = AcademicYear.objects.get_or_create(title=title)
+        return academicyear
 
 
 class AddStudentToGroupForm(forms.Form):

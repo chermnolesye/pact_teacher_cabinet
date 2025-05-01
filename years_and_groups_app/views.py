@@ -12,7 +12,8 @@ from core_app.models import (
 from .forms import (
     AddGroupForm,
     EditGroupForm,
-    AddStudentToGroupForm
+    AddStudentToGroupForm,
+    TransferStudentForm
 )
 from django.forms import formset_factory
 from django.views.decorators.http import require_POST
@@ -67,9 +68,10 @@ def edit_group(request, group_id):
     group = get_object_or_404(Group, idgroup=group_id)
     students = Student.objects.filter(idgroup=group)
 
-    # Создаем формы заранее
     form = EditGroupForm(instance=group)
     add_form = AddStudentToGroupForm(group=group)
+    transfer_form = TransferStudentForm(current_course=group.studycourse, current_group=group)
+    same_course_groups = Group.objects.filter(studycourse=group.studycourse).exclude(idgroup=group.idgroup)
 
     if request.method == 'POST':
         if 'save_group' in request.POST:
@@ -108,12 +110,25 @@ def edit_group(request, group_id):
             group.delete()
             return redirect('show_groups')
 
+        elif 'transfer_student' in request.POST:
+            transfer_form = TransferStudentForm(request.POST, current_course=group.studycourse)
+            if transfer_form.is_valid():
+                student_id = transfer_form.cleaned_data['student_id']
+                new_group = transfer_form.cleaned_data['new_group']
+                student = get_object_or_404(Student, idstudent=student_id, idgroup=group)
+                student.idgroup = new_group
+                student.save()
+                return redirect('edit_group', group_id=group.idgroup)
+
     return render(request, 'edit_group.html', {
         'group': group,
         'form': form,
         'students': students,
         'add_form': add_form,
+        'transfer_form': transfer_form,
+        'same_course_groups': same_course_groups,
     })
+
     
 # def add_academic_year(request):
 #     if request.method == "POST":
