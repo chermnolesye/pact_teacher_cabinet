@@ -16,7 +16,7 @@ class AddGroupForm(forms.ModelForm):
     )
 
     copy_from_group = forms.ModelChoiceField(
-        label='Скопировать студентов из группы (необязательно)',
+        label='Зачислить студентов из существующей группы (необязательно)',
         queryset=Group.objects.all(),
         required=False,
         widget=forms.Select(attrs={'class': 'form-control'})

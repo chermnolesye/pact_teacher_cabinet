@@ -19,9 +19,7 @@
         <form method="post" class="add-group-form">
             {% csrf_token %}
         
-            <div class="add-group-fields">
-                {{ form.copy_from_group.label_tag }}
-                {{ form.copy_from_group }}
+            <div class="add-group-fields">               
 
                 {{ form.groupname.label_tag }}
                 {{ form.groupname }}
@@ -36,6 +34,9 @@
                 </div>
                 <!-- Скрытое поле, в котором формируется строка 2024/2025 для отправки на сервер -->
                 <input type="hidden" name="idayear" id="idayear-hidden">
+
+                {{ form.copy_from_group.label_tag }}
+                {{ form.copy_from_group }}
             </div>
         
             <div class="form-buttons">

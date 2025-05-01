@@ -20,9 +20,14 @@
 .form-buttons {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 10px;
   width: 100%;
   max-width: 800px;
+  margin: 20px 0px;
+}
+
+.form-buttons .button {
+  margin: 0px;
 }
 
 .form-buttons .grey-button {
