@@ -28,44 +28,64 @@ def export_group_error_stats(request):
     if not group_id:
         return HttpResponse("Группа не выбрана", status=400)
 
-    student_ids = Student.objects.filter(idgroup=group_id).values_list('idstudent', flat=True)
+    try:
+        group = Group.objects.get(idgroup=group_id)
+    except Group.DoesNotExist:
+        return HttpResponse("Группа не найдена", status=404)
 
-    text_ids = Text.objects.filter(idstudent__in=student_ids).values_list('idtext', flat=True)
-
-    error_counts = Error.objects.filter(
-        errortoken__idtoken__idsentence__idtext__in=text_ids
-    ).values("iderrortag", "iderrorlevel").annotate(
-        count=Count("iderror")
-    )
-
-    tags = ErrorTag.objects.all().values("iderrortag", "tagtext", "tagtextrussian", "idtagparent")
-
-    error_map = defaultdict(lambda: defaultdict(int))
-    for e in error_counts:
-        error_map[e["iderrortag"]][e["iderrorlevel"]] = e["count"]
+    students = Student.objects.filter(idgroup=group_id).select_related("iduser").order_by("iduser__lastname")
+    tags = {t.iderrortag: t.tagtext for t in ErrorTag.objects.all()}
 
     wb = openpyxl.Workbook()
-    ws = wb.active
-    ws.title = "Статистика ошибок"
+    default_sheet = wb.active 
 
-    ws.append(["Тег", "Уровень 1", "Уровень 2", "Уровень 3", "Всего"])
-    for cell in ws[1]:
-        cell.font = Font(bold=True)
+    added_sheets = False  
 
-    for tag in tags:
-        tid = tag["iderrortag"]
-        name = tag["tagtextrussian"] or tag["tagtext"]
-        l1 = error_map[tid].get(1, 0)
-        l2 = error_map[tid].get(2, 0)
-        l3 = error_map[tid].get(3, 0)
-        total = l1 + l2 + l3
-        if total > 0:
-            ws.append([name, l1, l2, l3, total])
+    for student in students:
+        text_ids = Text.objects.filter(idstudent=student.idstudent).values_list('idtext', flat=True)
+
+        error_counts_raw = (
+            Error.objects
+            .filter(errortoken__idtoken__idsentence__idtext__in=text_ids)
+            .values("iderrortag")
+            .annotate(count=Count("iderror"))
+        )
+
+        if not error_counts_raw:
+            continue
+
+        error_counts = []
+        for error in error_counts_raw:
+            tag_id = error["iderrortag"]
+            tag_name = tags.get(tag_id, "Неизвестно")
+            count = error["count"]
+            error_counts.append((tag_name, count))
+        error_counts.sort(key=lambda x: x[0])
+
+        sheet_name = f"{student.iduser.lastname} {student.iduser.firstname} {student.iduser.middlename}"
+        sheet_name = sheet_name[:31]
+        ws = wb.create_sheet(title=sheet_name)
+
+        ws.append(["Тэг", "Частота"])
+        for cell in ws[1]:
+            cell.font = Font(bold=True)
+        for tag_name, count in error_counts:
+            ws.append([tag_name, count])
+
+        added_sheets = True
+
+    if added_sheets:
+        wb.remove(default_sheet)
+    else:
+        default_sheet.title = "Нет данных"
+        default_sheet.append(["Нет ошибок у студентов в этой группе."])
+
+    filename = f"{group.groupname} ({group.idayear.title}).xlsx"
 
     response = HttpResponse(
         content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
     )
-    response['Content-Disposition'] = 'attachment; filename=group_error_stats.xlsx'
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
     wb.save(response)
     return response
 
@@ -419,5 +439,3 @@ def chart_types_errors(request):
 
             return JsonResponse({"data_type_errors": data}, status=200)
 
-
-from django.shortcuts import render
