@@ -65,8 +65,8 @@ def get_levels():
 def get_texts_id_keys(data_count, texts_id):
     """Создаёт словарь: {id тега: [id текстов]}"""
     for data in data_count:
-        if data["iderrortag"] not in texts_id:
-            texts_id[data["iderrortag"]] = []
+        if data["iderror"] not in texts_id:
+            texts_id[data["iderror"]] = []
     return texts_id
 
 

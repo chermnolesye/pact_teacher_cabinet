@@ -469,10 +469,10 @@ def chart_types_errors(request):
 			 Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'iderrortag__tagtext',
 						  'iderrortag__tagtextrussian', 'errortoken__idtoken__idsentence__idtext__idtext')
 						#   .filter(Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1))
-						  .filter(errortoken__idtoken__idtext__errorcheckflag=True)
+						  .filter(errortoken__idtoken__idsentence__idtext__errorcheckflag=True)
 						  .annotate(count_data=Count('iderrortag__iderrortag')))
 		
-		data_on_tokens = dashboards.get_data_on_tokens(data_count_errors, 'iderrortag__iderrortag', 'tag__tag_language', True,
+		data_on_tokens = dashboards.get_data_on_tokens(data_count_errors, 'iderrortag__iderrortag', True,
 							       False)
 		data = dashboards.get_data_errors(data_on_tokens, 0, True)
 		
