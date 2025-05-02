@@ -194,22 +194,22 @@ def get_data_errors(data_count_errors, level, is_sorted):
     data_tags_not_in_errors = list(
         ErrorTag.objects.annotate(
             tag_id=F("iderrortag"),
-            parent_id=F("idtagparent"),
-            text=F("tagtext"),
-            text_russian=F("tagtextrussian"),
+            id_parent=F("idtagparent"),
+            tag_text=F("tagtext"),
+            tagtext_russian=F("tagtextrussian"),
         )
-        .values("iderrortag", "parent_id", "text", "text_russian")
+        .values("iderrortag", "idtagparent", "tagtext", "tagtextrussian")
         .filter(~Q(iderrortag__in=list_tags_id_in_markup))
         .annotate(
             count_data=Value(0, output_field=IntegerField()),
             count_data_on_tokens=Value(0, output_field=IntegerField()),
         )
     )
-
+    print((data_count_errors + data_tags_not_in_errors)[0])
     data = [
         {
-            "iderrortag": item.get("iderrortag", item["tag_id"]),
-            "idtagparent": item.get("idtagparent", item.get("parent_id")),
+            "iderrortag": item.get("iderrortag", item["iderrortag__iderrortag"]),
+            "idtagparent": item.get("idtagparent", item.get("iderrortag__idtagparent")),
             "tagtext": item.get("tagtext", item.get("text")),
             "tagtextrussian": item.get("tagtextrussian", item.get("text_russian")),
             "count_data": item["count_data"],
