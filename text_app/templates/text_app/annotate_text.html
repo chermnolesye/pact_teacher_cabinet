@@ -660,6 +660,9 @@
                         category_content.style.marginBottom = '5px';
                         inner_tag.id = tag['tag_id'];
                         inner_tag.innerHTML = tag['tag_text'];
+                        inner_tag.addEventListener('click', () => {
+                            document.getElementById('selected-tag-name').innerHTML = inner_tag.innerHTML;
+                        })
 
                         const children = document.createElement('div');
                         children.style.display = 'none';
