@@ -12,6 +12,7 @@ from core_app.models import (
     Sentence,
     User,
     ErrorLevel,
+    Emotion
 )
 
 import numpy as np
