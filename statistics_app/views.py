@@ -2146,22 +2146,22 @@ def chart_relation_assessment_self_rating(request):
 		text_type = list_filters['text_type']
 		
 		if surname and name and patronymic and text_type:
-			data_relation = list(Text.objects.values('language', 'assessment', 'selfrating').filter(
+			data_relation = list(Text.objects.values('textgrade', 'selfrating').filter(
 				Q(self_rating__gt=0) & Q(assessment__gt=0) & Q(user__last_name=surname) & Q(user__name=name) & Q(
 					user__patronymic=patronymic) & Q(text_type=text_type) & Q(errorcheckflag=True)).distinct())
 			
 		elif surname and name and patronymic:
-			data_relation = list(Text.objects.values('language', 'assessment', 'selfrating').filter(
+			data_relation = list(Text.objects.values('textgrade', 'selfrating').filter(
 				Q(self_rating__gt=0) & Q(assessment__gt=0) & Q(user__last_name=surname) & Q(user__name=name) & Q(
 					user__patronymic=patronymic) & Q(errorcheckflag=True)).distinct())
 			
 		elif surname and name and text_type:
-			data_relation = list(Text.objects.values('language', 'assessment', 'selfrating').filter(
+			data_relation = list(Text.objects.values('textgrade', 'selfrating').filter(
 				Q(self_rating__gt=0) & Q(assessment__gt=0) & Q(user__last_name=surname) & Q(user__name=name) & Q(
 					text_type=text_type) & Q(errorcheckflag=True)).distinct())
 			
 		else:
-			data_relation = list(Text.objects.values('language', 'assessment', 'selfrating').filter(
+			data_relation = list(Text.objects.values('textgrade', 'selfrating').filter(
 				Q(self_rating__gt=0) & Q(assessment__gt=0) & Q(user__last_name=surname) & Q(user__name=name) & Q(
 					errorcheckflag=True)).distinct())
 			
@@ -2171,7 +2171,7 @@ def chart_relation_assessment_self_rating(request):
 			idx = data["selfrating"]
 			data["self_rating_text"] = assessment_types[idx - 1][1]
 			
-			idx = data["assessment"]
+			idx = data["textgrade"]
 			data["assessment_text"] = assessment_types[idx - 1][1]
 			
 		if patronymic:
@@ -2202,10 +2202,10 @@ def relation_emotions_self_rating(request):
 		groups = list(Group.objects.values('groupname').distinct().order_by('groupname'))
 		
 		data_relation = list(
-			Text.objects.values('idemotion__idemotion__emotionname', 'selfrating').filter(
+			Text.objects.values('idemotion', 'selfrating').filter(
 				Q(idemotion__isnull=False) & Q(selfrating__gt=0) & ~Q(idemotion=2)))
 		
-		data, relation, data_fisher = dashboards.get_stat(data_relation, 'emotional', 'emotional__emotional_name',
+		data, relation, data_fisher = dashboards.get_stat(data_relation, 'idemotion', 'idemotion__emotionname',
 								  'selfrating', 'self_rating_text', True)
 		
 		return render(request, 'relation_emotions_self_rating.html', {'right': True, 'languages': languages,
@@ -2231,7 +2231,7 @@ def relation_emotions_self_rating(request):
 		if flag_post == 'course':
 			course = list_filters['course']
 			
-			data_relation = list(Text.objects.values('language', 'emotional', 'selfrating').filter(
+			data_relation = list(Text.objects.values('idemotion', 'selfrating').filter(
 				Q(emotional__isnull=False) & Q(self_rating__gt=0) & Q(tbltextgroup__group__course_number=course) & ~Q(
 					emotional=2)))
 			
@@ -2241,12 +2241,12 @@ def relation_emotions_self_rating(request):
 			group_date = date[:4] + '-09-01'
 			
 			data_relation = list(
-				Text.objects.values('language', 'emotional', 'selfrating').filter(
+				Text.objects.values('idemotion', 'selfrating').filter(
 					Q(emotional__isnull=False) & Q(self_rating__gt=0) & Q(
 						tbltextgroup__group__group_name=group) & Q(
 						tbltextgroup__group__enrollment_date=group_date) & ~Q(emotional=2)))
 			
-		data, relation, data_fisher = dashboards.get_stat(data_relation, 'emotional', 'emotional__emotional_name',
+		data, relation, data_fisher = dashboards.get_stat(data_relation, 'idemotion', 'idemotion__emotionname',
 								  'selfrating', 'self_rating_text', True)
 		
 		return JsonResponse({'data_relation': data, 'relation': relation, 'data_fisher': data_fisher}, status=200)
@@ -2259,16 +2259,16 @@ def relation_emotions_assessment(request):
 	if request.method != 'POST':
 		languages = ['Deustache']
 		courses = list(
-			Group.objects.values('studycourse', 'language').filter(studycourse__gt=0).distinct().order_by(
+			Group.objects.values('studycourse').filter(studycourse__gt=0).distinct().order_by(
 				'studycourse'))
-		groups = list(Group.objects.values('groupname', 'language').distinct().order_by('groupname'))
+		groups = list(Group.objects.values('groupname').distinct().order_by('groupname'))
 		
 		data_relation = list(
-			Text.objects.values('language', 'emotional', 'assessment').filter(
-				Q(emotional__isnull=False) & Q(assessment__gt=0) & ~Q(emotional=2)))
+			Text.objects.values('idemotion', 'textgrade').filter(
+				Q(idemotion__isnull=False) & Q(textgrade__gt=0) & ~Q(idemotion=2)))
 		
-		data, relation, data_fisher = dashboards.get_stat(data_relation, 'emotional', 'emotional__emotional_name',
-								  'assessment', 'assessment_text', True)
+		data, relation, data_fisher = dashboards.get_stat(data_relation, 'idemotion', 'idemotion__emotionname',
+								  'textgrade', 'assessment_text', True)
 		
 		return render(request, 'relation_emotions_assessment.html', {'right': True, 'languages': languages,
 									     'courses': courses, 'groups': groups,
@@ -2294,7 +2294,7 @@ def relation_emotions_assessment(request):
 			course = list_filters['course']
 			
 			data_relation = list(
-				Text.objects.values('language', 'emotional', 'assessment').filter(
+				Text.objects.values('idemotion', 'textgrade').filter(
 					Q(emotional__isnull=False) & Q(assessment__gt=0) & Q(
 						tbltextgroup__group__course_number=course) & ~Q(emotional=2)))
 			
@@ -2303,12 +2303,12 @@ def relation_emotions_assessment(request):
 			date = list_filters['date']
 			group_date = date[:4] + '-09-01'
 			
-			data_relation = list(Text.objects.values('language', 'emotional', 'assessment').filter(
+			data_relation = list(Text.objects.values('idemotion', 'textgrade').filter(
 				Q(emotional__isnull=False) & Q(assessment__gt=0) & Q(tbltextgroup__group__group_name=group) & Q(
 					tbltextgroup__group__enrollment_date=group_date) & ~Q(emotional=2)))
 			
-		data, relation, data_fisher = dashboards.get_stat(data_relation, 'emotional', 'emotional__emotional_name',
-								  'assessment', 'assessment_text', True)
+		data, relation, data_fisher = dashboards.get_stat(data_relation, 'idemotion', 'idemotion__emotionname',
+								  'textgrade', 'assessment_text', True)
 		
 		return JsonResponse({'data_relation': data, 'relation': relation, 'data_fisher': data_fisher}, status=200)
 
@@ -2320,15 +2320,15 @@ def relation_self_rating_assessment(request):
 	if request.method != 'POST':
 		languages = ['Deustache']
 		courses = list(
-			Group.objects.values('studycourse', 'language').filter(studycourse__gt=0).distinct().order_by(
+			Group.objects.values('studycourse').filter(studycourse__gt=0).distinct().order_by(
 				'studycourse'))
-		groups = list(Group.objects.values('groupname', 'language').distinct().order_by('groupname'))
+		groups = list(Group.objects.values('groupname').distinct().order_by('groupname'))
 		
-		data_relation = list(Text.objects.values('language', 'selfrating', 'assessment').filter(
-			Q(self_rating__gt=0) & Q(assessment__gt=0)))
+		data_relation = list(Text.objects.values('selfrating', 'textgrade').filter(
+			Q(selfrating__gt=0) & Q(textgrade__gt=0)))
 		
 		data, relation, data_fisher = dashboards.get_stat(data_relation, 'selfrating', 'self_rating_text',
-								  'assessment', 'assessment_text', False)
+								  'textgrade', 'assessment_text', False)
 		
 		return render(request, 'relation_self_rating_assessment.html', {'right': True, 'languages': languages,
 										'courses': courses, 'groups': groups,
@@ -2353,7 +2353,7 @@ def relation_self_rating_assessment(request):
 		if flag_post == 'course':
 			course = list_filters['course']
 			
-			data_relation = list(Text.objects.values('language', 'selfrating', 'assessment').filter(
+			data_relation = list(Text.objects.values('selfrating', 'textgrade').filter(
 				Q(self_rating__gt=0) & Q(assessment__gt=0) & Q(tbltextgroup__group__course_number=course)))
 			
 		if flag_post == 'group':
@@ -2361,12 +2361,12 @@ def relation_self_rating_assessment(request):
 			date = list_filters['date']
 			group_date = date[:4] + '-09-01'
 			
-			data_relation = list(Text.objects.values('language', 'selfrating', 'assessment').filter(
+			data_relation = list(Text.objects.values('selfrating', 'textgrade').filter(
 				Q(self_rating__gt=0) & Q(assessment__gt=0) & Q(tbltextgroup__group__group_name=group) & Q(
 					tbltextgroup__group__enrollment_date=group_date)))
 			
 		data, relation, data_fisher = dashboards.get_stat(data_relation, 'selfrating', 'self_rating_text',
-								  'assessment', 'assessment_text', False)
+								  'textgrade', 'assessment_text', False)
 		
 		return JsonResponse({'data_relation': data, 'relation': relation, 'data_fisher': data_fisher}, status=200)
 
@@ -2377,8 +2377,7 @@ def relation_course_errors(request):
 		
 	if request.method != 'POST':
 		languages = ['Deustache']
-		tags = list(Error.objects.values('iderrortag__iderrortag', 'tag_language', 'iderrortag__tagtext', 'iderrortag__tagtextrussian').filter(
-			markup_type=1).order_by('iderrortag__iderrortag'))
+		tags = list(Error.objects.values('iderrortag__iderrortag', 'iderrortag__tagtext', 'iderrortag__tagtextrussian').order_by('iderrortag__iderrortag'))
 		
 		return render(request, 'relation_course_errors.html', {'right': True, 'languages': languages, 'tags': tags})
 	else:
