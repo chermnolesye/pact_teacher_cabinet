@@ -603,8 +603,6 @@ label[for="id_iderrortag"] {
     gap: 8px;
     width: 550px;
     height: 150px;
-    /* height: auto;
-    width: auto; */
     box-shadow: 0 5px 10px rgba(0,0,0,0.1);
     border-radius: var(--border-radius);
     overflow-y: auto;
@@ -612,7 +610,7 @@ label[for="id_iderrortag"] {
 }
 
 .tag {
-    padding: 5px 10px;
+    padding: 10px 10px;
     border-radius: var(--border-radius);
     cursor: pointer;
     font-size: 16px;

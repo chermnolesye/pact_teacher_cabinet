@@ -814,10 +814,12 @@ def get_tags(request):
                 'tag_color': element['tagcolor']
             })
     
+    sorted_tags = sorted(list(tags_info), key=lambda d: d['parent_id'])
+
     context = {
-        'tags_info': list(tags_info),  # преобразуем QuerySet в список
+        'tags_info': sorted_tags,  # преобразуем QuerySet в список
     }
 
-    print(context)
+    #print(len(sorted_tags))
     
     return JsonResponse(context)

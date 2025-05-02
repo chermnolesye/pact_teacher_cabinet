@@ -427,8 +427,8 @@
                     {% csrf_token %}
                     <div class="annotation-modal-content">
                         <div style="width: 100%; overflow: hidden;">
-                            <label id="tags-label" for="id_iderrortag" style="width: 120px; float: left; margin-top:15px;">Выберите тег:</label>
-                            <input type="text" id="tag-search" placeholder="Поиск тега" class="tag-search" style="width: 420px;">
+                            <label id="tags-label" for="id_iderrortag" style="width: 550px; float: left; margin-top:15px;">Выберите тег:</label>
+                            <!--<input type="text" id="tag-search" placeholder="Поиск тега" class="tag-search" style="width: 420px;">-->
                         </div>
 
                         <div class="selected-tag-display">
@@ -483,12 +483,6 @@
         <script>
         const chosen = [];
         const chosen_ids = [];
-
-        const response = fetch('/text/get_tags/')
-            .then(res => res.json())
-            .then(out =>
-                console.log(out))
-            .catch(err => console.log(err));
 
         // Скрипт для отображения разметки (НЕ ДЫШАТЬ НА НЕГО!!!)
         document.addEventListener('DOMContentLoaded', function() {
@@ -561,13 +555,142 @@
         document.addEventListener('DOMContentLoaded', function() {
             const popup = document.getElementById('error-popup');
             const closePopupBtn = document.getElementById('close-popup');
+            let list_tags = {};
+
+            async function fetchDataAsync(url, let_tags) {
+                const response = await fetch(url);
+                list_tags = await response.json();
+                console.log(list_tags);
+            }
+
+            fetchDataAsync('/text/get_tags/', list_tags);
+
+            function AddEllWithChildren(category_content, inner_tag, children) {
+                const iconSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                const iconPath = document.createElementNS(
+                    'http://www.w3.org/2000/svg',
+                    'path'
+                );
+
+                iconSvg.setAttribute('fill', 'none')
+                iconSvg.setAttribute('viewBox', '0 0 24 24');
+                iconSvg.setAttribute('stroke', 'black');
+                iconPath.setAttribute(
+                    'd',
+                    'M7 3.338A9.954 9.954 0 0 1 12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12c0-1.821.487-3.53 1.338-5'
+                );
+                iconPath.setAttribute('stroke-linecap', 'round');
+                iconPath.setAttribute('stroke', '#768088');
+                iconPath.setAttribute('stroke-width', '1.5');
+
+                iconSvg.appendChild(iconPath);
+
+                const iconPath1 = document.createElementNS(
+                    'http://www.w3.org/2000/svg',
+                    'path'
+                );
+
+                iconPath1.setAttribute(
+                    'd',
+                    'm10.5 9 3 3-3 3'
+                );
+                iconPath1.setAttribute('stroke-linecap', 'round');
+                iconPath1.setAttribute('stroke', '#768088');
+                iconPath1.setAttribute('stroke-width', '1.5');
+
+                iconSvg.appendChild(iconPath1);
+                iconSvg.style.height = "35px";
+                iconSvg.style.width = "35px";
+                iconSvg.style.display = 'inline-block';
+                iconSvg.style.paddingTop = '5px';
+                iconSvg.classList.add('tag-icon');
+                iconSvg.classList.add('tag-icon-close');
+
+                iconSvg.addEventListener('click', () => {
+                    //console.log(iconSvg.children);
+                    const path1 = iconSvg.children[0];
+                    const path2 = iconSvg.children[1];
+
+                    if (iconSvg.classList.contains('tag-icon-close')) {
+                        children.style.display = 'block';
+                        path1.setAttribute(
+                            'd',
+                            'm15 10.5-3 3-3-3'
+                        );
+                        path2.setAttribute(
+                            'd',
+                            'M7 3.338A9.954 9.954 0 0 1 12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12c0-1.821.487-3.53 1.338-5'
+                        );
+                        iconSvg.classList.remove('tag-icon-close');
+                    }
+                    else {
+                        children.style.display = 'none';
+                        path1.setAttribute(
+                            'd',
+                            'M7 3.338A9.954 9.954 0 0 1 12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12c0-1.821.487-3.53 1.338-5'
+                        );
+                        path2.setAttribute(
+                            'd',
+                            'm10.5 9 3 3-3 3'
+                        );
+                        iconSvg.classList.add('tag-icon-close');
+                    }
+                });
+                category_content.appendChild(iconSvg);
+                inner_tag.style.display = 'inline-block';
+                inner_tag.style.marginLeft = '10px';
+
+            }
+
+            function TagAddChildren(index, parent_id, newToken) {
+                for (var i = index; i < tags_info.length; i++) {
+                    tag = tags_info[i];
+
+                    if (tag["parent_id"] === parent_id) {
+                        //console.log(tag);
+                        const category = document.createElement('div');
+                        category.classList.add('category');
+
+                        const category_content = document.createElement('div');
+                        category_content.style.display = 'flex';
+                        const inner_tag = document.createElement('div');
+                        inner_tag.classList.add('tag');
+                        inner_tag.style.width = "fit-content";
+                        inner_tag.style.backgroundColor = tag['tag_color'];
+                        category_content.style.marginBottom = '5px';
+                        inner_tag.id = tag['tag_id'];
+                        inner_tag.innerHTML = tag['tag_text'];
+
+                        const children = document.createElement('div');
+                        children.style.display = 'none';
+                        children.style.marginLeft = '50px';
+                        if (tag['has_children'] === true) {
+                            AddEllWithChildren(category_content, inner_tag, children);
+                        }
+                        category_content.appendChild(inner_tag);
+                        category.appendChild(category_content);
+                        newToken.appendChild(category);
+
+                        if (tag['has_children'] === true) {
+                            TagAddChildren(i, tag['tag_id'], children)
+                            category.appendChild(children);
+                        }
+                    }
+                }
+            }
 
             function createSelect() {
                 const parent = document.getElementsByClassName('annotation-modal-content')[0]; 
                 const newToken = document.createElement('div');
+                newToken.classList.add('select-for-tags');
                 const nextElement = document.getElementsByClassName('selected-tag-display')[0];
-                console.log(nextElement);
-                console.log(parent.children);
+                //console.log(list_tags);
+                //console.log(parent.children);
+                tags_info=list_tags["tags_info"];
+
+                TagAddChildren(0, 0, newToken);
+                newToken.style.height = "250px";
+                newToken.style.overflowY = "scroll";
                 parent.insertBefore(newToken, nextElement);
             }
 
@@ -1026,7 +1149,7 @@
 
         document.addEventListener('DOMContentLoaded', function() {
             const select = document.getElementById('id_iderrortag');
-            const tagsList = document.getElementById('tags-list');
+            //const tagsList = document.getElementById('tags-list');
             const selectedTagDisplay = document.getElementById('selected-tag-name');
 
             function updateSelectedTagDisplay() {
@@ -1034,7 +1157,7 @@
                 selectedTagDisplay.textContent = selectedOption ? selectedOption.text : 'Не выбран';
             }
 
-            function renderTags() {
+            /*function renderTags() {
                 tagsList.innerHTML = '';
 
                 Array.from(select.options).forEach(option => {
@@ -1067,13 +1190,19 @@
             }
 
             // Инициализация при загрузке
-            renderTags();
+            renderTags();*/
 
             document.getElementById('tag-search').addEventListener('input', function(e) {
                 const searchTerm = e.target.value.toLowerCase();
                 document.querySelectorAll('.tag').forEach(tag => {
+                    console.log(tag.parentElement);
                     const tagText = tag.textContent.toLowerCase();
                     tag.style.display = tagText.includes(searchTerm) ? 'block' : 'none';
+                    //console.log(tag.previousSibling);
+                    const svg_icon = tag.previousSibling;
+                    if (svg_icon != null) {
+                        svg_icon.style.display = tagText.includes(searchTerm) ? 'block' : 'none';
+                    }
                 });
             });
 
