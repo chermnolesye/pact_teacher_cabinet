@@ -63,10 +63,11 @@ def get_levels():
 
 
 def get_texts_id_keys(data_count, texts_id):
+    #print(data_count)
     """Создаёт словарь: {id тега: [id текстов]}"""
     for data in data_count:
-        if data["iderror"] not in texts_id:
-            texts_id[data["iderror"]] = []
+        if data["iderrortag__iderrortag"] not in texts_id:
+            texts_id[data["iderrortag__iderrortag"]] = []
     return texts_id
 
 
@@ -76,12 +77,12 @@ def get_texts_id_and_data_on_tokens(data_count, texts_id, id_data):
     id_data_count_on_tokens = []
 
     for data in data_count:
-        if data["iderror__idtext"] not in texts_id[data["iderrortag"]]:
-            texts_id[data["iderrortag"]].append(data["iderror__idtext"])
+        if data["errortoken__idtoken__idsentence__idtext__idtext"] not in texts_id[data["iderrortag__iderrortag"]]:
+            texts_id[data["iderrortag__iderrortag"]].append(data["errortoken__idtoken__idsentence__idtext__idtext"])
 
         if data[id_data] not in id_data_count_on_tokens:
             id_data_count_on_tokens.append(data[id_data])
-            del data["iderror__idtext"]
+            del data["errortoken__idtoken__idsentence__idtext__idtext"]
             data_count_on_tokens.append(data)
         else:
             idx = 0
@@ -103,9 +104,9 @@ def get_on_tokens(texts_id, data_count):
         count_tokens[tag_id] = count_tokens_tag["res"]
 
     for data in data_count:
-        if count_tokens.get(data["iderrortag"], 0):
+        if count_tokens.get(data["iderrortag__iderrortag"], 0):
             data["count_data_on_tokens"] = (
-                data["count_data"] * 100 / count_tokens[data["iderrortag"]]
+                data["count_data"] * 100 / count_tokens[data["iderrortag__iderrortag"]]
             )
         else:
             data["count_data_on_tokens"] = 0
@@ -188,27 +189,27 @@ def get_data_errors_dfs(v, d, d_on_tokens, level, level_input, h, flags_levels, 
 
 def get_data_errors(data_count_errors, level, is_sorted):
     """Финальная сборка статистики по ошибкам"""
-    list_tags_id_in_markup = [data["iderrortag"] for data in data_count_errors]
+    list_tags_id_in_markup = [data["iderrortag__iderrortag"] for data in data_count_errors]
 
     data_tags_not_in_errors = list(
         ErrorTag.objects.annotate(
             tag_id=F("iderrortag"),
-            parent_id=F("idtagparent"),
-            text=F("tagtext"),
-            text_russian=F("tagtextrussian"),
+            id_parent=F("idtagparent"),
+            tag_text=F("tagtext"),
+            tagtext_russian=F("tagtextrussian"),
         )
-        .values("tag_id", "parent_id", "text", "text_russian")
+        .values("iderrortag", "idtagparent", "tagtext", "tagtextrussian")
         .filter(~Q(iderrortag__in=list_tags_id_in_markup))
         .annotate(
             count_data=Value(0, output_field=IntegerField()),
             count_data_on_tokens=Value(0, output_field=IntegerField()),
         )
     )
-
+    print((data_count_errors + data_tags_not_in_errors)[0])
     data = [
         {
-            "iderrortag": item.get("iderrortag", item["tag_id"]),
-            "idtagparent": item.get("idtagparent", item.get("parent_id")),
+            "iderrortag": item.get("iderrortag", item["iderrortag__iderrortag"]),
+            "idtagparent": item.get("idtagparent", item.get("iderrortag__idtagparent")),
             "tagtext": item.get("tagtext", item.get("text")),
             "tagtextrussian": item.get("tagtextrussian", item.get("text_russian")),
             "count_data": item["count_data"],
