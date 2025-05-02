@@ -557,13 +557,7 @@
             const closePopupBtn = document.getElementById('close-popup');
             let list_tags = {};
 
-            async function fetchDataAsync(url, let_tags) {
-                const response = await fetch(url);
-                list_tags = await response.json();
-                console.log(list_tags);
-            }
-
-            fetchDataAsync('/text/get_tags/', list_tags);
+            
 
             function AddEllWithChildren(category_content, inner_tag, children) {
                 const iconSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -682,7 +676,7 @@
                 }
             }
 
-            function createSelect() {
+            function createSelect(list_tags) {
                 const parent = document.getElementsByClassName('annotation-modal-content')[0]; 
                 const newToken = document.createElement('div');
                 newToken.classList.add('select-for-tags');
@@ -696,6 +690,15 @@
                 newToken.style.overflowY = "scroll";
                 parent.insertBefore(newToken, nextElement);
             }
+
+            async function fetchDataAsync(url, let_tags) {
+                const response = await fetch(url);
+                list_tags = await response.json();
+                console.log(list_tags);
+                createSelect(list_tags);
+            }
+
+            fetchDataAsync('/text/get_tags/', list_tags);
 
             // Функция для отображения всплывающего окна с информацией об ошибке
             function showPopup(tokenElement) {
@@ -793,7 +796,7 @@
                     showPopup(this);
                 });
                 errorTagElement.addEventListener('click', function (e) {
-                    createSelect();
+                    
                     document.getElementById('annotation-modal').style.display = 'flex';
                     EditAnnotationForm(this);
                 });
