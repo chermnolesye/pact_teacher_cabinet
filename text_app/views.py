@@ -820,6 +820,6 @@ def get_tags(request):
         'tags_info': sorted_tags,  # преобразуем QuerySet в список
     }
 
-    #print(len(sorted_tags))
+    # print(len(sorted_tags))
     
     return JsonResponse(context)

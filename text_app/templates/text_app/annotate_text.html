@@ -1192,24 +1192,24 @@
             // Инициализация при загрузке
             renderTags();*/
 
-            document.getElementById('tag-search').addEventListener('input', function(e) {
-                const searchTerm = e.target.value.toLowerCase();
-                document.querySelectorAll('.tag').forEach(tag => {
-                    console.log(tag.parentElement);
-                    const tagText = tag.textContent.toLowerCase();
-                    tag.style.display = tagText.includes(searchTerm) ? 'block' : 'none';
-                    //console.log(tag.previousSibling);
-                    const svg_icon = tag.previousSibling;
-                    if (svg_icon != null) {
-                        svg_icon.style.display = tagText.includes(searchTerm) ? 'block' : 'none';
-                    }
-                });
-            });
+            // document.getElementById('tag-search').addEventListener('input', function(e) {
+            //     const searchTerm = e.target.value.toLowerCase();
+            //     document.querySelectorAll('.tag').forEach(tag => {
+            //         console.log(tag.parentElement);
+            //         const tagText = tag.textContent.toLowerCase();
+            //         tag.style.display = tagText.includes(searchTerm) ? 'block' : 'none';
+            //         //console.log(tag.previousSibling);
+            //         const svg_icon = tag.previousSibling;
+            //         if (svg_icon != null) {
+            //             svg_icon.style.display = tagText.includes(searchTerm) ? 'block' : 'none';
+            //         }
+            //     });
+            // });
 
             // Обновляем при изменении select (на случай, если он меняется программно)
-            select.addEventListener('change', function() {
-                renderTags();
-            });
+            // select.addEventListener('change', function() {
+            //     renderTags();
+            // });
         });
 
         async function addErrorAnnotation() {
