@@ -4,9 +4,11 @@ from core_app.models import (
     Token,
     PosTag,
     Error,
+	ErrorLevel,
     ErrorToken,
     ErrorTag,
     Group,
+	Emotion,
     AcademicYear,
     TextType,
     Student,
@@ -973,7 +975,7 @@ def chart_types_grade_errors(request):
 			Text.objects.values('header', 'language').filter(errorcheckflag=True).distinct().order_by('header'))
 		text_types = list(
 			TextType.objects.values().filter(text__errorcheckflag=True).distinct().order_by('idtexttype'))
-		grades = list(TblGrade.objects.values('id_grade', 'grade_name', 'grade_language').order_by('grade_language'))
+		grades = list(ErrorLevel.objects.values('id_grade', 'grade_name', 'grade_language').order_by('grade_language'))
 		
 		data_on_tokens = []
 		texts_id = {}
@@ -1070,7 +1072,7 @@ def chart_types_grade_errors(request):
 			level = int(list_filters['level'])
 			
 			grades = list(
-				TblGrade.objects.values('id_grade', 'grade_name', 'grade_language').order_by('grade_language'))
+				ErrorLevel.objects.values('id_grade', 'grade_name', 'grade_language').order_by('grade_language'))
 			
 			data_on_tokens = []
 			texts_id = {}
@@ -1569,7 +1571,7 @@ def chart_emotions_errors(request):
 	if request.method != 'POST':
 		languages = ['Deustache']
 		levels = dashboards.get_levels()
-		emotions = list(TblEmotional.objects.values())
+		emotions = list(Emotion.objects.values())
 		tag_parents, dict_children = dashboards.get_dict_children()
 		
 		return render(request, 'dashboard_error_emotions.html', {'right': True, 'languages': languages,
