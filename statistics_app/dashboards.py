@@ -12,7 +12,7 @@ from core_app.models import (
     Sentence,
     User,
     ErrorLevel,
-    Emotion
+    Emotion,
 )
 
 import numpy as np
@@ -63,7 +63,7 @@ def get_levels():
 
 
 def get_texts_id_keys(data_count, texts_id):
-    #print(data_count)
+    # print(data_count)
     """Создаёт словарь: {id тега: [id текстов]}"""
     for data in data_count:
         if data["iderrortag__iderrortag"] not in texts_id:
@@ -77,8 +77,13 @@ def get_texts_id_and_data_on_tokens(data_count, texts_id, id_data):
     id_data_count_on_tokens = []
 
     for data in data_count:
-        if data["errortoken__idtoken__idsentence__idtext__idtext"] not in texts_id[data["iderrortag__iderrortag"]]:
-            texts_id[data["iderrortag__iderrortag"]].append(data["errortoken__idtoken__idsentence__idtext__idtext"])
+        if (
+            data["errortoken__idtoken__idsentence__idtext__idtext"]
+            not in texts_id[data["iderrortag__iderrortag"]]
+        ):
+            texts_id[data["iderrortag__iderrortag"]].append(
+                data["errortoken__idtoken__idsentence__idtext__idtext"]
+            )
 
         if data[id_data] not in id_data_count_on_tokens:
             id_data_count_on_tokens.append(data[id_data])
@@ -189,7 +194,9 @@ def get_data_errors_dfs(v, d, d_on_tokens, level, level_input, h, flags_levels, 
 
 def get_data_errors(data_count_errors, level, is_sorted):
     """Финальная сборка статистики по ошибкам"""
-    list_tags_id_in_markup = [data["iderrortag__iderrortag"] for data in data_count_errors]
+    list_tags_id_in_markup = [
+        data["iderrortag__iderrortag"] for data in data_count_errors
+    ]
 
     data_tags_not_in_errors = list(
         ErrorTag.objects.annotate(
@@ -205,10 +212,22 @@ def get_data_errors(data_count_errors, level, is_sorted):
             count_data_on_tokens=Value(0, output_field=IntegerField()),
         )
     )
-    print((data_count_errors + data_tags_not_in_errors)[0])
+    # print((data_count_errors + data_tags_not_in_errors)[1])
+    s = 0
+    for item in data_count_errors + data_tags_not_in_errors:
+        if (
+            item.get("iderrortag", None) == None
+            and item.get("iderrortag__iderrortag", None) == None
+        ):
+            s += 1
+
+    print(len(data_count_errors + data_tags_not_in_errors), s)
+
     data = [
         {
-            "iderrortag": item.get("iderrortag", item["iderrortag__iderrortag"]),
+            "iderrortag": item.get("iderrortag", None)
+            if item.get("iderrortag") != None
+            else item.get("iderrortag__iderrortag", None),
             "idtagparent": item.get("idtagparent", item.get("iderrortag__idtagparent")),
             "tagtext": item.get("tagtext", item.get("text")),
             "tagtextrussian": item.get("tagtextrussian", item.get("text_russian")),
