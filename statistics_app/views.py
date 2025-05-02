@@ -2,7 +2,7 @@ from django.shortcuts import render
 from core_app.models import (
     Text,
     Token,
-    PosTag,
+    Error,
     Error,
 	ErrorLevel,
     ErrorToken,
@@ -448,9 +448,6 @@ def chart_types_errors2(request):
 # Дальше бога нет
 
 
-
-
-
 def chart_types_errors(request):
 	# if not (request.user.is_authenticated and request.user.is_teacher()):
 	# 	return render(request, 'access_denied.html', status=403)
@@ -531,8 +528,8 @@ def chart_types_errors(request):
 			
 			if surname and name and patronymic and text and text_type:
 				data_count_errors = list(
-					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'tag__tag_language', 'iderrortag__tagtext',
-								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idtext__idtext').filter(
+					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'iderrortag__tagtext',
+								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
 							sentence__text_id__user__last_name=surname) & Q(sentence__text_id__user__name=name) & Q(
 							sentence__text_id__user__patronymic=patronymic) & Q(sentence__text_id__header=text) & Q(
@@ -540,8 +537,8 @@ def chart_types_errors(request):
 				
 			elif surname and name and patronymic and text:
 				data_count_errors = list(
-					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'tag__tag_language', 'iderrortag__tagtext',
-								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idtext__idtext').filter(
+					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'iderrortag__tagtext',
+								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
 							sentence__text_id__user__last_name=surname) & Q(sentence__text_id__user__name=name) & Q(
 							sentence__text_id__user__patronymic=patronymic) & Q(
@@ -549,8 +546,8 @@ def chart_types_errors(request):
 				
 			elif surname and name and patronymic and text_type:
 				data_count_errors = list(
-					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'tag__tag_language', 'iderrortag__tagtext',
-								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idtext__idtext').filter(
+					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'iderrortag__tagtext',
+								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
 							sentence__text_id__user__last_name=surname) & Q(sentence__text_id__user__name=name) & Q(
 							sentence__text_id__user__patronymic=patronymic) & Q(
@@ -558,16 +555,16 @@ def chart_types_errors(request):
 				
 			elif surname and name and patronymic:
 				data_count_errors = list(
-					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'tag__tag_language', 'iderrortag__tagtext',
-								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idtext__idtext').filter(
+					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'iderrortag__tagtext',
+								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
 							sentence__text_id__user__last_name=surname) & Q(sentence__text_id__user__name=name) & Q(
 							sentence__text_id__user__patronymic=patronymic)).annotate(count_data=Count('iderrortag__iderrortag')))
 				
 			elif surname and name and text and text_type:
 				data_count_errors = list(
-					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'tag__tag_language', 'iderrortag__tagtext',
-								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idtext__idtext').filter(
+					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'iderrortag__tagtext',
+								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
 							sentence__text_id__user__last_name=surname) & Q(sentence__text_id__user__name=name) & Q(
 							sentence__text_id__header=text) & Q(sentence__text_id__text_type=text_type)).annotate(
@@ -575,32 +572,32 @@ def chart_types_errors(request):
 				
 			elif surname and name and text:
 				data_count_errors = list(
-					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'tag__tag_language', 'iderrortag__tagtext',
-								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idtext__idtext').filter(
+					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'iderrortag__tagtext',
+								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
 							sentence__text_id__user__last_name=surname) & Q(sentence__text_id__user__name=name) & Q(
 							sentence__text_id__header=text)).annotate(count_data=Count('iderrortag__iderrortag')))
 				
 			elif surname and name and text_type:
 				data_count_errors = list(
-					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'tag__tag_language', 'iderrortag__tagtext',
-								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idtext__idtext').filter(
+					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'iderrortag__tagtext',
+								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
 							sentence__text_id__user__last_name=surname) & Q(sentence__text_id__user__name=name) & Q(
 							sentence__text_id__text_type=text_type)).annotate(count_data=Count('iderrortag__iderrortag')))
 				
 			elif surname and name:
 				data_count_errors = list(
-					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'tag__tag_language', 'iderrortag__tagtext',
-								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idtext__idtext').filter(
+					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'iderrortag__tagtext',
+								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
 							sentence__text_id__user__last_name=surname) & Q(
 							sentence__text_id__user__name=name)).annotate(count_data=Count('iderrortag__iderrortag')))
 				
 			elif course and text_type and text:
 				data_count_errors = list(
-					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'tag__tag_language', 'iderrortag__tagtext',
-								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idtext__idtext').filter(
+					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'iderrortag__tagtext',
+								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
 							sentence__text_id__tbltextgroup__group__course_number=course) & Q(
 							sentence__text_id__header=text) & Q(sentence__text_id__text_type=text_type)).annotate(
@@ -608,24 +605,24 @@ def chart_types_errors(request):
 				
 			elif course and text:
 				data_count_errors = list(
-					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'tag__tag_language', 'iderrortag__tagtext',
-								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idtext__idtext').filter(
+					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'iderrortag__tagtext',
+								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
 							sentence__text_id__tbltextgroup__group__course_number=course) & Q(
 							sentence__text_id__header=text)).annotate(count_data=Count('iderrortag__iderrortag')))
 				
 			elif course and text_type:
 				data_count_errors = list(
-					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'tag__tag_language', 'iderrortag__tagtext',
-								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idtext__idtext').filter(
+					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'iderrortag__tagtext',
+								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
 							sentence__text_id__tbltextgroup__group__course_number=course) & Q(
 							sentence__text_id__text_type=text_type)).annotate(count_data=Count('iderrortag__iderrortag')))
 				
 			elif course:
 				data_count_errors = list(
-					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'tag__tag_language', 'iderrortag__tagtext',
-								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idtext__idtext').filter(
+					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'iderrortag__tagtext',
+								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
 							sentence__text_id__tbltextgroup__group__course_number=course)).annotate(
 						count_data=Count('iderrortag__iderrortag')))
@@ -634,8 +631,8 @@ def chart_types_errors(request):
 				group_date = date[:4] + '-09-01'
 				
 				data_count_errors = list(
-					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'tag__tag_language', 'iderrortag__tagtext',
-								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idtext__idtext').filter(
+					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'iderrortag__tagtext',
+								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
 							sentence__text_id__tbltextgroup__group__group_name=group) & Q(
 							sentence__text_id__tbltextgroup__group__enrollment_date=group_date) & Q(
@@ -646,8 +643,8 @@ def chart_types_errors(request):
 				group_date = date[:4] + '-09-01'
 				
 				data_count_errors = list(
-					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'tag__tag_language', 'iderrortag__tagtext',
-								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idtext__idtext').filter(
+					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'iderrortag__tagtext',
+								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
 							sentence__text_id__tbltextgroup__group__group_name=group) & Q(
 							sentence__text_id__tbltextgroup__group__enrollment_date=group_date) & Q(
@@ -657,8 +654,8 @@ def chart_types_errors(request):
 				group_date = date[:4] + '-09-01'
 				
 				data_count_errors = list(
-					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'tag__tag_language', 'iderrortag__tagtext',
-								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idtext__idtext').filter(
+					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'iderrortag__tagtext',
+								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
 							sentence__text_id__tbltextgroup__group__group_name=group) & Q(
 							sentence__text_id__tbltextgroup__group__enrollment_date=group_date) & Q(
@@ -668,8 +665,8 @@ def chart_types_errors(request):
 				group_date = date[:4] + '-09-01'
 				
 				data_count_errors = list(
-					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'tag__tag_language', 'iderrortag__tagtext',
-								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idtext__idtext').filter(
+					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'iderrortag__tagtext',
+								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
 							sentence__text_id__tbltextgroup__group__group_name=group) & Q(
 							sentence__text_id__tbltextgroup__group__enrollment_date=group_date)).annotate(
@@ -677,34 +674,34 @@ def chart_types_errors(request):
 				
 			elif text_type and text:
 				data_count_errors = list(
-					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'tag__tag_language', 'iderrortag__tagtext',
-								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idtext__idtext').filter(
+					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'iderrortag__tagtext',
+								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
 							sentence__text_id__text_type=text_type) & Q(sentence__text_id__header=text)).annotate(
 						count_data=Count('iderrortag__iderrortag')))
 				
 			elif text_type:
 				data_count_errors = list(
-					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'tag__tag_language', 'iderrortag__tagtext',
-								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idtext__idtext').filter(
+					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'iderrortag__tagtext',
+								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
 							sentence__text_id__text_type=text_type)).annotate(count_data=Count('iderrortag__iderrortag')))
 				
 			elif text:
 				data_count_errors = list(
-					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'tag__tag_language', 'iderrortag__tagtext',
-								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idtext__idtext').filter(
+					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'iderrortag__tagtext',
+								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
 							sentence__text_id__header=text)).annotate(count_data=Count('iderrortag__iderrortag')))
 				
 			else:
 				data_count_errors = list(
-					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'tag__tag_language', 'iderrortag__tagtext',
-								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idtext__idtext').filter(
+					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'iderrortag__tagtext',
+								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1)).annotate(
 						count_data=Count('iderrortag__iderrortag')))
 				
-			data_on_tokens = dashboards.get_data_on_tokens(data_count_errors, 'iderrortag__iderrortag', 'tag__tag_language', True,
+			data_on_tokens = dashboards.get_data_on_tokens(data_count_errors, 'iderrortag__iderrortag', True,
 								       False)
 			data = dashboards.get_data_errors(data_on_tokens, level, True)
 			
@@ -717,27 +714,31 @@ def chart_grade_errors(request):
 		
 	if request.method != 'POST':
 		languages = ['Deustache']
-		groups = list(Group.objects.values('groupname', 'language').distinct().order_by('groupname'))
+		groups = list(Group.objects.values('groupname').distinct().order_by('groupname'))
 		courses = list(
-			Group.objects.values('studycourse', 'language').filter(studycourse__gt=0).distinct().order_by(
+			Group.objects.values('studycourse').filter(studycourse__gt=0).distinct().order_by(
 				'studycourse'))
 		texts = list(
-			Text.objects.values('header', 'language').filter(errorcheckflag=True).distinct().order_by('header'))
+			Text.objects.values('header').filter(errorcheckflag=True).distinct().order_by('header'))
 		text_types = list(
 			TextType.objects.values().filter(text__errorcheckflag=True).distinct().order_by('idtexttype'))
 		
-		data_grade = list(Error.objects.values('grade__id_grade', 'grade__grade_name', 'grade__grade_language',
-							   'errortoken__idtoken__idtext__idtext').filter(
-			Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
-				grade__id_grade__isnull=False)).annotate(count_data=Count('grade__id_grade')))
+		data_errorlevel = list(Error.objects.values('iderrorlevel__iderrorlevel', 'iderrorlevel__errorlevelname', 
+							   'errortoken__idtoken__idsentence__idtext__idtext')
+							#    .filter(Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(grade__id_grade__isnull=False))
+							.filter(
+								errortoken__idtoken__idsentence__idtext__errorcheckflag=True,  # проверенные тексты
+								iderrorlevel__isnull=False
+							)
+							.annotate(count_data=Count('iderrorlevel__iderrorlevel')))
 		
-		data_grade = dashboards.get_data_on_tokens(data_grade, 'grade__id_grade', 'grade__grade_language', True, False)
-		data_grade = dashboards.get_zero_count_grade_errors(data_grade)
-		data_grade = sorted(data_grade, key=lambda d: d['count_data'], reverse=True)
+		data_errorlevel = dashboards.get_data_on_tokens(data_errorlevel, 'iderrorlevel__iderrorlevel',  True, False)
+		data_errorlevel = dashboards.get_zero_count_grade_errors(data_errorlevel)
+		data_errorlevel = sorted(data_errorlevel, key=lambda d: d['count_data'], reverse=True)
 		
 		return render(request, 'dashboard_error_grade.html', {'right': True, 'languages': languages, 'groups': groups,
 								      'courses': courses, 'texts': texts,
-								      'text_types': text_types, 'data': data_grade})
+								      'text_types': text_types, 'data': data_errorlevel})
 	else:
 		list_filters = json.loads(request.body)
 		flag_post = list_filters['flag_post']
@@ -781,183 +782,183 @@ def chart_grade_errors(request):
 			text_type = list_filters['text_type']
 			
 			if surname and name and patronymic and text and text_type:
-				data_grade = list(
-					Error.objects.values('grade__id_grade', 'grade__grade_name', 'grade__grade_language',
-								 'errortoken__idtoken__idtext__idtext').filter(
+				data_errorlevel = list(
+					Error.objects.values('iderrorlevel__iderrorlevel', 'iderrorlevel__errorlevelname', 
+								 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
 							sentence__text_id__user__last_name=surname) & Q(sentence__text_id__user__name=name) & Q(
 							sentence__text_id__user__patronymic=patronymic) & Q(sentence__text_id__header=text) & Q(
-							sentence__text_id__text_type=text_type)).annotate(count_data=Count('grade__id_grade')))
+							sentence__text_id__text_type=text_type)).annotate(count_data=Count('iderrorlevel__iderrorlevel')))
 				
 			elif surname and name and patronymic and text:
-				data_grade = list(
-					Error.objects.values('grade__id_grade', 'grade__grade_name', 'grade__grade_language',
-								 'errortoken__idtoken__idtext__idtext').filter(
+				data_errorlevel = list(
+					Error.objects.values('iderrorlevel__iderrorlevel', 'iderrorlevel__errorlevelname', 
+								 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
 							sentence__text_id__user__last_name=surname) & Q(sentence__text_id__user__name=name) & Q(
 							sentence__text_id__user__patronymic=patronymic) & Q(
-							sentence__text_id__header=text)).annotate(count_data=Count('grade__id_grade')))
+							sentence__text_id__header=text)).annotate(count_data=Count('iderrorlevel__iderrorlevel')))
 				
 			elif surname and name and patronymic and text_type:
-				data_grade = list(
-					Error.objects.values('grade__id_grade', 'grade__grade_name', 'grade__grade_language',
-								 'errortoken__idtoken__idtext__idtext').filter(
+				data_errorlevel = list(
+					Error.objects.values('iderrorlevel__iderrorlevel', 'iderrorlevel__errorlevelname', 
+								 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
 							sentence__text_id__user__last_name=surname) & Q(sentence__text_id__user__name=name) & Q(
 							sentence__text_id__user__patronymic=patronymic) & Q(
-							sentence__text_id__text_type=text_type)).annotate(count_data=Count('grade__id_grade')))
+							sentence__text_id__text_type=text_type)).annotate(count_data=Count('iderrorlevel__iderrorlevel')))
 				
 			elif surname and name and patronymic:
-				data_grade = list(
-					Error.objects.values('grade__id_grade', 'grade__grade_name', 'grade__grade_language',
-								 'errortoken__idtoken__idtext__idtext').filter(
+				data_errorlevel = list(
+					Error.objects.values('iderrorlevel__iderrorlevel', 'iderrorlevel__errorlevelname', 
+								 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
 							sentence__text_id__user__last_name=surname) & Q(sentence__text_id__user__name=name) & Q(
 							sentence__text_id__user__patronymic=patronymic)).annotate(
-						count_data=Count('grade__id_grade')))
+						count_data=Count('iderrorlevel__iderrorlevel')))
 				
 			elif surname and name and text and text_type:
-				data_grade = list(
-					Error.objects.values('grade__id_grade', 'grade__grade_name', 'grade__grade_language',
-								 'errortoken__idtoken__idtext__idtext').filter(
+				data_errorlevel = list(
+					Error.objects.values('iderrorlevel__iderrorlevel', 'iderrorlevel__errorlevelname', 
+								 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
 							sentence__text_id__user__last_name=surname) & Q(sentence__text_id__user__name=name) & Q(
 							sentence__text_id__header=text) & Q(sentence__text_id__text_type=text_type)).annotate(
-						count_data=Count('grade__id_grade')))
+						count_data=Count('iderrorlevel__iderrorlevel')))
 				
 			elif surname and name and text:
-				data_grade = list(
-					Error.objects.values('grade__id_grade', 'grade__grade_name', 'grade__grade_language',
-								 'errortoken__idtoken__idtext__idtext').filter(
+				data_errorlevel = list(
+					Error.objects.values('iderrorlevel__iderrorlevel', 'iderrorlevel__errorlevelname', 
+								 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
 							sentence__text_id__user__last_name=surname) & Q(sentence__text_id__user__name=name) & Q(
-							sentence__text_id__header=text)).annotate(count_data=Count('grade__id_grade')))
+							sentence__text_id__header=text)).annotate(count_data=Count('iderrorlevel__iderrorlevel')))
 				
 			elif surname and name and text_type:
-				data_grade = list(
-					Error.objects.values('grade__id_grade', 'grade__grade_name', 'grade__grade_language',
-								 'errortoken__idtoken__idtext__idtext').filter(
+				data_errorlevel = list(
+					Error.objects.values('iderrorlevel__iderrorlevel', 'iderrorlevel__errorlevelname', 
+								 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
 							sentence__text_id__user__last_name=surname) & Q(sentence__text_id__user__name=name) & Q(
-							sentence__text_id__text_type=text_type)).annotate(count_data=Count('grade__id_grade')))
+							sentence__text_id__text_type=text_type)).annotate(count_data=Count('iderrorlevel__iderrorlevel')))
 				
 			elif surname and name:
-				data_grade = list(
-					Error.objects.values('grade__id_grade', 'grade__grade_name', 'grade__grade_language',
-								 'errortoken__idtoken__idtext__idtext').filter(
+				data_errorlevel = list(
+					Error.objects.values('iderrorlevel__iderrorlevel', 'iderrorlevel__errorlevelname', 
+								 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
 							sentence__text_id__user__last_name=surname) & Q(
-							sentence__text_id__user__name=name)).annotate(count_data=Count('grade__id_grade')))
+							sentence__text_id__user__name=name)).annotate(count_data=Count('iderrorlevel__iderrorlevel')))
 				
 			elif course and text_type and text:
-				data_grade = list(
-					Error.objects.values('grade__id_grade', 'grade__grade_name', 'grade__grade_language',
-								 'errortoken__idtoken__idtext__idtext').filter(
+				data_errorlevel = list(
+					Error.objects.values('iderrorlevel__iderrorlevel', 'iderrorlevel__errorlevelname', 
+								 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
 							sentence__text_id__tbltextgroup__group__course_number=course) & Q(
 							sentence__text_id__header=text) & Q(sentence__text_id__text_type=text_type)).annotate(
-						count_data=Count('grade__id_grade')))
+						count_data=Count('iderrorlevel__iderrorlevel')))
 				
 			elif course and text:
-				data_grade = list(
-					Error.objects.values('grade__id_grade', 'grade__grade_name', 'grade__grade_language',
-								 'errortoken__idtoken__idtext__idtext').filter(
+				data_errorlevel = list(
+					Error.objects.values('iderrorlevel__iderrorlevel', 'iderrorlevel__errorlevelname', 
+								 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
 							sentence__text_id__tbltextgroup__group__course_number=course) & Q(
-							sentence__text_id__header=text)).annotate(count_data=Count('grade__id_grade')))
+							sentence__text_id__header=text)).annotate(count_data=Count('iderrorlevel__iderrorlevel')))
 				
 			elif course and text_type:
-				data_grade = list(
-					Error.objects.values('grade__id_grade', 'grade__grade_name', 'grade__grade_language',
-								 'errortoken__idtoken__idtext__idtext').filter(
+				data_errorlevel = list(
+					Error.objects.values('iderrorlevel__iderrorlevel', 'iderrorlevel__errorlevelname', 
+								 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
 							sentence__text_id__tbltextgroup__group__course_number=course) & Q(
-							sentence__text_id__text_type=text_type)).annotate(count_data=Count('grade__id_grade')))
+							sentence__text_id__text_type=text_type)).annotate(count_data=Count('iderrorlevel__iderrorlevel')))
 				
 			elif course:
-				data_grade = list(
-					Error.objects.values('grade__id_grade', 'grade__grade_name', 'grade__grade_language',
-								 'errortoken__idtoken__idtext__idtext').filter(
+				data_errorlevel = list(
+					Error.objects.values('iderrorlevel__iderrorlevel', 'iderrorlevel__errorlevelname', 
+								 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
 							sentence__text_id__tbltextgroup__group__course_number=course)).annotate(
-						count_data=Count('grade__id_grade')))
+						count_data=Count('iderrorlevel__iderrorlevel')))
 				
 			elif group and text and text_type:
 				group_date = date[:4] + '-09-01'
-				data_grade = list(
-					Error.objects.values('grade__id_grade', 'grade__grade_name', 'grade__grade_language',
-								 'errortoken__idtoken__idtext__idtext').filter(
+				data_errorlevel = list(
+					Error.objects.values('iderrorlevel__iderrorlevel', 'iderrorlevel__errorlevelname', 
+								 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
 							sentence__text_id__tbltextgroup__group__group_name=group) & Q(
 							sentence__text_id__tbltextgroup__group__enrollment_date=group_date) & Q(
 							sentence__text_id__header=text) & Q(sentence__text_id__text_type=text_type)).annotate(
-						count_data=Count('grade__id_grade')))
+						count_data=Count('iderrorlevel__iderrorlevel')))
 				
 			elif group and text:
 				group_date = date[:4] + '-09-01'
-				data_grade = list(
-					Error.objects.values('grade__id_grade', 'grade__grade_name', 'grade__grade_language',
-								 'errortoken__idtoken__idtext__idtext').filter(
+				data_errorlevel = list(
+					Error.objects.values('iderrorlevel__iderrorlevel', 'iderrorlevel__errorlevelname', 
+								 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
 							sentence__text_id__tbltextgroup__group__group_name=group) & Q(
 							sentence__text_id__tbltextgroup__group__enrollment_date=group_date) & Q(
-							sentence__text_id__header=text)).annotate(count_data=Count('grade__id_grade')))
+							sentence__text_id__header=text)).annotate(count_data=Count('iderrorlevel__iderrorlevel')))
 				
 			elif group and text_type:
 				group_date = date[:4] + '-09-01'
-				data_grade = list(
-					Error.objects.values('grade__id_grade', 'grade__grade_name', 'grade__grade_language',
-								 'errortoken__idtoken__idtext__idtext').filter(
+				data_errorlevel = list(
+					Error.objects.values('iderrorlevel__iderrorlevel', 'iderrorlevel__errorlevelname', 
+								 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
 							sentence__text_id__tbltextgroup__group__group_name=group) & Q(
 							sentence__text_id__tbltextgroup__group__enrollment_date=group_date) & Q(
-							sentence__text_id__text_type=text_type)).annotate(count_data=Count('grade__id_grade')))
+							sentence__text_id__text_type=text_type)).annotate(count_data=Count('iderrorlevel__iderrorlevel')))
 				
 			elif group:
 				group_date = date[:4] + '-09-01'
-				data_grade = list(
-					Error.objects.values('grade__id_grade', 'grade__grade_name', 'grade__grade_language',
-								 'errortoken__idtoken__idtext__idtext').filter(
+				data_errorlevel = list(
+					Error.objects.values('iderrorlevel__iderrorlevel', 'iderrorlevel__errorlevelname', 
+								 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
 							sentence__text_id__tbltextgroup__group__group_name=group) & Q(
 							sentence__text_id__tbltextgroup__group__enrollment_date=group_date)).annotate(
-						count_data=Count('grade__id_grade')))
+						count_data=Count('iderrorlevel__iderrorlevel')))
 				
 			elif text_type and text:
-				data_grade = list(
-					Error.objects.values('grade__id_grade', 'grade__grade_name', 'grade__grade_language',
-								 'errortoken__idtoken__idtext__idtext').filter(
+				data_errorlevel = list(
+					Error.objects.values('iderrorlevel__iderrorlevel', 'iderrorlevel__errorlevelname', 
+								 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
 							sentence__text_id__text_type=text_type) & Q(sentence__text_id__header=text)).annotate(
-						count_data=Count('grade__id_grade')))
+						count_data=Count('iderrorlevel__iderrorlevel')))
 				
 			elif text_type:
-				data_grade = list(
-					Error.objects.values('grade__id_grade', 'grade__grade_name', 'grade__grade_language',
-								 'errortoken__idtoken__idtext__idtext').filter(
+				data_errorlevel = list(
+					Error.objects.values('iderrorlevel__iderrorlevel', 'iderrorlevel__errorlevelname', 
+								 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
-							sentence__text_id__text_type=text_type)).annotate(count_data=Count('grade__id_grade')))
+							sentence__text_id__text_type=text_type)).annotate(count_data=Count('iderrorlevel__iderrorlevel')))
 				
 			elif text:
-				data_grade = list(
-					Error.objects.values('grade__id_grade', 'grade__grade_name', 'grade__grade_language',
-								 'errortoken__idtoken__idtext__idtext').filter(
+				data_errorlevel = list(
+					Error.objects.values('iderrorlevel__iderrorlevel', 'iderrorlevel__errorlevelname', 
+								 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
-							sentence__text_id__header=text)).annotate(count_data=Count('grade__id_grade')))
+							sentence__text_id__header=text)).annotate(count_data=Count('iderrorlevel__iderrorlevel')))
 				
 			else:
-				data_grade = list(
-					Error.objects.values('grade__id_grade', 'grade__grade_name', 'grade__grade_language',
-								 'errortoken__idtoken__idtext__idtext').filter(
+				data_errorlevel = list(
+					Error.objects.values('iderrorlevel__iderrorlevel', 'iderrorlevel__errorlevelname', 
+								 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1)).annotate(
-						count_data=Count('grade__id_grade')))
+						count_data=Count('iderrorlevel__iderrorlevel')))
 				
-			data_grade = dashboards.get_data_on_tokens(data_grade, 'grade__id_grade', 'grade__grade_language', True,
+			data_errorlevel = dashboards.get_data_on_tokens(data_errorlevel, 'iderrorlevel__iderrorlevel',  True,
 								   False)
-			data_grade = dashboards.get_zero_count_grade_errors(data_grade)
-			data_grade = sorted(data_grade, key=lambda d: d['count_data'], reverse=True)
+			data_errorlevel = dashboards.get_zero_count_grade_errors(data_errorlevel)
+			data_errorlevel = sorted(data_errorlevel, key=lambda d: d['count_data'], reverse=True)
 			
-			return JsonResponse({'data_grade_errors': data_grade}, status=200)
+			return JsonResponse({'data_grade_errors': data_errorlevel}, status=200)
 
 
 def chart_types_grade_errors(request):
@@ -967,53 +968,65 @@ def chart_types_grade_errors(request):
 	if request.method != 'POST':
 		languages = ['Deustache']
 		levels = dashboards.get_levels()
-		groups = list(Group.objects.values('groupname', 'language').distinct().order_by('groupname'))
+		groups = list(Group.objects.values('groupname').distinct().order_by('groupname'))
 		courses = list(
-			Group.objects.values('studycourse', 'language').filter(studycourse__gt=0).distinct().order_by(
+			Group.objects.values('studycourse').filter(studycourse__gt=0).distinct().order_by(
 				'studycourse'))
 		texts = list(
-			Text.objects.values('header', 'language').filter(errorcheckflag=True).distinct().order_by('header'))
+			Text.objects.values('header').filter(errorcheckflag=True).distinct().order_by('header'))
 		text_types = list(
 			TextType.objects.values().filter(text__errorcheckflag=True).distinct().order_by('idtexttype'))
-		grades = list(ErrorLevel.objects.values('id_grade', 'grade_name', 'grade_language').order_by('grade_language'))
+		grades = list(ErrorLevel.objects.values('iderrorlevel', 'errorlevelname').order_by('errorlevelname'))
 		
 		data_on_tokens = []
 		texts_id = {}
-		count_grades_for_language = {}
+		# count_grades = {}
+		count_grades = len(grades)
 		for grade in grades:
 			data_count_errors = list(
-				Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'tag__tag_language', 'iderrortag__tagtext',
-							 'iderrortag__tagtextrussian', 'errortoken__idtoken__idtext__idtext').filter(
-					Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
-						grade=grade["id_grade"])).annotate(count_data=Count('iderrortag__iderrortag')))
+				Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'iderrortag__tagtext',
+							 'iderrortag__tagtextrussian', 'errortoken__idtoken__idsentence__idtext__idtext')
+							#  .filter(Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
+							# 		grade=grade["id_grade"])).annotate(count_data=Count('iderrortag__iderrortag')))
+							.filter(
+									errortoken__idtoken__idsentence__idtext__errorcheckflag=True,
+									iderrorlevel=grade["iderrorlevel"]
+								)
+							.annotate(count_data=Count('iderrortag__iderrortag')))
 			
-			texts_id = dashboards.get_texts_id_keys(data_count_errors, texts_id, 'tag__tag_language')
+			texts_id = dashboards.get_texts_id_keys(data_count_errors, texts_id)
 			data_count_on_tokens, texts_id = dashboards.get_texts_id_and_data_on_tokens(data_count_errors, texts_id,
-												    'iderrortag__iderrortag',
-												    'tag__tag_language')
+												    'iderrortag__iderrortag')
 			data_on_tokens.append(data_count_on_tokens)
 			
-			if grade['grade_language'] not in count_grades_for_language.keys():
-				count_grades_for_language[grade['grade_language']] = 1
-			else:
-				count_grades_for_language[grade['grade_language']] += 1
+			# if grade['grade_language'] not in count_grades_for_language.keys():
+			# 	count_grades_for_language[grade['grade_language']] = 1
+			# else:
+			# 	count_grades_for_language[grade['grade_language']] += 1
+			# if 'grade_count' not in count_grades:
+			# 	count_grades['grade_count'] = 1
+			# else:
+			# 	count_grades['grade_count'] += 1
 		
 		data = []
 		for i in range(len(data_on_tokens)):
-			data_count = dashboards.get_on_tokens(texts_id, data_on_tokens[i], 'tag__tag_language')
+			data_count = dashboards.get_on_tokens(texts_id, data_on_tokens[i])
 			data.append(dashboards.get_data_errors(data_count, 0, False))
 			
 		for i in range(len(data[0])):
-			offset = 0
-			for language in count_grades_for_language.keys():
-				sum_count = 0
-				for j in range(count_grades_for_language[language]):
-					sum_count += data[offset + j][i]['count_data']
+			sum_count = sum(item[i]['count_data'] for item in data)
+			for item in data:
+				item[i]['sum_count'] = sum_count
+			# offset = 0
+			# for language in count_grades_for_language.keys():
+			# 	sum_count = 0
+			# 	for j in range(count_grades_for_language[language]):
+			# 		sum_count += data[offset + j][i]['count_data']
 					
-				for j in range(count_grades_for_language[language]):
-					data[offset + j][i]['sum_count'] = sum_count
+			# 	for j in range(count_grades_for_language[language]):
+			# 		data[offset + j][i]['sum_count'] = sum_count
 					
-				offset += count_grades_for_language[language]
+			# 	offset += count_grades_for_language[language]
 				
 		for i in range(len(data)):
 			data[i] = sorted(data[i], key=lambda d: d['sum_count'], reverse=True)
@@ -1027,7 +1040,7 @@ def chart_types_grade_errors(request):
 									    'grades': grades, 'tag_parents': tag_parents,
 									    'dict_children': dict_children,
 									    'count_grades_for_language':
-									    	count_grades_for_language})
+									    	count_grades})
 	else:
 		list_filters = json.loads(request.body)
 		flag_post = list_filters['flag_post']
@@ -1072,241 +1085,314 @@ def chart_types_grade_errors(request):
 			level = int(list_filters['level'])
 			
 			grades = list(
-				ErrorLevel.objects.values('id_grade', 'grade_name', 'grade_language').order_by('grade_language'))
+				ErrorLevel.objects.values('iderrorlevel', 'errorlevelname').order_by('errorlevelname'))
 			
 			data_on_tokens = []
 			texts_id = {}
-			count_grades_for_language = {}
+			count_grades = 0  # Просто счетчик вместо count_grades_for_language
 			for grade in grades:
-				if surname and name and patronymic and text and text_type:
-					data_count_errors = list(
-						Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'tag__tag_language', 'iderrortag__tagtext',
-									 'iderrortag__tagtextrussian', 'errortoken__idtoken__idtext__idtext').filter(
-							Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
-								grade=grade["id_grade"]) & Q(sentence__text_id__user__last_name=surname) & Q(
-								sentence__text_id__user__name=name) & Q(
-								sentence__text_id__user__patronymic=patronymic) & Q(sentence__text_id__header=text) & Q(
-								sentence__text_id__text_type=text_type)).annotate(count_data=Count('iderrortag__iderrortag')))
-					
-				elif surname and name and patronymic and text:
-					data_count_errors = list(
-						Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'tag__tag_language', 'iderrortag__tagtext',
-									 'iderrortag__tagtextrussian', 'errortoken__idtoken__idtext__idtext').filter(
-							Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
-								grade=grade["id_grade"]) & Q(sentence__text_id__user__last_name=surname) & Q(
-								sentence__text_id__user__name=name) & Q(
-								sentence__text_id__user__patronymic=patronymic) & Q(
-								sentence__text_id__header=text)).annotate(count_data=Count('iderrortag__iderrortag')))
-					
-				elif surname and name and patronymic and text_type:
-					data_count_errors = list(
-						Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'tag__tag_language', 'iderrortag__tagtext',
-									 'iderrortag__tagtextrussian', 'errortoken__idtoken__idtext__idtext').filter(
-							Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
-								grade=grade["id_grade"]) & Q(sentence__text_id__user__last_name=surname) & Q(
-								sentence__text_id__user__name=name) & Q(
-								sentence__text_id__user__patronymic=patronymic) & Q(
-								sentence__text_id__text_type=text_type)).annotate(count_data=Count('iderrortag__iderrortag')))
-					
-				elif surname and name and patronymic:
-					data_count_errors = list(
-						Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'tag__tag_language', 'iderrortag__tagtext',
-									 'iderrortag__tagtextrussian', 'errortoken__idtoken__idtext__idtext').filter(
-							Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
-								grade=grade["id_grade"]) & Q(sentence__text_id__user__last_name=surname) & Q(
-								sentence__text_id__user__name=name) & Q(
-								sentence__text_id__user__patronymic=patronymic)).annotate(
-							count_data=Count('iderrortag__iderrortag')))
-					
-				elif surname and name and text and text_type:
-					data_count_errors = list(
-						Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'tag__tag_language', 'iderrortag__tagtext',
-									 'iderrortag__tagtextrussian', 'errortoken__idtoken__idtext__idtext').filter(
-							Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
-								grade=grade["id_grade"]) & Q(sentence__text_id__user__last_name=surname) & Q(
-								sentence__text_id__user__name=name) & Q(sentence__text_id__header=text) & Q(
-								sentence__text_id__text_type=text_type)).annotate(count_data=Count('iderrortag__iderrortag')))
-					
-				elif surname and name and text:
-					data_count_errors = list(
-						Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'tag__tag_language', 'iderrortag__tagtext',
-									 'iderrortag__tagtextrussian', 'errortoken__idtoken__idtext__idtext').filter(
-							Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
-								grade=grade["id_grade"]) & Q(sentence__text_id__user__last_name=surname) & Q(
-								sentence__text_id__user__name=name) & Q(sentence__text_id__header=text)).annotate(
-							count_data=Count('iderrortag__iderrortag')))
-					
-				elif surname and name and text_type:
-					data_count_errors = list(
-						Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'tag__tag_language', 'iderrortag__tagtext',
-									 'iderrortag__tagtextrussian', 'errortoken__idtoken__idtext__idtext').filter(
-							Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
-								grade=grade["id_grade"]) & Q(sentence__text_id__user__last_name=surname) & Q(
-								sentence__text_id__user__name=name) & Q(
-								sentence__text_id__text_type=text_type)).annotate(count_data=Count('iderrortag__iderrortag')))
-					
-				elif surname and name:
-					data_count_errors = list(
-						Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'tag__tag_language', 'iderrortag__tagtext',
-									 'iderrortag__tagtextrussian', 'errortoken__idtoken__idtext__idtext').filter(
-							Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
-								grade=grade["id_grade"]) & Q(sentence__text_id__user__last_name=surname) & Q(
-								sentence__text_id__user__name=name)).annotate(count_data=Count('iderrortag__iderrortag')))
-					
-				elif course and text_type and text:
-					data_count_errors = list(
-						Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'tag__tag_language', 'iderrortag__tagtext',
-									 'iderrortag__tagtextrussian', 'errortoken__idtoken__idtext__idtext').filter(
-							Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
-								grade=grade["id_grade"]) & Q(
-								sentence__text_id__tbltextgroup__group__course_number=course) & Q(
-								sentence__text_id__header=text) & Q(sentence__text_id__text_type=text_type)).annotate(
-							count_data=Count('iderrortag__iderrortag')))
-					
-				elif course and text:
-					data_count_errors = list(
-						Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'tag__tag_language', 'iderrortag__tagtext',
-									 'iderrortag__tagtextrussian', 'errortoken__idtoken__idtext__idtext').filter(
-							Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
-								grade=grade["id_grade"]) & Q(
-								sentence__text_id__tbltextgroup__group__course_number=course) & Q(
-								sentence__text_id__header=text)).annotate(count_data=Count('iderrortag__iderrortag')))
-					
-				elif course and text_type:
-					data_count_errors = list(
-						Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'tag__tag_language', 'iderrortag__tagtext',
-									 'iderrortag__tagtextrussian', 'errortoken__idtoken__idtext__idtext').filter(
-							Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
-								grade=grade["id_grade"]) & Q(
-								sentence__text_id__tbltextgroup__group__course_number=course) & Q(
-								sentence__text_id__text_type=text_type)).annotate(count_data=Count('iderrortag__iderrortag')))
-					
-				elif course:
-					data_count_errors = list(
-						Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'tag__tag_language', 'iderrortag__tagtext',
-									 'iderrortag__tagtextrussian', 'errortoken__idtoken__idtext__idtext').filter(
-							Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
-								grade=grade["id_grade"]) & Q(
-								sentence__text_id__tbltextgroup__group__course_number=course)).annotate(
-							count_data=Count('iderrortag__iderrortag')))
-					
-				elif group and text and text_type:
-					group_date = date[:4] + '-09-01'
-					data_count_errors = list(
-						Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'tag__tag_language', 'iderrortag__tagtext',
-									 'iderrortag__tagtextrussian', 'errortoken__idtoken__idtext__idtext').filter(
-							Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
-								grade=grade["id_grade"]) & Q(
-								sentence__text_id__tbltextgroup__group__group_name=group) & Q(
-								sentence__text_id__tbltextgroup__group__enrollment_date=group_date) & Q(
-								sentence__text_id__header=text) & Q(sentence__text_id__text_type=text_type)).annotate(
-							count_data=Count('iderrortag__iderrortag')))
-					
-				elif group and text:
-					group_date = date[:4] + '-09-01'
-					data_count_errors = list(
-						Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'tag__tag_language', 'iderrortag__tagtext',
-									 'iderrortag__tagtextrussian', 'errortoken__idtoken__idtext__idtext').filter(
-							Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
-								grade=grade["id_grade"]) & Q(
-								sentence__text_id__tbltextgroup__group__group_name=group) & Q(
-								sentence__text_id__tbltextgroup__group__enrollment_date=group_date) & Q(
-								sentence__text_id__header=text)).annotate(count_data=Count('iderrortag__iderrortag')))
-					
-				elif group and text_type:
-					group_date = date[:4] + '-09-01'
-					data_count_errors = list(
-						Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'tag__tag_language', 'iderrortag__tagtext',
-									 'iderrortag__tagtextrussian', 'errortoken__idtoken__idtext__idtext').filter(
-							Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
-								grade=grade["id_grade"]) & Q(
-								sentence__text_id__tbltextgroup__group__group_name=group) & Q(
-								sentence__text_id__tbltextgroup__group__enrollment_date=group_date) & Q(
-								sentence__text_id__text_type=text_type)).annotate(count_data=Count('iderrortag__iderrortag')))
-					
-				elif group:
-					group_date = date[:4] + '-09-01'
-					data_count_errors = list(
-						Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'tag__tag_language', 'iderrortag__tagtext',
-									 'iderrortag__tagtextrussian', 'errortoken__idtoken__idtext__idtext').filter(
-							Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
-								grade=grade["id_grade"]) & Q(
-								sentence__text_id__tbltextgroup__group__group_name=group) & Q(
-								sentence__text_id__tbltextgroup__group__enrollment_date=group_date)).annotate(
-							count_data=Count('iderrortag__iderrortag')))
-					
-				elif text_type and text:
-					data_count_errors = list(
-						Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'tag__tag_language', 'iderrortag__tagtext',
-									 'iderrortag__tagtextrussian', 'errortoken__idtoken__idtext__idtext').filter(
-							Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
-								grade=grade["id_grade"]) & Q(sentence__text_id__text_type=text_type) & Q(
-								sentence__text_id__header=text)).annotate(count_data=Count('iderrortag__iderrortag')))
-					
-				elif text_type:
-					data_count_errors = list(
-						Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'tag__tag_language', 'iderrortag__tagtext',
-									 'iderrortag__tagtextrussian', 'errortoken__idtoken__idtext__idtext').filter(
-							Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
-								grade=grade["id_grade"]) & Q(sentence__text_id__text_type=text_type)).annotate(
-							count_data=Count('iderrortag__iderrortag')))
-					
-				elif text:
-					data_count_errors = list(
-						Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'tag__tag_language', 'iderrortag__tagtext',
-									 'iderrortag__tagtextrussian', 'errortoken__idtoken__idtext__idtext').filter(
-							Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
-								grade=grade["id_grade"]) & Q(sentence__text_id__header=text)).annotate(
-							count_data=Count('iderrortag__iderrortag')))
-					
-				else:
-					data_count_errors = list(
-						Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'tag__tag_language', 'iderrortag__tagtext',
-									 'iderrortag__tagtextrussian', 'errortoken__idtoken__idtext__idtext').filter(
-							Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
-								grade=grade["id_grade"])).annotate(count_data=Count('iderrortag__iderrortag')))
-					
-				texts_id = dashboards.get_texts_id_keys(data_count_errors, texts_id, 'tag__tag_language')
-				data_count_on_tokens, texts_id = dashboards.get_texts_id_and_data_on_tokens(data_count_errors, texts_id,
-													    'iderrortag__iderrortag',
-													    'tag__tag_language')
-				data_on_tokens.append(data_count_on_tokens)
+				base_query = Error.objects.values(
+					'iderrortag__iderrortag', 
+					'iderrortag__idtagparent', 
+					'iderrortag__tagtext',
+					'iderrortag__tagtextrussian', 
+					'errortoken__idtoken__idsentence__idtext__idtext'
+				).filter(
+					errortoken__idtoken__idsentence__idtext__errorcheckflag=True,
+					iderrorlevel=grade["iderrorlevel"]
+				)
 				
-				if grade['grade_language'] not in count_grades_for_language.keys():
-					count_grades_for_language[grade['grade_language']] = 1
-				else:
-					count_grades_for_language[grade['grade_language']] += 1
+				# Упрощенная фильтрация
+				if surname and name:
+					base_query = base_query.filter(
+						errortoken__idtoken__idsentence__idtext__idstudent__lastname=surname,
+						errortoken__idtoken__idsentence__idtext__idstudent__firstname=name
+					)
+					if patronymic:
+						base_query = base_query.filter(
+							errortoken__idtoken__idsentence__idtext__idstudent__patronymic=patronymic
+						)
+				
+				if course:
+					base_query = base_query.filter(
+						errortoken__idtoken__idsentence__idtext__idstudent__idgroup__studycourse=course
+					)
+				
+				if group and date:
+					group_date = date[:4] + '-09-01'
+					base_query = base_query.filter(
+						errortoken__idtoken__idsentence__idtext__idstudent__idgroup__groupname=group,
+						errortoken__idtoken__idsentence__idtext__idstudent__idgroup__idayear__startdate=group_date
+					)
+				
+				if text:
+					base_query = base_query.filter(
+						errortoken__idtoken__idsentence__idtext__header=text
+					)
+				
+				if text_type:
+					base_query = base_query.filter(
+						errortoken__idtoken__idsentence__idtext__idtexttype=text_type
+					)
+				
+				data_count_errors = list(base_query.annotate(
+					count_data=Count('iderrortag__iderrortag')
+				))
+				
+				texts_id = dashboards.get_texts_id_keys(data_count_errors, texts_id)
+				data_count_on_tokens, texts_id = dashboards.get_texts_id_and_data_on_tokens(
+					data_count_errors, texts_id, 'iderrortag__iderrortag'
+				)
+				data_on_tokens.append(data_count_on_tokens)
+				count_grades += 1
+			
+			# Обработка данных
 			data = []
 			for i in range(len(data_on_tokens)):
-				data_count = dashboards.get_on_tokens(texts_id, data_on_tokens[i], 'tag__tag_language')
+				data_count = dashboards.get_on_tokens(texts_id, data_on_tokens[i])
 				data.append(dashboards.get_data_errors(data_count, level, False))
-				
+			
+			# Суммирование данных (упрощенная версия без разделения по языкам)
 			for i in range(len(data[0])):
-				offset = 0
-				for language in count_grades_for_language.keys():
-					sum_count = 0
-					for j in range(count_grades_for_language[language]):
-						sum_count += data[offset + j][i]['count_data']
-						
-					for j in range(count_grades_for_language[language]):
-						data[offset + j][i]['sum_count'] = sum_count
-						
-					offset += count_grades_for_language[language]
-					
+				sum_count = sum(item[i]['count_data'] for item in data)
+				for item in data:
+					item[i]['sum_count'] = sum_count
+			
+			# Сортировка
 			for i in range(len(data)):
 				data[i] = sorted(data[i], key=lambda d: d['sum_count'], reverse=True)
-				
+			
 			return JsonResponse({'data': data}, status=200)
+			# count_grades_for_language = {}
+			# for grade in grades:
+			# 	if surname and name and patronymic and text and text_type:
+			# 		data_count_errors = list(
+			# 			Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'iderrortag__tagtext',
+			# 						 'iderrortag__tagtextrussian', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
+			# 				Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
+			# 					grade=grade["id_grade"]) & Q(sentence__text_id__user__last_name=surname) & Q(
+			# 					sentence__text_id__user__name=name) & Q(
+			# 					sentence__text_id__user__patronymic=patronymic) & Q(sentence__text_id__header=text) & Q(
+			# 					sentence__text_id__text_type=text_type)).annotate(count_data=Count('iderrortag__iderrortag')))
+					
+			# 	elif surname and name and patronymic and text:
+			# 		data_count_errors = list(
+			# 			Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'iderrortag__tagtext',
+			# 						 'iderrortag__tagtextrussian', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
+			# 				Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
+			# 					grade=grade["id_grade"]) & Q(sentence__text_id__user__last_name=surname) & Q(
+			# 					sentence__text_id__user__name=name) & Q(
+			# 					sentence__text_id__user__patronymic=patronymic) & Q(
+			# 					sentence__text_id__header=text)).annotate(count_data=Count('iderrortag__iderrortag')))
+					
+			# 	elif surname and name and patronymic and text_type:
+			# 		data_count_errors = list(
+			# 			Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'iderrortag__tagtext',
+			# 						 'iderrortag__tagtextrussian', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
+			# 				Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
+			# 					grade=grade["id_grade"]) & Q(sentence__text_id__user__last_name=surname) & Q(
+			# 					sentence__text_id__user__name=name) & Q(
+			# 					sentence__text_id__user__patronymic=patronymic) & Q(
+			# 					sentence__text_id__text_type=text_type)).annotate(count_data=Count('iderrortag__iderrortag')))
+					
+			# 	elif surname and name and patronymic:
+			# 		data_count_errors = list(
+			# 			Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'iderrortag__tagtext',
+			# 						 'iderrortag__tagtextrussian', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
+			# 				Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
+			# 					grade=grade["id_grade"]) & Q(sentence__text_id__user__last_name=surname) & Q(
+			# 					sentence__text_id__user__name=name) & Q(
+			# 					sentence__text_id__user__patronymic=patronymic)).annotate(
+			# 				count_data=Count('iderrortag__iderrortag')))
+					
+			# 	elif surname and name and text and text_type:
+			# 		data_count_errors = list(
+			# 			Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'iderrortag__tagtext',
+			# 						 'iderrortag__tagtextrussian', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
+			# 				Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
+			# 					grade=grade["id_grade"]) & Q(sentence__text_id__user__last_name=surname) & Q(
+			# 					sentence__text_id__user__name=name) & Q(sentence__text_id__header=text) & Q(
+			# 					sentence__text_id__text_type=text_type)).annotate(count_data=Count('iderrortag__iderrortag')))
+					
+			# 	elif surname and name and text:
+			# 		data_count_errors = list(
+			# 			Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'iderrortag__tagtext',
+			# 						 'iderrortag__tagtextrussian', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
+			# 				Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
+			# 					grade=grade["id_grade"]) & Q(sentence__text_id__user__last_name=surname) & Q(
+			# 					sentence__text_id__user__name=name) & Q(sentence__text_id__header=text)).annotate(
+			# 				count_data=Count('iderrortag__iderrortag')))
+					
+			# 	elif surname and name and text_type:
+			# 		data_count_errors = list(
+			# 			Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'iderrortag__tagtext',
+			# 						 'iderrortag__tagtextrussian', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
+			# 				Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
+			# 					grade=grade["id_grade"]) & Q(sentence__text_id__user__last_name=surname) & Q(
+			# 					sentence__text_id__user__name=name) & Q(
+			# 					sentence__text_id__text_type=text_type)).annotate(count_data=Count('iderrortag__iderrortag')))
+					
+			# 	elif surname and name:
+			# 		data_count_errors = list(
+			# 			Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'iderrortag__tagtext',
+			# 						 'iderrortag__tagtextrussian', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
+			# 				Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
+			# 					grade=grade["id_grade"]) & Q(sentence__text_id__user__last_name=surname) & Q(
+			# 					sentence__text_id__user__name=name)).annotate(count_data=Count('iderrortag__iderrortag')))
+					
+			# 	elif course and text_type and text:
+			# 		data_count_errors = list(
+			# 			Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'iderrortag__tagtext',
+			# 						 'iderrortag__tagtextrussian', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
+			# 				Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
+			# 					grade=grade["id_grade"]) & Q(
+			# 					sentence__text_id__tbltextgroup__group__course_number=course) & Q(
+			# 					sentence__text_id__header=text) & Q(sentence__text_id__text_type=text_type)).annotate(
+			# 				count_data=Count('iderrortag__iderrortag')))
+					
+			# 	elif course and text:
+			# 		data_count_errors = list(
+			# 			Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'iderrortag__tagtext',
+			# 						 'iderrortag__tagtextrussian', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
+			# 				Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
+			# 					grade=grade["id_grade"]) & Q(
+			# 					sentence__text_id__tbltextgroup__group__course_number=course) & Q(
+			# 					sentence__text_id__header=text)).annotate(count_data=Count('iderrortag__iderrortag')))
+					
+			# 	elif course and text_type:
+			# 		data_count_errors = list(
+			# 			Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'iderrortag__tagtext',
+			# 						 'iderrortag__tagtextrussian', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
+			# 				Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
+			# 					grade=grade["id_grade"]) & Q(
+			# 					sentence__text_id__tbltextgroup__group__course_number=course) & Q(
+			# 					sentence__text_id__text_type=text_type)).annotate(count_data=Count('iderrortag__iderrortag')))
+					
+			# 	elif course:
+			# 		data_count_errors = list(
+			# 			Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'iderrortag__tagtext',
+			# 						 'iderrortag__tagtextrussian', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
+			# 				Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
+			# 					grade=grade["id_grade"]) & Q(
+			# 					sentence__text_id__tbltextgroup__group__course_number=course)).annotate(
+			# 				count_data=Count('iderrortag__iderrortag')))
+					
+			# 	elif group and text and text_type:
+			# 		group_date = date[:4] + '-09-01'
+			# 		data_count_errors = list(
+			# 			Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'iderrortag__tagtext',
+			# 						 'iderrortag__tagtextrussian', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
+			# 				Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
+			# 					grade=grade["id_grade"]) & Q(
+			# 					sentence__text_id__tbltextgroup__group__group_name=group) & Q(
+			# 					sentence__text_id__tbltextgroup__group__enrollment_date=group_date) & Q(
+			# 					sentence__text_id__header=text) & Q(sentence__text_id__text_type=text_type)).annotate(
+			# 				count_data=Count('iderrortag__iderrortag')))
+					
+			# 	elif group and text:
+			# 		group_date = date[:4] + '-09-01'
+			# 		data_count_errors = list(
+			# 			Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'iderrortag__tagtext',
+			# 						 'iderrortag__tagtextrussian', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
+			# 				Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
+			# 					grade=grade["id_grade"]) & Q(
+			# 					sentence__text_id__tbltextgroup__group__group_name=group) & Q(
+			# 					sentence__text_id__tbltextgroup__group__enrollment_date=group_date) & Q(
+			# 					sentence__text_id__header=text)).annotate(count_data=Count('iderrortag__iderrortag')))
+					
+			# 	elif group and text_type:
+			# 		group_date = date[:4] + '-09-01'
+			# 		data_count_errors = list(
+			# 			Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'iderrortag__tagtext',
+			# 						 'iderrortag__tagtextrussian', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
+			# 				Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
+			# 					grade=grade["id_grade"]) & Q(
+			# 					sentence__text_id__tbltextgroup__group__group_name=group) & Q(
+			# 					sentence__text_id__tbltextgroup__group__enrollment_date=group_date) & Q(
+			# 					sentence__text_id__text_type=text_type)).annotate(count_data=Count('iderrortag__iderrortag')))
+					
+			# 	elif group:
+			# 		group_date = date[:4] + '-09-01'
+			# 		data_count_errors = list(
+			# 			Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'iderrortag__tagtext',
+			# 						 'iderrortag__tagtextrussian', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
+			# 				Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
+			# 					grade=grade["id_grade"]) & Q(
+			# 					sentence__text_id__tbltextgroup__group__group_name=group) & Q(
+			# 					sentence__text_id__tbltextgroup__group__enrollment_date=group_date)).annotate(
+			# 				count_data=Count('iderrortag__iderrortag')))
+					
+			# 	elif text_type and text:
+			# 		data_count_errors = list(
+			# 			Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'iderrortag__tagtext',
+			# 						 'iderrortag__tagtextrussian', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
+			# 				Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
+			# 					grade=grade["id_grade"]) & Q(sentence__text_id__text_type=text_type) & Q(
+			# 					sentence__text_id__header=text)).annotate(count_data=Count('iderrortag__iderrortag')))
+					
+			# 	elif text_type:
+			# 		data_count_errors = list(
+			# 			Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'iderrortag__tagtext',
+			# 						 'iderrortag__tagtextrussian', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
+			# 				Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
+			# 					grade=grade["id_grade"]) & Q(sentence__text_id__text_type=text_type)).annotate(
+			# 				count_data=Count('iderrortag__iderrortag')))
+					
+			# 	elif text:
+			# 		data_count_errors = list(
+			# 			Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'iderrortag__tagtext',
+			# 						 'iderrortag__tagtextrussian', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
+			# 				Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
+			# 					grade=grade["id_grade"]) & Q(sentence__text_id__header=text)).annotate(
+			# 				count_data=Count('iderrortag__iderrortag')))
+					
+			# 	else:
+			# 		data_count_errors = list(
+			# 			Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'iderrortag__tagtext',
+			# 						 'iderrortag__tagtextrussian', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
+			# 				Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
+			# 					grade=grade["id_grade"])).annotate(count_data=Count('iderrortag__iderrortag')))
+					
+				# texts_id = dashboards.get_texts_id_keys(data_count_errors, texts_id)
+				# data_count_on_tokens, texts_id = dashboards.get_texts_id_and_data_on_tokens(data_count_errors, texts_id,
+				# 									    'iderrortag__iderrortag')
+				# data_on_tokens.append(data_count_on_tokens)
+				
+				# if grade['grade_language'] not in count_grades_for_language.keys():
+				# 	count_grades_for_language[grade['grade_language']] = 1
+				# else:
+				# 	count_grades_for_language[grade['grade_language']] += 1
+			# data = []
+			# for i in range(len(data_on_tokens)):
+			# 	data_count = dashboards.get_on_tokens(texts_id, data_on_tokens[i])
+			# 	data.append(dashboards.get_data_errors(data_count, level, False))
+				
+			# for i in range(len(data[0])):
+			# 	offset = 0
+			# 	for language in count_grades_for_language.keys():
+			# 		sum_count = 0
+			# 		for j in range(count_grades_for_language[language]):
+			# 			sum_count += data[offset + j][i]['count_data']
+						
+			# 		for j in range(count_grades_for_language[language]):
+			# 			data[offset + j][i]['sum_count'] = sum_count
+						
+			# 		offset += count_grades_for_language[language]
+					
+			# for i in range(len(data)):
+			# 	data[i] = sorted(data[i], key=lambda d: d['sum_count'], reverse=True)
+				
+			# return JsonResponse({'data': data}, status=200)
 
 
+# НУЖНО ПЕРЕПИСАТЬ ПОСЛЕ ELSE ЗАПРОСЫ
 def chart_student_dynamics(request):
 	# if not (request.user.is_authenticated and request.user.is_teacher()):
 	# 	return render(request, 'access_denied.html', status=403)
 		
 	if request.method != 'POST':
 		languages = ['Deustache']
-		tags = list(PosTag.objects.values('id_tag', 'tag_language', 'tag_text', 'tag_text_russian').filter(
-			markup_type=1).order_by('id_tag'))
+		tags = list(Error.objects.values('iderrortag__iderrortag', 'iderrortag__tagtext', 'iderrortag__tagtextrussian').order_by('iderrortag__iderrortag'))
 		
 		return render(request, 'dashboard_student_dynamics.html', {'right': True, 'languages': languages, 'tags': tags})
 	else:
@@ -1324,13 +1410,21 @@ def chart_student_dynamics(request):
 			
 		list_text_id_with_markup = []
 		if surname and name and patronymic and tag and text_type:
-			data_count_errors = list(Error.objects.values('tag__tag_language', 'sentence__text_id__create_date',
-									  'errortoken__idtoken__idtext__idtext').filter(
-				Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
-					sentence__text_id__user__last_name=surname) & Q(sentence__text_id__user__name=name) & Q(
-					sentence__text_id__user__patronymic=patronymic) & Q(tag__id_tag__in=tags) & Q(
-					sentence__text_id__text_type=text_type)).annotate(
-				count_data=Count('sentence__text_id__create_date')))
+			data_count_errors = list(Error.objects.values('errortoken__idtoken__idsentence__idtext__createdate',
+									  'errortoken__idtoken__idsentence__idtext__idtext')
+									  .filter(
+										errortoken__idtoken__idsentence__idtext__idstudent__lastname=surname,
+										errortoken__idtoken__idsentence__idtext__idstudent__firstname=name,
+										errortoken__idtoken__idsentence__idtext__idstudent__patronymic=patronymic,
+										errortoken__idtoken__idsentence__idtext__idtexttype=text_type,
+										iderrortag__in=tags,
+        								errortoken__idtoken__idsentence__idtext__errorcheckflag=True
+				# Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
+				# 	sentence__text_id__user__last_name=surname) & Q(sentence__text_id__user__name=name) & Q(
+				# 	sentence__text_id__user__patronymic=patronymic) & Q(tag__id_tag__in=tags) & Q(
+				# 	sentence__text_id__text_type=text_type)
+									)
+					.annotate(count_data=Count('errortoken__idtoken__idsentence__idtext__createdate')))
 			
 			for data in data_count_errors:
 				list_text_id_with_markup.append(data["sentence__text_id"])
@@ -1338,14 +1432,14 @@ def chart_student_dynamics(request):
 			texts_without_markup = list(Text.objects.annotate(tag__tag_language=F('language'),
 									     sentence__text_id__create_date=F('create_date'),
 									     sentence__text_id=F('id_text')).values(
-				'tag__tag_language', 'sentence__text_id__create_date', 'errortoken__idtoken__idtext__idtext').filter(
+				'sentence__text_id__create_date', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 				Q(errorcheckflag=True) & Q(user__last_name=surname) & Q(user__name=name) & Q(
 					user__patronymic=patronymic) & Q(text_type=text_type) & ~Q(
 					id_text__in=list_text_id_with_markup)).annotate(count_data=Value(0, output_field=IntegerField())))
 			
 		elif surname and name and patronymic and tag:
-			data_count_errors = list(Error.objects.values('tag__tag_language', 'sentence__text_id__create_date',
-									  'errortoken__idtoken__idtext__idtext').filter(
+			data_count_errors = list(Error.objects.values('sentence__text_id__create_date',
+									  'errortoken__idtoken__idsentence__idtext__idtext').filter(
 				Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
 					sentence__text_id__user__last_name=surname) & Q(sentence__text_id__user__name=name) & Q(
 					sentence__text_id__user__patronymic=patronymic) & Q(tag__id_tag__in=tags)).annotate(
@@ -1357,14 +1451,14 @@ def chart_student_dynamics(request):
 			texts_without_markup = list(Text.objects.annotate(tag__tag_language=F('language'),
 									     sentence__text_id__create_date=F('create_date'),
 									     sentence__text_id=F('id_text')).values(
-				'tag__tag_language', 'sentence__text_id__create_date', 'errortoken__idtoken__idtext__idtext').filter(
+				'sentence__text_id__create_date', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 				Q(errorcheckflag=True) & Q(user__last_name=surname) & Q(user__name=name) & Q(
 					user__patronymic=patronymic) & ~Q(id_text__in=list_text_id_with_markup)).annotate(
 				count_data=Value(0, output_field=IntegerField())))
 			
 		elif surname and name and tag and text_type:
-			data_count_errors = list(Error.objects.values('tag__tag_language', 'sentence__text_id__create_date',
-									  'errortoken__idtoken__idtext__idtext').filter(
+			data_count_errors = list(Error.objects.values('sentence__text_id__create_date',
+									  'errortoken__idtoken__idsentence__idtext__idtext').filter(
 				Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
 					sentence__text_id__user__last_name=surname) & Q(sentence__text_id__user__name=name) & Q(
 					tag__id_tag__in=tags) & Q(sentence__text_id__text_type=text_type)).annotate(
@@ -1376,13 +1470,13 @@ def chart_student_dynamics(request):
 			texts_without_markup = list(Text.objects.annotate(tag__tag_language=F('language'),
 									     sentence__text_id__create_date=F('create_date'),
 									     sentence__text_id=F('id_text')).values(
-				'tag__tag_language', 'sentence__text_id__create_date', 'errortoken__idtoken__idtext__idtext').filter(
+				'sentence__text_id__create_date', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 				Q(errorcheckflag=True) & Q(user__last_name=surname) & Q(user__name=name) & Q(text_type=text_type) & ~Q(
 					id_text__in=list_text_id_with_markup)).annotate(count_data=Value(0, output_field=IntegerField())))
 			
 		elif surname and name and tag:
-			data_count_errors = list(Error.objects.values('tag__tag_language', 'sentence__text_id__create_date',
-									  'errortoken__idtoken__idtext__idtext').filter(
+			data_count_errors = list(Error.objects.values('sentence__text_id__create_date',
+									  'errortoken__idtoken__idsentence__idtext__idtext').filter(
 				Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
 					sentence__text_id__user__last_name=surname) & Q(sentence__text_id__user__name=name) & Q(
 					tag__id_tag__in=tags)).annotate(count_data=Count('sentence__text_id__create_date')))
@@ -1393,12 +1487,12 @@ def chart_student_dynamics(request):
 			texts_without_markup = list(Text.objects.annotate(tag__tag_language=F('language'),
 									     sentence__text_id__create_date=F('create_date'),
 									     sentence__text_id=F('id_text')).values(
-				'tag__tag_language', 'sentence__text_id__create_date', 'errortoken__idtoken__idtext__idtext').filter(
+				'sentence__text_id__create_date', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 				Q(errorcheckflag=True) & Q(user__last_name=surname) & Q(user__name=name) & ~Q(
 					id_text__in=list_text_id_with_markup)).annotate(count_data=Value(0, output_field=IntegerField())))
 			
 		data_count_errors.extend(texts_without_markup)
-		data_count_errors = dashboards.get_data_on_tokens(data_count_errors, '', 'tag__tag_language', False, False)
+		data_count_errors = dashboards.get_data_on_tokens(data_count_errors, '', False, False)
 		
 		texts_with_create_date = []
 		for data in data_count_errors:
@@ -1429,14 +1523,13 @@ def chart_groups_errors(request):
 		
 	if request.method != 'POST':
 		languages = ['Deustache']
-		tags = list(PosTag.objects.values('id_tag', 'tag_language', 'tag_text', 'tag_text_russian').filter(
-			markup_type=1).order_by('id_tag'))
-		groups = list(Group.objects.values('groupname', 'enrollment_date', 'language').distinct().order_by(
-			'-enrollment_date'))
+		tags = list(Error.objects.values('iderrortag__iderrortag', 'iderrortag__tagtext', 'iderrortag__tagtextrussian').order_by('iderrortag__iderrortag'))
+		# groups = list(Group.objects.values('groupname', 'enrollment_date').distinct().order_by('-enrollment_date'))
+		groups = list(Group.objects.select_related('idayear').values('groupname', 'idayear__title').distinct().order_by('-idayear__title'))
 		
-		for group in groups:
-			group['enrollment_date'] = str(group['enrollment_date'].year) + ' \ ' \
-							+ str(group['enrollment_date'].year + 1)
+		# for group in groups:
+		# 	group['enrollment_date'] = str(group['enrollment_date'].year) + ' \ ' \
+		# 					+ str(group['enrollment_date'].year + 1)
 			
 		return render(request, 'dashboard_error_groups.html', {'right': True, 'languages': languages, 'tags': tags,
 								       'groups': groups})
@@ -1473,7 +1566,7 @@ def chart_groups_errors(request):
 								    number=F('sentence__text_id__tbltextgroup__group__group_name'),
 								    date=F(
 									    'sentence__text_id__tbltextgroup__group__enrollment_date')).values(
-					'tag__tag_language', 'id_group', 'number', 'date', 'errortoken__idtoken__idtext__idtext').filter(
+					'id_group', 'number', 'date', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 					Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(number=group_number[i]) & Q(
 						date=group_date[i]) & Q(tag__id_tag__in=tags) & Q(sentence__text_id__header=text) & Q(
 						sentence__text_id__text_type=text_type)).annotate(count_data=Count('id_group')))
@@ -1483,7 +1576,7 @@ def chart_groups_errors(request):
 								    number=F('sentence__text_id__tbltextgroup__group__group_name'),
 								    date=F(
 									    'sentence__text_id__tbltextgroup__group__enrollment_date')).values(
-					'tag__tag_language', 'id_group', 'number', 'date', 'errortoken__idtoken__idtext__idtext').filter(
+					'id_group', 'number', 'date', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 					Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(number=group_number[i]) & Q(
 						date=group_date[i]) & Q(tag__id_tag__in=tags) & Q(sentence__text_id__header=text)).annotate(
 					count_data=Count('id_group')))
@@ -1493,7 +1586,7 @@ def chart_groups_errors(request):
 								    number=F('sentence__text_id__tbltextgroup__group__group_name'),
 								    date=F(
 									    'sentence__text_id__tbltextgroup__group__enrollment_date')).values(
-					'tag__tag_language', 'id_group', 'number', 'date', 'errortoken__idtoken__idtext__idtext').filter(
+					'id_group', 'number', 'date', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 					Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(number=group_number[i]) & Q(
 						date=group_date[i]) & Q(tag__id_tag__in=tags) & Q(
 						sentence__text_id__text_type=text_type)).annotate(count_data=Count('id_group')))
@@ -1503,12 +1596,12 @@ def chart_groups_errors(request):
 								    number=F('sentence__text_id__tbltextgroup__group__group_name'),
 								    date=F(
 									    'sentence__text_id__tbltextgroup__group__enrollment_date')).values(
-					'tag__tag_language', 'id_group', 'number', 'date', 'errortoken__idtoken__idtext__idtext').filter(
+					'id_group', 'number', 'date', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 					Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(number=group_number[i]) & Q(
 						date=group_date[i]) & Q(tag__id_tag__in=tags)).annotate(count_data=Count('id_group')))
 				
 			if d != []:
-				d = dashboards.get_data_on_tokens(d, '', 'tag__tag_language', False, True)
+				d = dashboards.get_data_on_tokens(d, '', False, True)
 			else:
 				d = list(Group.objects.annotate(tag__tag_language=F('language'), number=F('groupname'),
 								   date=F('enrollment_date')).values('tag__tag_language',
@@ -1601,8 +1694,8 @@ def chart_emotions_errors(request):
 			data_count_errors = []
 			if surname and name and patronymic and text and text_type and emotion:
 				data_count_errors = list(
-					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'tag__tag_language', 'iderrortag__tagtext',
-								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idtext__idtext').filter(
+					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'iderrortag__tagtext',
+								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
 							sentence__text_id__emotional=emotion) & Q(sentence__text_id__user__last_name=surname) & Q(
 							sentence__text_id__user__name=name) & Q(sentence__text_id__user__patronymic=patronymic) & Q(
@@ -1611,8 +1704,8 @@ def chart_emotions_errors(request):
 				
 			elif surname and name and patronymic and text and emotion:
 				data_count_errors = list(
-					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'tag__tag_language', 'iderrortag__tagtext',
-								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idtext__idtext').filter(
+					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'iderrortag__tagtext',
+								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
 							sentence__text_id__emotional=emotion) & Q(sentence__text_id__user__last_name=surname) & Q(
 							sentence__text_id__user__name=name) & Q(sentence__text_id__user__patronymic=patronymic) & Q(
@@ -1620,8 +1713,8 @@ def chart_emotions_errors(request):
 				
 			elif surname and name and patronymic and text_type and emotion:
 				data_count_errors = list(
-					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'tag__tag_language', 'iderrortag__tagtext',
-								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idtext__idtext').filter(
+					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'iderrortag__tagtext',
+								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
 							sentence__text_id__emotional=emotion) & Q(sentence__text_id__user__last_name=surname) & Q(
 							sentence__text_id__user__name=name) & Q(sentence__text_id__user__patronymic=patronymic) & Q(
@@ -1629,8 +1722,8 @@ def chart_emotions_errors(request):
 				
 			elif surname and name and patronymic and emotion:
 				data_count_errors = list(
-					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'tag__tag_language', 'iderrortag__tagtext',
-								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idtext__idtext').filter(
+					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'iderrortag__tagtext',
+								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
 							sentence__text_id__emotional=emotion) & Q(sentence__text_id__user__last_name=surname) & Q(
 							sentence__text_id__user__name=name) & Q(
@@ -1638,8 +1731,8 @@ def chart_emotions_errors(request):
 				
 			elif surname and name and text and text_type and emotion:
 				data_count_errors = list(
-					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'tag__tag_language', 'iderrortag__tagtext',
-								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idtext__idtext').filter(
+					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'iderrortag__tagtext',
+								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
 							sentence__text_id__emotional=emotion) & Q(sentence__text_id__user__last_name=surname) & Q(
 							sentence__text_id__user__name=name) & Q(sentence__text_id__header=text) & Q(
@@ -1647,8 +1740,8 @@ def chart_emotions_errors(request):
 				
 			elif surname and name and text and emotion:
 				data_count_errors = list(
-					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'tag__tag_language', 'iderrortag__tagtext',
-								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idtext__idtext').filter(
+					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'iderrortag__tagtext',
+								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
 							sentence__text_id__emotional=emotion) & Q(sentence__text_id__user__last_name=surname) & Q(
 							sentence__text_id__user__name=name) & Q(sentence__text_id__header=text)).annotate(
@@ -1656,8 +1749,8 @@ def chart_emotions_errors(request):
 				
 			elif surname and name and text_type and emotion:
 				data_count_errors = list(
-					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'tag__tag_language', 'iderrortag__tagtext',
-								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idtext__idtext').filter(
+					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'iderrortag__tagtext',
+								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
 							sentence__text_id__emotional=emotion) & Q(sentence__text_id__user__last_name=surname) & Q(
 							sentence__text_id__user__name=name) & Q(sentence__text_id__text_type=text_type)).annotate(
@@ -1665,16 +1758,16 @@ def chart_emotions_errors(request):
 				
 			elif surname and name and emotion:
 				data_count_errors = list(
-					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'tag__tag_language', 'iderrortag__tagtext',
-								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idtext__idtext').filter(
+					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'iderrortag__tagtext',
+								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
 							sentence__text_id__emotional=emotion) & Q(sentence__text_id__user__last_name=surname) & Q(
 							sentence__text_id__user__name=name)).annotate(count_data=Count('iderrortag__iderrortag')))
 				
 			elif course and text_type and text and emotion:
 				data_count_errors = list(
-					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'tag__tag_language', 'iderrortag__tagtext',
-								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idtext__idtext').filter(
+					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'iderrortag__tagtext',
+								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
 							sentence__text_id__emotional=emotion) & Q(
 							sentence__text_id__tbltextgroup__group__course_number=course) & Q(
@@ -1683,8 +1776,8 @@ def chart_emotions_errors(request):
 				
 			elif course and text and emotion:
 				data_count_errors = list(
-					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'tag__tag_language', 'iderrortag__tagtext',
-								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idtext__idtext').filter(
+					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'iderrortag__tagtext',
+								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
 							sentence__text_id__emotional=emotion) & Q(
 							sentence__text_id__tbltextgroup__group__course_number=course) & Q(
@@ -1692,8 +1785,8 @@ def chart_emotions_errors(request):
 				
 			elif course and text_type and emotion:
 				data_count_errors = list(
-					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'tag__tag_language', 'iderrortag__tagtext',
-								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idtext__idtext').filter(
+					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'iderrortag__tagtext',
+								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
 							sentence__text_id__emotional=emotion) & Q(
 							sentence__text_id__tbltextgroup__group__course_number=course) & Q(
@@ -1701,8 +1794,8 @@ def chart_emotions_errors(request):
 				
 			elif course and emotion:
 				data_count_errors = list(
-					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'tag__tag_language', 'iderrortag__tagtext',
-								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idtext__idtext').filter(
+					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'iderrortag__tagtext',
+								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
 							sentence__text_id__emotional=emotion) & Q(
 							sentence__text_id__tbltextgroup__group__course_number=course)).annotate(
@@ -1711,8 +1804,8 @@ def chart_emotions_errors(request):
 			elif group and text and text_type and emotion:
 				group_date = date[:4] + '-09-01'
 				data_count_errors = list(
-					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'tag__tag_language', 'iderrortag__tagtext',
-								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idtext__idtext').filter(
+					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'iderrortag__tagtext',
+								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
 							sentence__text_id__emotional=emotion) & Q(
 							sentence__text_id__tbltextgroup__group__group_name=group) & Q(
@@ -1723,8 +1816,8 @@ def chart_emotions_errors(request):
 			elif group and text and emotion:
 				group_date = date[:4] + '-09-01'
 				data_count_errors = list(
-					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'tag__tag_language', 'iderrortag__tagtext',
-								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idtext__idtext').filter(
+					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'iderrortag__tagtext',
+								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
 							sentence__text_id__emotional=emotion) & Q(
 							sentence__text_id__tbltextgroup__group__group_name=group) & Q(
@@ -1734,8 +1827,8 @@ def chart_emotions_errors(request):
 			elif group and text_type and emotion:
 				group_date = date[:4] + '-09-01'
 				data_count_errors = list(
-					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'tag__tag_language', 'iderrortag__tagtext',
-								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idtext__idtext').filter(
+					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'iderrortag__tagtext',
+								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
 							sentence__text_id__emotional=emotion) & Q(
 							sentence__text_id__tbltextgroup__group__group_name=group) & Q(
@@ -1745,8 +1838,8 @@ def chart_emotions_errors(request):
 			elif group and emotion:
 				group_date = date[:4] + '-09-01'
 				data_count_errors = list(
-					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'tag__tag_language', 'iderrortag__tagtext',
-								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idtext__idtext').filter(
+					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'iderrortag__tagtext',
+								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
 							sentence__text_id__emotional=emotion) & Q(
 							sentence__text_id__tbltextgroup__group__group_name=group) & Q(
@@ -1755,32 +1848,32 @@ def chart_emotions_errors(request):
 				
 			elif text_type and text and emotion:
 				data_count_errors = list(
-					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'tag__tag_language', 'iderrortag__tagtext',
-								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idtext__idtext').filter(
+					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'iderrortag__tagtext',
+								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
 							sentence__text_id__emotional=emotion) & Q(sentence__text_id__header=text) & Q(
 							sentence__text_id__text_type=text_type)).annotate(count_data=Count('iderrortag__iderrortag')))
 				
 			elif text_type and emotion:
 				data_count_errors = list(
-					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'tag__tag_language', 'iderrortag__tagtext',
-								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idtext__idtext').filter(
+					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'iderrortag__tagtext',
+								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
 							sentence__text_id__emotional=emotion) & Q(sentence__text_id__text_type=text_type)).annotate(
 						count_data=Count('iderrortag__iderrortag')))
 				
 			elif text and emotion:
 				data_count_errors = list(
-					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'tag__tag_language', 'iderrortag__tagtext',
-								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idtext__idtext').filter(
+					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'iderrortag__tagtext',
+								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
 							sentence__text_id__emotional=emotion) & Q(sentence__text_id__header=text)).annotate(
 						count_data=Count('iderrortag__iderrortag')))
 				
 			elif emotion:
 				data_count_errors = list(
-					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'tag__tag_language', 'iderrortag__tagtext',
-								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idtext__idtext').filter(
+					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'iderrortag__tagtext',
+								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
 							sentence__text_id__emotional=emotion)).annotate(count_data=Count('iderrortag__iderrortag')))
 				
@@ -1802,15 +1895,15 @@ def chart_self_rating_errors(request):
 	if request.method != 'POST':
 		languages = ['Deustache']
 		levels = dashboards.get_levels()
-		self_ratings = list(Text.objects.values('self_rating').filter(
-			Q(self_rating__gt=0) & Q(errorcheckflag=True)).distinct().order_by('self_rating'))
+		self_ratings = list(Text.objects.values('selfrating').filter(
+			Q(selfrating__gt=0) & Q(errorcheckflag=True)).distinct().order_by('selfrating'))
 		tag_parents, dict_children = dashboards.get_dict_children()
 		
 		self_rating_text = Text.TASK_RATES
 		
-		for self_rating in self_ratings:
-			idx = self_rating["self_rating"]
-			self_rating["self_rating_text"] = self_rating_text[idx - 1][1]
+		for selfrating in self_ratings:
+			idx = selfrating["selfrating"]
+			selfrating["self_rating_text"] = self_rating_text[idx - 1][1]
 			
 		return render(request, 'dashboard_error_self_rating.html', {'right': True, 'languages': languages,
 									    'levels': levels, 'tag_parents': tag_parents,
@@ -1833,198 +1926,198 @@ def chart_self_rating_errors(request):
 			course = list_filters['course']
 			text = list_filters['text']
 			text_type = list_filters['text_type']
-			self_rating = list_filters['self_rating']
+			selfrating = list_filters['selfrating']
 			level = int(list_filters['level'])
 			
 			data_count_errors = []
-			if surname and name and patronymic and text and text_type and self_rating:
+			if surname and name and patronymic and text and text_type and selfrating:
 				data_count_errors = list(
-					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'tag__tag_language', 'iderrortag__tagtext',
-								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idtext__idtext').filter(
+					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'iderrortag__tagtext',
+								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
-							sentence__text_id__self_rating=self_rating) & Q(
+							sentence__text_id__self_rating=selfrating) & Q(
 							sentence__text_id__user__last_name=surname) & Q(sentence__text_id__user__name=name) & Q(
 							sentence__text_id__user__patronymic=patronymic) & Q(sentence__text_id__header=text) & Q(
 							sentence__text_id__text_type=text_type)).annotate(count_data=Count('iderrortag__iderrortag')))
 				
-			elif surname and name and patronymic and text and self_rating:
+			elif surname and name and patronymic and text and selfrating:
 				data_count_errors = list(
-					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'tag__tag_language', 'iderrortag__tagtext',
-								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idtext__idtext').filter(
+					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'iderrortag__tagtext',
+								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
-							sentence__text_id__self_rating=self_rating) & Q(
+							sentence__text_id__self_rating=selfrating) & Q(
 							sentence__text_id__user__last_name=surname) & Q(sentence__text_id__user__name=name) & Q(
 							sentence__text_id__user__patronymic=patronymic) & Q(
 							sentence__text_id__header=text)).annotate(count_data=Count('iderrortag__iderrortag')))
 				
-			elif surname and name and patronymic and text_type and self_rating:
+			elif surname and name and patronymic and text_type and selfrating:
 				data_count_errors = list(
-					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'tag__tag_language', 'iderrortag__tagtext',
-								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idtext__idtext').filter(
+					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'iderrortag__tagtext',
+								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
-							sentence__text_id__self_rating=self_rating) & Q(
+							sentence__text_id__self_rating=selfrating) & Q(
 							sentence__text_id__user__last_name=surname) & Q(sentence__text_id__user__name=name) & Q(
 							sentence__text_id__user__patronymic=patronymic) & Q(
 							sentence__text_id__text_type=text_type)).annotate(count_data=Count('iderrortag__iderrortag')))
 				
-			elif surname and name and patronymic and self_rating:
+			elif surname and name and patronymic and selfrating:
 				data_count_errors = list(
-					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'tag__tag_language', 'iderrortag__tagtext',
-								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idtext__idtext').filter(
+					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'iderrortag__tagtext',
+								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
-							sentence__text_id__self_rating=self_rating) & Q(
+							sentence__text_id__self_rating=selfrating) & Q(
 							sentence__text_id__user__last_name=surname) & Q(sentence__text_id__user__name=name) & Q(
 							sentence__text_id__user__patronymic=patronymic)).annotate(count_data=Count('iderrortag__iderrortag')))
 				
-			elif surname and name and text and text_type and self_rating:
+			elif surname and name and text and text_type and selfrating:
 				data_count_errors = list(
-					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'tag__tag_language', 'iderrortag__tagtext',
-								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idtext__idtext').filter(
+					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'iderrortag__tagtext',
+								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
-							sentence__text_id__self_rating=self_rating) & Q(
+							sentence__text_id__self_rating=selfrating) & Q(
 							sentence__text_id__user__last_name=surname) & Q(sentence__text_id__user__name=name) & Q(
 							sentence__text_id__header=text) & Q(sentence__text_id__text_type=text_type)).annotate(
 						count_data=Count('iderrortag__iderrortag')))
 				
-			elif surname and name and text and self_rating:
+			elif surname and name and text and selfrating:
 				data_count_errors = list(
-					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'tag__tag_language', 'iderrortag__tagtext',
-								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idtext__idtext').filter(
+					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'iderrortag__tagtext',
+								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
-							sentence__text_id__self_rating=self_rating) & Q(
+							sentence__text_id__self_rating=selfrating) & Q(
 							sentence__text_id__user__last_name=surname) & Q(sentence__text_id__user__name=name) & Q(
 							sentence__text_id__header=text)).annotate(count_data=Count('iderrortag__iderrortag')))
 				
-			elif surname and name and text_type and self_rating:
+			elif surname and name and text_type and selfrating:
 				data_count_errors = list(
-					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'tag__tag_language', 'iderrortag__tagtext',
-								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idtext__idtext').filter(
+					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'iderrortag__tagtext',
+								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
-							sentence__text_id__self_rating=self_rating) & Q(
+							sentence__text_id__self_rating=selfrating) & Q(
 							sentence__text_id__user__last_name=surname) & Q(sentence__text_id__user__name=name) & Q(
 							sentence__text_id__text_type=text_type)).annotate(count_data=Count('iderrortag__iderrortag')))
 				
-			elif surname and name and self_rating:
+			elif surname and name and selfrating:
 				data_count_errors = list(
-					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'tag__tag_language', 'iderrortag__tagtext',
-								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idtext__idtext').filter(
+					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'iderrortag__tagtext',
+								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
-							sentence__text_id__self_rating=self_rating) & Q(
+							sentence__text_id__self_rating=selfrating) & Q(
 							sentence__text_id__user__last_name=surname) & Q(
 							sentence__text_id__user__name=name)).annotate(count_data=Count('iderrortag__iderrortag')))
 				
-			elif course and text_type and text and self_rating:
+			elif course and text_type and text and selfrating:
 				data_count_errors = list(
-					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'tag__tag_language', 'iderrortag__tagtext',
-								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idtext__idtext').filter(
+					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'iderrortag__tagtext',
+								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
-							sentence__text_id__self_rating=self_rating) & Q(
+							sentence__text_id__self_rating=selfrating) & Q(
 							sentence__text_id__tbltextgroup__group__course_number=course) & Q(
 							sentence__text_id__header=text) & Q(sentence__text_id__text_type=text_type)).annotate(
 						count_data=Count('iderrortag__iderrortag')))
 				
-			elif course and text and self_rating:
+			elif course and text and selfrating:
 				data_count_errors = list(
-					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'tag__tag_language', 'iderrortag__tagtext',
-								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idtext__idtext').filter(
+					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'iderrortag__tagtext',
+								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
-							sentence__text_id__self_rating=self_rating) & Q(
+							sentence__text_id__self_rating=selfrating) & Q(
 							sentence__text_id__tbltextgroup__group__course_number=course) & Q(
 							sentence__text_id__header=text)).annotate(count_data=Count('iderrortag__iderrortag')))
 				
-			elif course and text_type and self_rating:
+			elif course and text_type and selfrating:
 				data_count_errors = list(
-					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'tag__tag_language', 'iderrortag__tagtext',
-								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idtext__idtext').filter(
+					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'iderrortag__tagtext',
+								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
-							sentence__text_id__self_rating=self_rating) & Q(
+							sentence__text_id__self_rating=selfrating) & Q(
 							sentence__text_id__tbltextgroup__group__course_number=course) & Q(
 							sentence__text_id__text_type=text_type)).annotate(count_data=Count('iderrortag__iderrortag')))
 				
-			elif course and self_rating:
+			elif course and selfrating:
 				data_count_errors = list(
-					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'tag__tag_language', 'iderrortag__tagtext',
-								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idtext__idtext').filter(
+					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'iderrortag__tagtext',
+								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
-							sentence__text_id__self_rating=self_rating) & Q(
+							sentence__text_id__self_rating=selfrating) & Q(
 							sentence__text_id__tbltextgroup__group__course_number=course)).annotate(
 						count_data=Count('iderrortag__iderrortag')))
 				
-			elif group and text and text_type and self_rating:
+			elif group and text and text_type and selfrating:
 				group_date = date[:4] + '-09-01'
 				data_count_errors = list(
-					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'tag__tag_language', 'iderrortag__tagtext',
-								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idtext__idtext').filter(
+					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'iderrortag__tagtext',
+								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
-							sentence__text_id__self_rating=self_rating) & Q(
+							sentence__text_id__self_rating=selfrating) & Q(
 							sentence__text_id__tbltextgroup__group__group_name=group) & Q(
 							sentence__text_id__tbltextgroup__group__enrollment_date=group_date) & Q(
 							sentence__text_id__header=text) & Q(sentence__text_id__text_type=text_type)).annotate(
 						count_data=Count('iderrortag__iderrortag')))
 				
-			elif group and text and self_rating:
+			elif group and text and selfrating:
 				group_date = date[:4] + '-09-01'
 				data_count_errors = list(
-					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'tag__tag_language', 'iderrortag__tagtext',
-								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idtext__idtext').filter(
+					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'iderrortag__tagtext',
+								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
-							sentence__text_id__self_rating=self_rating) & Q(
+							sentence__text_id__self_rating=selfrating) & Q(
 							sentence__text_id__tbltextgroup__group__group_name=group) & Q(
 							sentence__text_id__tbltextgroup__group__enrollment_date=group_date) & Q(
 							sentence__text_id__header=text)).annotate(count_data=Count('iderrortag__iderrortag')))
 				
-			elif group and text_type and self_rating:
+			elif group and text_type and selfrating:
 				group_date = date[:4] + '-09-01'
 				data_count_errors = list(
-					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'tag__tag_language', 'iderrortag__tagtext',
-								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idtext__idtext').filter(
+					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'iderrortag__tagtext',
+								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
-							sentence__text_id__self_rating=self_rating) & Q(
+							sentence__text_id__self_rating=selfrating) & Q(
 							sentence__text_id__tbltextgroup__group__group_name=group) & Q(
 							sentence__text_id__tbltextgroup__group__enrollment_date=group_date) & Q(
 							sentence__text_id__text_type=text_type)).annotate(count_data=Count('iderrortag__iderrortag')))
 				
-			elif group and self_rating:
+			elif group and selfrating:
 				group_date = date[:4] + '-09-01'
 				data_count_errors = list(
-					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'tag__tag_language', 'iderrortag__tagtext',
-								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idtext__idtext').filter(
+					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'iderrortag__tagtext',
+								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
-							sentence__text_id__self_rating=self_rating) & Q(
+							sentence__text_id__self_rating=selfrating) & Q(
 							sentence__text_id__tbltextgroup__group__group_name=group) & Q(
 							sentence__text_id__tbltextgroup__group__enrollment_date=group_date)).annotate(
 						count_data=Count('iderrortag__iderrortag')))
 				
-			elif text_type and text and self_rating:
+			elif text_type and text and selfrating:
 				data_count_errors = list(
-					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'tag__tag_language', 'iderrortag__tagtext',
-								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idtext__idtext').filter(
+					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'iderrortag__tagtext',
+								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
-							sentence__text_id__self_rating=self_rating) & Q(sentence__text_id__header=text) & Q(
+							sentence__text_id__self_rating=selfrating) & Q(sentence__text_id__header=text) & Q(
 							sentence__text_id__text_type=text_type)).annotate(count_data=Count('iderrortag__iderrortag')))
 				
-			elif text_type and self_rating:
+			elif text_type and selfrating:
 				data_count_errors = list(
-					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'tag__tag_language', 'iderrortag__tagtext',
-								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idtext__idtext').filter(
+					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'iderrortag__tagtext',
+								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
-							sentence__text_id__self_rating=self_rating) & Q(
+							sentence__text_id__self_rating=selfrating) & Q(
 							sentence__text_id__text_type=text_type)).annotate(count_data=Count('iderrortag__iderrortag')))
 				
-			elif text and self_rating:
+			elif text and selfrating:
 				data_count_errors = list(
-					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'tag__tag_language', 'iderrortag__tagtext',
-								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idtext__idtext').filter(
+					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'iderrortag__tagtext',
+								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
-							sentence__text_id__self_rating=self_rating) & Q(sentence__text_id__header=text)).annotate(
+							sentence__text_id__self_rating=selfrating) & Q(sentence__text_id__header=text)).annotate(
 						count_data=Count('iderrortag__iderrortag')))
 				
-			elif self_rating:
+			elif selfrating:
 				data_count_errors = list(
-					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'tag__tag_language', 'iderrortag__tagtext',
-								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idtext__idtext').filter(
+					Error.objects.values('iderrortag__iderrortag', 'iderrortag__idtagparent', 'iderrortag__tagtext',
+								 'iderrortag__tagtextrussian', 'errortoken__idtoken__idsentence__idtext__idtext').filter(
 						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
-							sentence__text_id__self_rating=self_rating)).annotate(count_data=Count('iderrortag__iderrortag')))
+							sentence__text_id__self_rating=selfrating)).annotate(count_data=Count('iderrortag__iderrortag')))
 				
 			data_count_on_tokens = dashboards.get_data_on_tokens(data_count_errors, 'iderrortag__iderrortag', 'tag__tag_language',
 									     True, False)
@@ -2053,29 +2146,29 @@ def chart_relation_assessment_self_rating(request):
 		text_type = list_filters['text_type']
 		
 		if surname and name and patronymic and text_type:
-			data_relation = list(Text.objects.values('language', 'assessment', 'self_rating').filter(
+			data_relation = list(Text.objects.values('language', 'assessment', 'selfrating').filter(
 				Q(self_rating__gt=0) & Q(assessment__gt=0) & Q(user__last_name=surname) & Q(user__name=name) & Q(
 					user__patronymic=patronymic) & Q(text_type=text_type) & Q(errorcheckflag=True)).distinct())
 			
 		elif surname and name and patronymic:
-			data_relation = list(Text.objects.values('language', 'assessment', 'self_rating').filter(
+			data_relation = list(Text.objects.values('language', 'assessment', 'selfrating').filter(
 				Q(self_rating__gt=0) & Q(assessment__gt=0) & Q(user__last_name=surname) & Q(user__name=name) & Q(
 					user__patronymic=patronymic) & Q(errorcheckflag=True)).distinct())
 			
 		elif surname and name and text_type:
-			data_relation = list(Text.objects.values('language', 'assessment', 'self_rating').filter(
+			data_relation = list(Text.objects.values('language', 'assessment', 'selfrating').filter(
 				Q(self_rating__gt=0) & Q(assessment__gt=0) & Q(user__last_name=surname) & Q(user__name=name) & Q(
 					text_type=text_type) & Q(errorcheckflag=True)).distinct())
 			
 		else:
-			data_relation = list(Text.objects.values('language', 'assessment', 'self_rating').filter(
+			data_relation = list(Text.objects.values('language', 'assessment', 'selfrating').filter(
 				Q(self_rating__gt=0) & Q(assessment__gt=0) & Q(user__last_name=surname) & Q(user__name=name) & Q(
 					errorcheckflag=True)).distinct())
 			
 		assessment_types = Text.TASK_RATES
 		
 		for data in data_relation:
-			idx = data["self_rating"]
+			idx = data["selfrating"]
 			data["self_rating_text"] = assessment_types[idx - 1][1]
 			
 			idx = data["assessment"]
@@ -2094,6 +2187,9 @@ def chart_relation_assessment_self_rating(request):
 		return JsonResponse({'data': data_relation, 'text_types': text_types}, status=200)
 
 
+# ПОИСК ЗАВИСИМОСТЕЙ
+
+
 def relation_emotions_self_rating(request):
 	# if not (request.user.is_authenticated and request.user.is_teacher()):
 	# 	return render(request, 'access_denied.html', status=403)
@@ -2101,16 +2197,16 @@ def relation_emotions_self_rating(request):
 	if request.method != 'POST':
 		languages = ['Deustache']
 		courses = list(
-			Group.objects.values('studycourse', 'language').filter(studycourse__gt=0).distinct().order_by(
+			Group.objects.values('studycourse').filter(studycourse__gt=0).distinct().order_by(
 				'studycourse'))
-		groups = list(Group.objects.values('groupname', 'language').distinct().order_by('groupname'))
+		groups = list(Group.objects.values('groupname').distinct().order_by('groupname'))
 		
 		data_relation = list(
-			Text.objects.values('language', 'emotional', 'self_rating').filter(
-				Q(emotional__isnull=False) & Q(self_rating__gt=0) & ~Q(emotional=2)))
+			Text.objects.values('idemotion__idemotion__emotionname', 'selfrating').filter(
+				Q(idemotion__isnull=False) & Q(selfrating__gt=0) & ~Q(idemotion=2)))
 		
 		data, relation, data_fisher = dashboards.get_stat(data_relation, 'emotional', 'emotional__emotional_name',
-								  'self_rating', 'self_rating_text', True)
+								  'selfrating', 'self_rating_text', True)
 		
 		return render(request, 'relation_emotions_self_rating.html', {'right': True, 'languages': languages,
 									      'courses': courses, 'groups': groups,
@@ -2135,7 +2231,7 @@ def relation_emotions_self_rating(request):
 		if flag_post == 'course':
 			course = list_filters['course']
 			
-			data_relation = list(Text.objects.values('language', 'emotional', 'self_rating').filter(
+			data_relation = list(Text.objects.values('language', 'emotional', 'selfrating').filter(
 				Q(emotional__isnull=False) & Q(self_rating__gt=0) & Q(tbltextgroup__group__course_number=course) & ~Q(
 					emotional=2)))
 			
@@ -2145,13 +2241,13 @@ def relation_emotions_self_rating(request):
 			group_date = date[:4] + '-09-01'
 			
 			data_relation = list(
-				Text.objects.values('language', 'emotional', 'self_rating').filter(
+				Text.objects.values('language', 'emotional', 'selfrating').filter(
 					Q(emotional__isnull=False) & Q(self_rating__gt=0) & Q(
 						tbltextgroup__group__group_name=group) & Q(
 						tbltextgroup__group__enrollment_date=group_date) & ~Q(emotional=2)))
 			
 		data, relation, data_fisher = dashboards.get_stat(data_relation, 'emotional', 'emotional__emotional_name',
-								  'self_rating', 'self_rating_text', True)
+								  'selfrating', 'self_rating_text', True)
 		
 		return JsonResponse({'data_relation': data, 'relation': relation, 'data_fisher': data_fisher}, status=200)
 
@@ -2228,10 +2324,10 @@ def relation_self_rating_assessment(request):
 				'studycourse'))
 		groups = list(Group.objects.values('groupname', 'language').distinct().order_by('groupname'))
 		
-		data_relation = list(Text.objects.values('language', 'self_rating', 'assessment').filter(
+		data_relation = list(Text.objects.values('language', 'selfrating', 'assessment').filter(
 			Q(self_rating__gt=0) & Q(assessment__gt=0)))
 		
-		data, relation, data_fisher = dashboards.get_stat(data_relation, 'self_rating', 'self_rating_text',
+		data, relation, data_fisher = dashboards.get_stat(data_relation, 'selfrating', 'self_rating_text',
 								  'assessment', 'assessment_text', False)
 		
 		return render(request, 'relation_self_rating_assessment.html', {'right': True, 'languages': languages,
@@ -2257,7 +2353,7 @@ def relation_self_rating_assessment(request):
 		if flag_post == 'course':
 			course = list_filters['course']
 			
-			data_relation = list(Text.objects.values('language', 'self_rating', 'assessment').filter(
+			data_relation = list(Text.objects.values('language', 'selfrating', 'assessment').filter(
 				Q(self_rating__gt=0) & Q(assessment__gt=0) & Q(tbltextgroup__group__course_number=course)))
 			
 		if flag_post == 'group':
@@ -2265,11 +2361,11 @@ def relation_self_rating_assessment(request):
 			date = list_filters['date']
 			group_date = date[:4] + '-09-01'
 			
-			data_relation = list(Text.objects.values('language', 'self_rating', 'assessment').filter(
+			data_relation = list(Text.objects.values('language', 'selfrating', 'assessment').filter(
 				Q(self_rating__gt=0) & Q(assessment__gt=0) & Q(tbltextgroup__group__group_name=group) & Q(
 					tbltextgroup__group__enrollment_date=group_date)))
 			
-		data, relation, data_fisher = dashboards.get_stat(data_relation, 'self_rating', 'self_rating_text',
+		data, relation, data_fisher = dashboards.get_stat(data_relation, 'selfrating', 'self_rating_text',
 								  'assessment', 'assessment_text', False)
 		
 		return JsonResponse({'data_relation': data, 'relation': relation, 'data_fisher': data_fisher}, status=200)
@@ -2281,8 +2377,8 @@ def relation_course_errors(request):
 		
 	if request.method != 'POST':
 		languages = ['Deustache']
-		tags = list(PosTag.objects.values('id_tag', 'tag_language', 'tag_text', 'tag_text_russian').filter(
-			markup_type=1).order_by('id_tag'))
+		tags = list(Error.objects.values('iderrortag__iderrortag', 'tag_language', 'iderrortag__tagtext', 'iderrortag__tagtextrussian').filter(
+			markup_type=1).order_by('iderrortag__iderrortag'))
 		
 		return render(request, 'relation_course_errors.html', {'right': True, 'languages': languages, 'tags': tags})
 	else:
