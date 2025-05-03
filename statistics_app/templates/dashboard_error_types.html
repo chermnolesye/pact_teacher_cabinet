@@ -14,16 +14,6 @@
 
 	<div class="d-flex flex-column flex-md-row my-4 gap-4 justify-content-evenly">
 		<div class="col">
-			<label class="text-center text-primary"> Язык </label>
-			<hr class="mt-1" />
-			<select id="selected_language" class="form-select" onchange="on_change_language()">
-				{% for language in languages %}
-				<option value="{{language.id_language}}">{{ language.language_name }}</option>
-				{% endfor %}
-			</select>
-		</div>
-
-		<div class="col">
 			<label class="text-center text-primary"> Статистика </label>
 			<hr class="mt-1"/>
 			<select id="selected_stat" class="form-select" onchange="update_data()">
@@ -478,7 +468,6 @@
 </main>
 {% endblock content%} {%block script%}
 <script type="text/javascript">
-	var list_languages = {{languages | safe}}
 	var list_levels = {{levels | safe}}
 	var list_groups = {{groups | safe}}
 	var list_enrollment_date = []
@@ -490,7 +479,7 @@
 	let dict_children = {{dict_children | safe}}
 
 	var change_level_text = false
-	var data_for_language = list_data.filter(data => data.tag__tag_language == list_languages[0].id_language)
+	var data_for_language = list_data
 
 
 	async function post_request_data_errors(group, enrollment_date, surname, name, patronymic, course, text, text_type,
@@ -541,11 +530,8 @@
 		workbook.SheetNames.push("Errors")
 		workbook.Sheets["Errors"] = worksheet
 
-		selected_language_id = document.getElementById("selected_language").value
-		selected_language = list_languages.filter(language => language.id_language == selected_language_id)
-
 		XLSX.writeFile(workbook,
-			`Errors_types_${level_detail.selected_level_detail}_level_${selected_language[0].language_name}.xlsx`)
+			`Errors_types_${level_detail.selected_level_detail}_level.xlsx`)
 	}
 
 	function update_data() {
@@ -555,58 +541,11 @@
 		type_errors_pie.update_chart()
 	}
 
-	function update_data_for_language() {
-		selected_language = document.getElementById("selected_language").value
-		data_for_language = list_data.filter(data => data.tag__tag_language == selected_language)
-
-		tag_parents.selected_tag_parent = '--'
-		tag_parents.tag_parents = list_tag_parents.filter(tag_parent => tag_parent.tag_language == selected_language)
-
-		update_data()
-	}
-
-	function on_change_language() {
-		 selected_language = document.getElementById("selected_language").value
-
-		 language_record = list_languages.filter(language => language.id_language == selected_language)
-		 signature.language_labels[1] = language_record[0].language_name
-		 signature.selected_language_labels =  signature.language_labels[1]
-
-		 level_detail.levels = list_levels.filter(level => level.level_language == selected_language)
-		 selected_level = level_detail.levels.filter(level => level.id_level == level_detail.selected_level_detail)
-		 if (selected_level.length == 0 || change_level_text) {
-			length_list_levels_for_language = level_detail.levels.length
-			level_detail.selected_level_detail = level_detail.levels[level_detail.levels.length-1].id_level
-			change_level_text = !change_level_text
-		 }
-
-		 filters.groups = list_groups.filter(group => group.language == selected_language)
-		 filters.courses = list_courses.filter(course => course.language == selected_language)
-		 filters.texts = list_texts.filter(text => text.language == selected_language)
-		 filters.text_types = list_text_types.filter(text_type => text_type.language_id == selected_language)
-
-		 update_data_for_language()
-	}
-
 	async function post_request_data() {
 		await post_request_data_errors(filters.selected_group, filters.selected_date, filters.surname, filters.name,
 										filters.patronymic, filters.selected_course, filters.selected_text,
 										filters.selected_text_type, level_detail.selected_level_detail)
 	}
-
-
-	var signature = new Vue({
-		el: '#signature',
-		data: {
-			language_labels:  ['Русском', list_languages[0].language_name],
-			selected_language_labels: list_languages[0].language_name
-		},
-		methods:{
-			on_change_language_labels() {
-				update_data()
-			}
-		}
-	})
 
 	var level_detail = new Vue({
 		el: '#level_detail',
@@ -630,8 +569,7 @@
 		},
 		methods:{
 			on_change_tag_parent() {
-				selected_language = document.getElementById("selected_language").value
-				data_for_language = list_data.filter(data => data.tag__tag_language == selected_language)
+				data_for_language = list_data
 
 				if (this.selected_tag_parent != '--') {
 					var grouped_data_for_tag = []
@@ -710,13 +648,7 @@
 				type_stat = document.getElementById("selected_stat").value
 
 				for (let i=0; i<data_for_language.length; i++) {
-					if (signature.selected_language_labels == 'Русском') {
-						labels.push(data_for_language[i].tag__tag_text_russian)
-					}
-					else {
-						labels.push(data_for_language[i].tag__tag_text)
-					}
-
+					labels.push(data_for_language[i].tag__tag_text_russian)
 					if (type_stat == 'абсолютная') {
 						points.push(data_for_language[i].count_data)
 					}

@@ -12,16 +12,6 @@
 	<h2 class="text-primary text-center my-5">Взаимосвязь оценки и самооценки для заданного студента</h2>
 
 	<div class="d-flex flex-column flex-md-row my-4 gap-4 justify-content-evenly">
-		<div class="col">
-			<label class="text-center text-primary"> Язык </label>
-			<hr class="mt-1" />
-			<select id="selected_language" class="form-select" onchange="on_change_language()">
-				{% for language in languages %}
-				<option value="{{language.id_language}}">{{ language.language_name }}</option>
-				{% endfor %}
-			</select>
-		</div>
-
 		<form id="form_relation" name="filters">
 			<div class="col">
 				<label class="text-center text-primary"> Студент </label>
@@ -164,7 +154,6 @@
 </main>
 {% endblock content%} {%block script%}
 <script type="text/javascript">
-	var list_languages = {{languages | safe}}
 	var list_text_types = []
 	var list_data = []
 	var data_for_language = []
@@ -214,28 +203,14 @@
 		workbook.SheetNames.push("Relation")
 		workbook.Sheets["Relation"] = worksheet
 
-		selected_language_id = document.getElementById("selected_language").value
-		selected_language = list_languages.filter(language => language.id_language == selected_language_id)
-
 		XLSX.writeFile(workbook,
-			`Relation_assessment_self_rating_${filters.surname}_${filters.name}_${filters.patronymic}_${selected_language[0].language_name}.xlsx`);
+			`Relation_assessment_self_rating_${filters.surname}_${filters.name}_${filters.patronymic}.xlsx`);
+
 	}
 
 	function update_data() {
 		relation.get_data()
         relation.update_chart()
-	}
-
-	function update_data_for_language() {
-		selected_language = document.getElementById("selected_language").value
-		data_for_language = list_data.filter(data => data.language == selected_language)
-		filters.text_types = list_text_types.filter(text_type => text_type.language_id == selected_language)
-		update_data()
-	}
-
-	function on_change_language() {
-		selected_language = document.getElementById("selected_language").value
-		update_data_for_language()
 	}
 
 	function on_change_font_size() {
@@ -256,9 +231,10 @@
 		},
 		methods: {
 			async update_diagrams() {
-				await post_request_data_errors(this.selected_text_type, selected_surname, selected_name,
-												selected_patronymic)
-				update_data_for_language()
+				await post_request_data_errors(this.selected_text_type, selected_surname, selected_name, selected_patronymic)
+				data_for_language = list_data
+				filters.text_types = list_text_types
+				update_data()
 			},
 			on_choice_params() {
 				if (this.surname == '') {
