@@ -63,11 +63,18 @@ def get_levels():
 
 
 def get_texts_id_keys(data_count, texts_id):
-    # print(data_count)
+    print(data_count[0])
     """Создаёт словарь: {id тега: [id текстов]}"""
     for data in data_count:
-        if data["iderrortag__iderrortag"] not in texts_id:
-            texts_id[data["iderrortag__iderrortag"]] = []
+        if "iderrortag__iderrortag" in data:
+            key = "iderrortag__iderrortag"
+        elif "iderrorlevel__iderrorlevel" in data:
+            key = "iderrorlevel__iderrorlevel"
+        else:
+            continue
+            
+        if data[key] not in texts_id:
+            texts_id[data[key]] = []
     return texts_id
 
 
@@ -77,11 +84,18 @@ def get_texts_id_and_data_on_tokens(data_count, texts_id, id_data):
     id_data_count_on_tokens = []
 
     for data in data_count:
+        if "iderrortag__iderrortag" in data:
+            tag_key = "iderrortag__iderrortag"
+        elif "iderrorlevel__iderrorlevel" in data:
+            tag_key = "iderrorlevel__iderrorlevel"
+        else:
+            continue
+            
         if (
             data["errortoken__idtoken__idsentence__idtext__idtext"]
-            not in texts_id[data["iderrortag__iderrortag"]]
+            not in texts_id[data[tag_key]]
         ):
-            texts_id[data["iderrortag__iderrortag"]].append(
+            texts_id[data[tag_key]].append(
                 data["errortoken__idtoken__idsentence__idtext__idtext"]
             )
 
@@ -109,9 +123,16 @@ def get_on_tokens(texts_id, data_count):
         count_tokens[tag_id] = count_tokens_tag["res"]
 
     for data in data_count:
-        if count_tokens.get(data["iderrortag__iderrortag"], 0):
+        if "iderrortag__iderrortag" in data:
+            tag_key = "iderrortag__iderrortag"
+        elif "iderrorlevel__iderrorlevel" in data:
+            tag_key = "iderrorlevel__iderrorlevel"
+        else:
+            continue
+            
+        if count_tokens.get(data[tag_key], 0):
             data["count_data_on_tokens"] = (
-                data["count_data"] * 100 / count_tokens[data["iderrortag__iderrortag"]]
+                data["count_data"] * 100 / count_tokens[data[tag_key]]
             )
         else:
             data["count_data_on_tokens"] = 0
@@ -628,16 +649,16 @@ def get_filters_for_choice_text_type(list_filters):
 
 def get_zero_count_grade_errors(data_count_errors):
     list_grades_id_in_markup = [
-        data["errorlevel__iderrorlevel"] for data in data_count_errors
+        data["iderrorlevel__iderrorlevel"] for data in data_count_errors
     ]
 
     data_grades_not_in_errors = list(
         ErrorLevel.objects.filter(~Q(iderrorlevel__in=list_grades_id_in_markup))
         .annotate(
-            errorlevel__iderrorlevel=F("iderrorlevel"),
-            errorlevel__errorlevelname=F("errorlevelname"),
+            iderrorlevel__iderrorlevel=F("iderrorlevel"),
+            iderrorlevel__errorlevelname=F("errorlevelname"),
         )
-        .values("errorlevel__iderrorlevel", "errorlevel__errorlevelname")
+        .values("iderrorlevel__iderrorlevel", "iderrorlevel__errorlevelname")
         .annotate(
             count_data=Value(0, output_field=IntegerField()),
             count_data_on_tokens=Value(0, output_field=IntegerField()),
