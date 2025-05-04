@@ -477,7 +477,7 @@ def chart_types_errors(request):
 		
 		tag_parents, dict_children = dashboards.get_dict_children()
 		
-		return render(request, 'dashboard_error_types.html', {'right': True, 'languages': languages, 'levels': levels,
+		return render(request, 'dashboard_error_types.html', {'right': True, 'levels': levels,
 								      'groups': groups, 'courses': courses, 'texts': texts,
 								      'text_types': text_types, 'data': data,
 								      'tag_parents': tag_parents,

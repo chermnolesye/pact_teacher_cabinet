@@ -2,14 +2,32 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Добавление студента</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Студенты</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/base.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/manage.css' %}" />
 </head>
 <body>
-    <h1>Добавление студента</h1>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Добавить</button>
-    </form>
+
+    <div id="header-container"></div>
+
+    <div class="group-container">
+        <h2 class="highlighted-header">Добавление студента</h2>
+        <form method="post" class="add-group-form">
+            {% csrf_token %}
+            <div class="add-group-fields">
+                {{ form.user.label_tag }}
+                {{ form.user }}
+
+                {{ form.group.label_tag }}
+                {{ form.group }}
+            </div>
+            <div class="form-buttons">
+                <button type="submit" class="button">Добавить студента</button>
+                <a href="{% url 'show_students' %}" class="button grey-button">Назад</a>
+            </div>            
+        </form>
+    </div>
 </body>
 </html>

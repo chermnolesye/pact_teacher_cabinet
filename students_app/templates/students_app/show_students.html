@@ -17,6 +17,10 @@
             Список студентов
         </h2>
 
+        <div class="add-group">
+            <a href="{% url 'add_student' %}"><button class="button">Добавить студента</button></a>
+        </div>
+
         <form method="get" id="text-search-form">
             <div class="search-bar">
                 <input type="text" name="q" placeholder="Поиск студента" value="{{ query }}">

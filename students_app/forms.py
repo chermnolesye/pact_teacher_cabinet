@@ -7,6 +7,7 @@ class AddStudentForm(forms.Form):
         queryset=User.objects.exclude(iduser__in=Student.objects.values_list('iduser', flat=True)),
         label="Пользователь"
     )
+    
     group = forms.ModelChoiceField(queryset=Group.objects.all(), label="Группа")
 
     def __init__(self, *args, **kwargs):
