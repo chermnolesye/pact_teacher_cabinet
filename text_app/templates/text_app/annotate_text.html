@@ -347,42 +347,30 @@
                 <div class="tokens-container" id_sentence="{{ sentence.id_sentence }}">
                     <p class="sentence-number">{{ sentence.sentence.ordernumber|add:1 }}:</p>
                     {% for token in sentence.tokens %}
-
-                    <svg class="clickable-icon" width="20" height="20" viewBox="0 0 54 54" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M34.5 27H27M27 27H19.5M27 27V19.5M27 27V34.5M14.5 5.34503C18.2988 3.14728 22.6113 1.99327 27 2.00003C40.8075 2.00003 52 13.1925 52 27C52 40.8075 40.8075 52 27 52C13.1925 52 2 40.8075 2 27C2 22.4475 3.2175 18.175 5.345 14.5" stroke="#768088" stroke-width="4" stroke-linecap="round" />
-                    </svg>
                     <span class="token"
                           id_token="{{ token.token_id }}"
                           data-pos-tag="{{ token.pos_tag }}"
                           data-pos-tag-russian="{{ token.pos_tag_russian }}"
                           data-pos-tag-abbrev="{{ token.pos_tag_abbrev }}"
                           data-pos-color="{{ token.pos_tag_color }}"
-                          data-position="{{ token.token_order_number }}"
-                          {% if token.error_tag %}
-                          data-error-tag="{{ token.error_tag }}"
-                          data-error-tag-russian="{{ token.error_tag_russian }}"
-                          data-error-tag-abbrev="{{ token.error_tag_abbrev }}"
-                          data-error-level="{{ token.error_level }}"
-                          data-error-color="{{ token.error_color }}"
-                          {% endif %}>
-
-                        {% if token.all_errors %}
-                        {% for error in token.all_errors %}
+                          data-position="{{ token.token_order_number }}">
+        
+                        {% if token.errors %}
+                        {% for error in token.errors %}
                         <span class="error-tag"
                               style="background-color: {{ error.error_color }}; display: none;"
                               data-error-tag="{{ error.error_tag }}"
                               data-error-tag-russian="{{ error.error_tag_russian }}"
                               data-error-tag-abbrev="{{ error.error_tag_abbrev }}"
-                              data-error-level="{{ token.error_level }}"
-                              data-error-correct="{{ token.error_correct }}"
-                              data-error-comment="{{ token.error_comment }}"
-                              data-all-errors="{{ token.all_errors|safe|escapejs }}"
-                              data-error-reason="{{ token.error_reason }}">
+                              data-error-level="{{ error.error_level }}"
+                              data-error-correct="{{ error.error_correct }}"
+                              data-error-comment="{{ error.error_comment }}"
+                              data-error-reason="{{ error.error_reason }}">
                             {{ error.error_tag }}
                         </span>
                         {% endfor %}
                         {% endif %}
-
+        
                         {% if token.pos_tag %}
                         <span class="abbr"
                               style="background-color: {{ token.pos_tag_color }}; display: none;"
@@ -392,19 +380,18 @@
                             {{ token.pos_tag }}
                         </span>
                         {% endif %}
-
+        
                         {% if token.token == '-EMPTY-' %}
                         <span class="word">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="bi" height="1em" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-width="1.5" d="m14.36 4.079.927-.927a3.932 3.932 0 0 1 5.561 5.561l-.927.927m-5.56-5.561s.115 1.97 1.853 3.707C17.952 9.524 19.92 9.64 19.92 9.64m-5.56-5.561L12 6.439m7.921 3.2-5.26 5.262L11.56 18l-.16.161c-.578.577-.867.866-1.185 1.114a6.554 6.554 0 0 1-1.211.749c-.364.173-.751.302-1.526.56l-3.281 1.094m0 0-.802.268a1.06 1.06 0 0 1-1.342-1.342l.268-.802m1.876 1.876-1.876-1.876m0 0 1.094-3.281c.258-.775.387-1.162.56-1.526.205-.43.456-.836.749-1.211.248-.318.537-.607 1.114-1.184L8.5 9.939"></path></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="bi" height="1em" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-width="1.5" d="m14.36 4.079.927-.927a3.932 3.932 0 0 1 5.561 5.561l-.927.927m-5.56-5.561s.115 1.97 1.853 3.707C17.952 9.524 19.92 9.64 19.92 9.64m-5.56-5.561L12 6.439m7.921 3.2-5.26 5.262L11.56 18l-.16.161c-.578.577-.867.866-1.185 1.114a6.554 6.554 0 0 1-1.211.749c-.364.173-.751.302-1.526.56l-3.281 1.094m0 0-.802.268a1.06 1.06 0 0 1-1.342-1.342l.268-.802m1.876 1.876-1.876-1.876m0 0 1.094-3.281c.258-.775.387-1.162.56-1.526.205-.43.456-.836.749-1.211.248-.318.537-.607 1.114-1.184L8.5 9.939"></path>
+                            </svg>
                         </span>
                         {% else %}
                         <span class="word">{{ token.token }}</span>
                         {% endif %}
                     </span>
                     {% endfor %}
-                    <svg class="clickable-icon" width="20" height="20" viewBox="0 0 54 54" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M34.5 27H27M27 27H19.5M27 27V19.5M27 27V34.5M14.5 5.34503C18.2988 3.14728 22.6113 1.99327 27 2.00003C40.8075 2.00003 52 13.1925 52 27C52 40.8075 40.8075 52 27 52C13.1925 52 2 40.8075 2 27C2 22.4475 3.2175 18.175 5.345 14.5" stroke="#768088" stroke-width="4" stroke-linecap="round" />
-                    </svg>
                 </div>
             </div>
             {% endfor %}
