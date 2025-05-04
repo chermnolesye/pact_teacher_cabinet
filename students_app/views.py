@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import JsonResponse
 from django.db.models import Count, Q, F
-from .forms import EditStudentForm
+from .forms import EditStudentForm, AddStudentForm
 from core_app.models import (
     Student,
     Error,
@@ -91,3 +91,15 @@ def student_info(request, student_id):
     }
 
     return render(request, 'student_info.html', context)
+
+def add_student(request):
+    if request.method == 'POST':
+        form = AddStudentForm(request.POST)
+        if form.is_valid():
+            user = form.cleaned_data['user']
+            group = form.cleaned_data['group']
+            Student.objects.create(iduser=user, idgroup=group)
+            return redirect('show_students') 
+    else:
+        form = AddStudentForm()
+    return render(request, 'add_student.html', {'form': form})
