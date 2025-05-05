@@ -560,7 +560,7 @@
 				type_stat = document.getElementById("selected_stat").value
 
 				for (let i=0; i<data_for_language.length; i++) {
-					labels.push(data_for_language[i].grade__grade_name)
+					labels.push(data_for_language[i].iderrorlevel__errorlevelname)
 
 					if (type_stat == 'абсолютная') {
 						points.push(data_for_language[i].count_data)
@@ -642,7 +642,7 @@
 				}
 
 				for (let i=0; i<data_for_language.length; i++) {
-					labels.push(data_for_language[i].grade__grade_name)
+					labels.push(data_for_language[i].iderrorlevel__errorlevelname)
 
 					if (type_stat == 'абсолютная') {
 						points.push(data_for_language[i].count_data * 100 / count)
