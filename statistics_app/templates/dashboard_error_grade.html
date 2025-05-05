@@ -158,7 +158,7 @@
 													v-model="selected_group"
 													@change="on_change_group_number"
 												>
-													<option v-for="group in groups">{{ group.group_name }}</option>
+													<option v-for="group in groups">{{ group.groupname }}</option>
 												</select>
 												{% endverbatim %}
 											</div>
@@ -296,7 +296,7 @@
 													@change="on_change_course"
 												>
 													<option v-for="course in courses">
-														{{ course.course_number }}
+														{{ course.studycourse }}
 													</option>
 												</select>
 												{% endverbatim %}
@@ -377,7 +377,7 @@
 													<option
 														v-for="text_type in text_types":value="text_type.id_text_type"
 													>
-														{{ text_type.text_type_name }}
+														{{ text_type.texttypename }}
 													</option>
 												</select>
 												{% endverbatim %}
