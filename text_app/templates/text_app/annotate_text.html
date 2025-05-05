@@ -362,6 +362,7 @@
                         {% for error in token.errors %}
                         <span class="error-tag"
                               style="background-color: {{ error.error_color }}; display: none;"
+                              data-error-id="{{ error.error_id }}"
                               data-error-tag="{{ error.error_tag }}"
                               data-error-tag-russian="{{ error.error_tag_russian }}"
                               data-error-tag-abbrev="{{ error.error_tag_abbrev }}"
@@ -447,7 +448,7 @@
 
                             <div class="grade-buttons">
                                 <button type="button" class="button" id="save-annotation" onclick="addErrorAnnotation()">Сохранить</button>
-                                <button type="button" class="button red-button" id="delete-annotation" onclick="deleteErrorAnnotation()">Удалить</button>
+                                <button type="button" class="button red-button" id="delete-annotation">Удалить</button>
                             </div>
                     </div>
                 </form>
@@ -744,48 +745,174 @@
                 popup.style.top = `${top}px`;
             }
 
+/*
+                РЕДАКТИРОВАНИЕ
+*/
             function EditAnnotationForm(tokenElement) {
-                document.getElementById('selected-tag-name').innerHTML = tokenElement.dataset.errorTag;
+                console.log("РЕДАКТИРОВАНИЕ ОТКРЫТО")
+                // let iderror = tokenElement.data.errorId;
+                let iderror = tokenElement?.dataset.errorId || null;
 
-                const id_idreason = document.getElementById('id_idreason');
-                var options = id_idreason.options;
-                var chosen = 0;
-                for (var i = 0; i < options.length; i++) {
-                    var option = options[i];
-                    if (option.text === tokenElement.dataset.errorReason) {
-                        chosen = option.value;
+                // document.getElementById('selected-tag-name').innerHTML = tokenElement.dataset.errorTag;
+
+                // const id_idreason = document.getElementById('id_idreason');
+                // var options = id_idreason.options;
+                // var chosen = 0;
+                // for (var i = 0; i < options.length; i++) {
+                //     var option = options[i];
+                //     if (option.text === tokenElement.dataset.errorReason) {
+                //         chosen = option.value;
+                //     }
+                // }
+                // id_idreason.getElementsByTagName('option')[chosen].selected = 'selected';
+
+                // const id_iderrorlevel = document.getElementById('id_iderrorlevel');
+                // options = id_iderrorlevel.options;
+                // chosen = 0;
+                // for (var i = 0; i < options.length; i++) {
+                //     var option = options[i];
+                //     if (option.text === tokenElement.dataset.errorLevel) {
+                //         chosen = option.value;
+                //     }
+                // } 
+                // id_iderrorlevel.getElementsByTagName('option')[chosen].selected = 'selected';
+
+                // if (tokenElement.dataset.errorComment !== "Не указано") {
+                //     document.getElementById('id_comment').value = tokenElement.dataset.errorComment;
+                // }
+
+                // if (tokenElement.dataset.errorCorrect !== "Не указано") {
+                //     document.getElementById('id_correct').value = tokenElement.dataset.errorCorrect;
+                // }
+
+                // Заполняем выбранный тег
+                document.getElementById('selected-tag-name').textContent = 
+                    tokenElement.dataset.errorTag || "Не указано";
+
+                // Устанавливаем причину ошибки (idreason)
+                const reasonSelect = document.getElementById('id_idreason');
+                if (reasonSelect) {
+                    const reasonText = tokenElement.dataset.errorReason;
+                    if (reasonText) {
+                        Array.from(reasonSelect.options).forEach(option => {
+                            option.selected = (option.text === reasonText);
+                        });
                     }
                 }
-                id_idreason.getElementsByTagName('option')[chosen].selected = 'selected';
 
-                const id_iderrorlevel = document.getElementById('id_iderrorlevel');
-                options = id_iderrorlevel.options;
-                chosen = 0;
-                for (var i = 0; i < options.length; i++) {
-                    var option = options[i];
-                    if (option.text === tokenElement.dataset.errorLevel) {
-                        chosen = option.value;
+                // Устанавливаем уровень ошибки (iderrorlevel)
+                const levelSelect = document.getElementById('id_iderrorlevel');
+                if (levelSelect) {
+                    const levelText = tokenElement.dataset.errorLevel;
+                    if (levelText) {
+                        Array.from(levelSelect.options).forEach(option => {
+                            option.selected = (option.text === levelText);
+                        });
                     }
-                } 
-                id_iderrorlevel.getElementsByTagName('option')[chosen].selected = 'selected';
-
-                if (tokenElement.dataset.errorComment !== "Не указано") {
-                    document.getElementById('id_comment').value = tokenElement.dataset.errorComment;
                 }
 
-                if (tokenElement.dataset.errorCorrect !== "Не указано") {
-                    document.getElementById('id_correct').value = tokenElement.dataset.errorCorrect;
+                // Заполняем комментарий и исправление (если есть)
+                const commentField = document.getElementById('id_comment');
+                if (commentField) {
+                    commentField.value = 
+                        tokenElement.dataset.errorComment !== "Не указано" 
+                            ? tokenElement.dataset.errorComment 
+                            : "";
                 }
+
+                const correctField = document.getElementById('id_correct');
+                if (correctField) {
+                    correctField.value = 
+                        tokenElement.dataset.errorCorrect !== "Не указано" 
+                            ? tokenElement.dataset.errorCorrect 
+                            : "";
+                }
+
+                // Назначаем обработчики кнопок
+                document.getElementById('save-annotation').onclick = () => {
+                    saveAnnotation(iderror);
+                };
+
+                // document.getElementById('delete-annotation').onclick = () => {
+                //     //  deleteErrorAnnotation(iderror);
+                //     deleteAnnotation(iderror);
+                // };    
+                document.getElementById('delete-annotation').addEventListener('click', () => {
+                    deleteAnnotation(iderror);
+                });           
             }
 
-            // Закрытие окна с анимацией
-            /*closePopupBtn.addEventListener('click', function() {
-                const popup = document.getElementById('error-popup');
-                popup.classList.remove('show'); // Убираем класс для анимации исчезновения
-                setTimeout(() => {
-                    popup.style.display = 'none'; // Скрываем окно после анимации
-                }, 300); // Задержка, соответствующая длительности перехода
-            });*/
+            // Функция для сохранения отредактированной аннотации
+            function saveAnnotation(errorId) {
+                const form = document.getElementById('annotation-form');
+                const formData = new FormData(form);
+
+                // Добавляем action и error_id (если редактируем существующую аннотацию)
+                if (errorId) {
+                    formData.append('action', 'edit');
+                    formData.append('error_id', errorId);
+                } else {
+                    formData.append('action', 'add');
+                }
+
+                fetch(window.location.href, {  // Замените на ваш API-эндпоинт
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRFToken': formData.get('csrfmiddlewaretoken'),
+                    },
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert("Изменения сохранены!");
+                        location.reload(); // Или обновляем интерфейс без перезагрузки
+                    } else {
+                        alert("Ошибка: " + data.error);
+                    }
+                })
+                .catch(error => {
+                    console.error("AJAX error:", error);
+                });
+            }
+
+            // Функция для удаления аннотации
+            function deleteAnnotation(errorId) {
+                console.log("Удаление");
+                if (!errorId) {
+                    alert("Невозможно удалить: аннотация не найдена.");
+                    return;
+                }
+
+                if (!confirm("Вы уверены, что хотите удалить аннотацию?")) {
+                    return;
+                }
+
+                const formData = new FormData();
+                formData.append('action', 'delete');
+                formData.append('error_id', errorId);
+                formData.append('csrfmiddlewaretoken', document.querySelector('[name=csrfmiddlewaretoken]').value);
+
+                fetch(window.location.href, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRFToken': formData.get('csrfmiddlewaretoken'),
+                    },
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert("Аннотация удалена!");
+                        location.reload();
+                    } else {
+                        alert("Ошибка: " + data.error);
+                    }
+                })
+                .catch(error => {
+                    console.error("AJAX error:", error);
+                });
+            }
 
             // Слушаем клик по токенам
             document.querySelectorAll('.error-tag').forEach(function(errorTagElement) {
@@ -1215,6 +1342,10 @@
             //     renderTags();
             // });
         });
+
+/*
+            ДОБАВЛЕНИЕ
+*/
 
         function addErrorAnnotation() {
             const chosen_ids = [];

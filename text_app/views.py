@@ -171,7 +171,7 @@ def annotate_text(request, text_id=2379):
             pos_tag_color = token.idpostag.tagcolor if token.idpostag else None
 
             error_tokens = token.errortoken_set.select_related(
-                "iderror__iderrortag", "iderror__iderrorlevel", "iderror__idreason"
+                "iderror__iderrortag", "iderror__iderrorlevel", "iderror__idreason", "iderror"
             ).all()
 
             errors_list = []
@@ -179,6 +179,7 @@ def annotate_text(request, text_id=2379):
                 error = et.iderror
                 if error and error.iderrortag:
                     errors_list.append({
+                        "error_id": error.iderror,
                         "error_tag": error.iderrortag.tagtext,
                         "error_tag_russian": error.iderrortag.tagtextrussian,
                         "error_tag_abbrev": error.iderrortag.tagtextabbrev,
@@ -215,15 +216,15 @@ def annotate_text(request, text_id=2379):
     else:
         grade_form = AddTextAnnotationForm(instance=text)
     
-    if request.method == 'POST' and 'delete-annotation' in request.POST:
-            chosen_ids = json.loads(request.POST.get('chosen_ids', '[]'))
-            
-            error_tokens = ErrorToken.objects.filter(idtoken__in=chosen_ids)
+    if request.method == 'POST' and request.POST.get('action') == 'delete':
+        error_id = request.POST.get('error_id')
         
-            error_ids = error_tokens.values_list('iderror', flat=True).distinct()
-            
-            Error.objects.filter(iderror__in=error_ids).delete()
-            
+        if not error_id:
+            return JsonResponse({'success': False, 'error': 'ID ошибки не передан'})
+
+        Error.objects.filter(iderror=error_id).delete()
+        return JsonResponse({'success': True})
+                
     if request.method == "POST" and "annotation-form" in request.POST:
         annotation_form = AddErrorAnnotationForm(request.POST, user=request.user)
 
