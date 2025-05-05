@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
+from django.db.models import F
 import json
 from django.http import JsonResponse
 from django.db import transaction
@@ -228,18 +229,23 @@ def annotate_text(request, text_id=2379):
         except Error.DoesNotExist:
             return JsonResponse({'success': False, 'error': 'Ошибка не найдена'})
 
-        # Получаем id токенов, связанных с этой аннотацией
         token_ids = list(ErrorToken.objects.filter(iderror=error).values_list('idtoken', flat=True))
         tokens_to_check = Token.objects.filter(idtoken__in=token_ids, tokentext='-EMPTY-')
 
-        # Удаляем ErrorToken и саму ошибку
         ErrorToken.objects.filter(iderror=error).delete()
         error.delete()
 
-        # Теперь удаляем пустые токены, если они больше ни к чему не привязаны
         for token in tokens_to_check:
             if not ErrorToken.objects.filter(idtoken=token).exists():
+                sentence_id = token.idsentence
+                order_number = token.tokenordernumber
+
                 token.delete()
+
+                Token.objects.filter(
+                    idsentence=sentence_id,
+                    tokenordernumber__gt=order_number
+                ).update(tokenordernumber=F('tokenordernumber') - 1)
 
         return JsonResponse({'success': True})
                 
