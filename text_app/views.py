@@ -216,16 +216,15 @@ def annotate_text(request, text_id=2379):
     else:
         grade_form = AddTextAnnotationForm(instance=text)
     
-    if request.method == 'POST' and 'delete' in request.POST:
-            # chosen_ids = json.loads(request.POST.get('chosen_ids', '[]'))
-            error_id = json.loads(request.POST.get('error_id', ''))
-            print(error_id)
-            error_tokens = ErrorToken.objects.filter(idtoken__in=chosen_ids)
+    if request.method == 'POST' and request.POST.get('action') == 'delete':
+        error_id = request.POST.get('error_id')
         
-            error_ids = error_tokens.values_list('iderror', flat=True).distinct()
-            
-            Error.objects.filter(iderror__in=error_ids).delete()
-            
+        if not error_id:
+            return JsonResponse({'success': False, 'error': 'ID ошибки не передан'})
+
+        Error.objects.filter(iderror=error_id).delete()
+        return JsonResponse({'success': True})
+                
     if request.method == "POST" and "annotation-form" in request.POST:
         annotation_form = AddErrorAnnotationForm(request.POST, user=request.user)
 
