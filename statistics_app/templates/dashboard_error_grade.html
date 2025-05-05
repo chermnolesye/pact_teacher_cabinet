@@ -17,16 +17,6 @@
 
 	<div class="d-flex flex-column flex-md-row my-4 gap-4 justify-content-evenly">
 		<div class="col">
-			<label class="text-center text-primary"> Язык </label>
-			<hr class="mt-1" />
-			<select id="selected_language" class="form-select" onchange="on_change_language()">
-				{% for language in languages %}
-				<option value="{{language.id_language}}">{{ language.language_name }}</option>
-				{% endfor %}
-			</select>
-		</div>
-
-		<div class="col">
 			<label class="text-center text-primary"> Статистика </label>
 			<hr class="mt-1"/>
 			<select id="selected_stat" class="form-select" onchange="update_data()">
@@ -498,10 +488,7 @@
 	    workbook.SheetNames.push("Errors")
 	    workbook.Sheets["Errors"] = worksheet
 
-	    selected_language_id = document.getElementById("selected_language").value
-		selected_language = list_languages.filter(language => language.id_language == selected_language_id)
-
-	    XLSX.writeFile(workbook, `Errors_grade_${selected_language[0].language_name}.xlsx`)
+	    XLSX.writeFile(workbook, `Errors_grade.xlsx`)
 	}
 
 	function update_data() {
@@ -509,23 +496,6 @@
 		grade_errors_bar.update_chart()
 		grade_errors_pie.get_data()
 		grade_errors_pie.update_chart()
-	}
-
-	function update_data_for_language() {
-		selected_language = document.getElementById("selected_language").value
-		data_for_language = list_data.filter(data => data.grade__grade_language == selected_language)
-		update_data()
-	}
-
-	function on_change_language() {
-		 selected_language = document.getElementById("selected_language").value
-
-		 filters.groups = list_groups.filter(group => group.language == selected_language)
-		 filters.courses = list_courses.filter(course => course.language == selected_language)
-		 filters.texts = list_texts.filter(text => text.language == selected_language)
-		 filters.text_types = list_text_types.filter(text_type => text_type.language_id == selected_language)
-
-		 update_data_for_language()
 	}
 
 	async function post_request_data() {
