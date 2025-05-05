@@ -1,10 +1,14 @@
- {% load static %} {%block plugins%}
+ {% load static %} 
+ {%block plugins%}
 <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
 <script src="{% static 'js/external/axios.min.js' %}"></script>
 <script src="{% static 'js/external/chart.umd.min.js' %}"></script>
 <script src="{% static 'js/external/xlsx.full.min.js' %}"></script>
+<script src="{% static 'js/external/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'js/external/jquery.min.js' %}"></script>
 {%endblock plugins%} {% block link %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/dashboards.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'css/external/bootstrap.min.css' %}" />
 {% endblock link %}
 
 {% block content %}
@@ -475,6 +479,7 @@
 	        })
 
 	    list_data = data
+		console.log(list_data)
 	}
 
 
