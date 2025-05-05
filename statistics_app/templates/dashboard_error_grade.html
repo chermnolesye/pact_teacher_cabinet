@@ -384,38 +384,44 @@
 	</div>
 
 	<hr class="mt-2" />
-	<div id="legend_checked_filters" class="d-flex flex-column flex-md-row gap-3 mt-4 justify-content-start">
-		<div id="card_group" class="card card-rounded shadow-sm card-display border border-primary">
-			<div class="card-body">
-				<p class="card-text text-primary">
-					<span v-html="group">{{group}}</span> (<span v-html="enrollment_date">{{enrollment_date}}</span>)
-				</p>
+		<div id="legend_checked_filters" class="d-flex flex-column flex-md-row gap-3 mt-4 justify-content-start">
+			<div id="card_group" v-show="group && enrollment_date" class="card card-rounded shadow-sm card-display border border-primary">
+				<div class="card-body">
+					<p class="card-text text-primary">
+						<span v-html="group">{{group}}</span> (<span v-html="enrollment_date">{{enrollment_date}}</span>)
+					</p>
+				</div>
+			</div>
+		
+			<div id="card_student" v-show="surname || name || patronymic" class="card card-rounded shadow-sm card-display border border-primary">
+				<div class="card-body">
+					<p class="card-text text-primary">
+						<span v-html="surname">{{surname}}</span>
+						<span v-html="name">{{name}}</span>
+						<span v-html="patronymic">{{patronymic}}</span>
+					</p>
+				</div>
+			</div>
+		
+			<div id="card_course" v-show="course" class="card card-rounded shadow-sm card-display border border-primary">
+				<div class="card-body">
+					<p class="card-text text-primary"><span v-html="course">{{course}}</span> курс</p>
+				</div>
+			</div>
+		
+			<div id="card_text" v-show="text" class="card card-rounded shadow-sm card-display border border-primary">
+				<div class="card-body">
+					<p class="card-text text-primary" v-html="text">{{text}}</p>
+				</div>
+			</div>
+		
+			<div id="card_text_type" v-show="text_type" class="card card-rounded shadow-sm card-display border border-primary">
+				<div class="card-body">
+					<p class="card-text text-primary" v-html="text_type">{{text_type}}</p>
+				</div>
 			</div>
 		</div>
-		<div id="card_student" class="card card-rounded shadow-sm card-display border border-primary">
-			<div class="card-body">
-				<p class="card-text text-primary">
-					<span v-html="surname">{{surname}}</span>
-					<span v-html="name">{{name}}</span>
-					<span v-html="patronymic">{{patronymic}}</span>
-				</p>
-			</div>
-		</div>
-		<div id="card_course" class="card card-rounded shadow-sm card-display border border-primary">
-			<div class="card-body">
-				<p class="card-text text-primary"> <span v-html="course">{{course}}</span> курс</p>
-			</div>
-		</div>
-		<div id="card_text" class="card card-rounded shadow-sm card-display border border-primary">
-			<div class="card-body">
-				<p class="card-text text-primary" v-html="text">{{text}}</p>
-			</div>
-		</div>
-		<div id="card_text_type" class="card card-rounded shadow-sm card-display border border-primary">
-			<div class="card-body">
-				<p class="card-text text-primary" v-html="text_type">{{text_type}}</p>
-			</div>
-		</div>
+		
 	</div>
 
 	<div id="diagrams" class="d-flex flex-column  my-2">

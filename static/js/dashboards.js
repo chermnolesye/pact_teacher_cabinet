@@ -113,13 +113,13 @@ async function post_request_enrollment_date(group, text, text_type) {
         },
         headers: {
             'X-Requested-With': 'XMLHttpRequest',
-	    }
-	})
-        .then(function (response) {
-            enrollment_date = response.data.enrollment_date
-        })
+        }
+    })
+    .then(function (response) {
+        enrollment_date = response.data.enrollment_date
+    })
 
-	list_enrollment_date = enrollment_date
+    list_enrollment_date = enrollment_date
 }
 
 async function post_request_all(text, text_type) {
@@ -136,15 +136,15 @@ async function post_request_all(text, text_type) {
         },
         headers: {
             'X-Requested-With': 'XMLHttpRequest',
-	    }
-	})
-        .then(function (response) {
-            texts = response.data.texts
-            text_types = response.data.text_types
-        })
+        }
+    })
+    .then(function (response) {
+        texts = response.data.texts
+        text_types = response.data.text_types
+    })
 
-	list_texts = texts
-	list_text_types = text_types
+    list_texts = texts
+    list_text_types = text_types
 }
 
 async function post_request_group(group, enrollment_date, text, text_type) {
@@ -163,15 +163,15 @@ async function post_request_group(group, enrollment_date, text, text_type) {
         },
         headers: {
             'X-Requested-With': 'XMLHttpRequest',
-	    }
-	})
-	    .then(function (response) {
-	        texts = response.data.texts
-	        text_types = response.data.text_types
-	    })
+        }
+    })
+    .then(function (response) {
+        texts = response.data.texts
+        text_types = response.data.text_types
+    })
 
-	list_texts = texts
-	list_text_types = text_types
+    list_texts = texts
+    list_text_types = text_types
 }
 
 async function post_request_student(surname, name, patronymic, text, text_type) {
@@ -191,22 +191,22 @@ async function post_request_student(surname, name, patronymic, text, text_type) 
         },
         headers: {
             'X-Requested-With': 'XMLHttpRequest',
-	    }
-	})
-	    .then(function (response) {
-	        texts = response.data.texts
-	        text_types = response.data.text_types
-	    })
+        }
+    })
+    .then(function (response) {
+        texts = response.data.texts
+        text_types = response.data.text_types
+    })
 
-	list_texts = texts
-	list_text_types = text_types
+    list_texts = texts
+    list_text_types = text_types
 }
 
 async function post_request_course(course, text, text_type) {
     var texts = []
     var text_types = []
 
-     await axios({
+    await axios({
         method: 'post',
         url: '',
         data: {
@@ -218,11 +218,11 @@ async function post_request_course(course, text, text_type) {
         headers: {
             'X-Requested-With': 'XMLHttpRequest',
         }
-	 })
-	    .then(function (response) {
-	        texts = response.data.texts
-	        text_types = response.data.text_types
-	    })
+    })
+    .then(function (response) {
+        texts = response.data.texts
+        text_types = response.data.text_types
+    })
 
     list_texts = texts
     list_text_types = text_types
@@ -250,16 +250,16 @@ async function post_request_text(group, enrollment_date, surname, name, patronym
         headers: {
             'X-Requested-With': 'XMLHttpRequest',
         }
-	})
-	    .then(function (response) {
-	        groups = response.data.groups
-	        courses = response.data.courses
-	        text_types = response.data.text_types
-	    })
+    })
+    .then(function (response) {
+        groups = response.data.groups
+        courses = response.data.courses
+        text_types = response.data.text_types
+    })
 
-	list_groups = groups
-	list_courses = courses
-	list_text_types = text_types
+    list_groups = groups
+    list_courses = courses
+    list_text_types = text_types
 }
 
 async function post_request_text_type(group, enrollment_date, surname, name, patronymic, course, text, text_type) {
@@ -280,22 +280,21 @@ async function post_request_text_type(group, enrollment_date, surname, name, pat
             'text': text,
             'text_type': text_type,
             'flag_post': 'choice_text_type'
-	    },
-	    headers: {
-	        'X-Requested-With': 'XMLHttpRequest',
-	    }
-	})
-	    .then(function (response) {
-	        groups = response.data.groups
-	        courses = response.data.courses
-	        texts = response.data.texts
-	    })
+        },
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+        }
+    })
+    .then(function (response) {
+        groups = response.data.groups
+        courses = response.data.courses
+        texts = response.data.texts
+    })
 
-	list_groups = groups
-	list_courses = courses
-	list_texts = texts
+    list_groups = groups
+    list_courses = courses
+    list_texts = texts
 }
-
 
 function on_change_font_size() {
     selected_font_size = document.getElementById("font_size").value
@@ -303,22 +302,21 @@ function on_change_font_size() {
     update_data()
 }
 
-
 var filters = new Vue({
     el: '#form_filters',
     data: {
-        groups: list_groups.filter(group => group.language == list_languages[0].id_language),
+        groups: list_groups,
         selected_group: '',
-        group_dates:  list_enrollment_date,
+        group_dates: list_enrollment_date,
         selected_date: '',
         surname: '',
         name: '',
         patronymic: '',
-        courses: list_courses.filter(course => course.language == list_languages[0].id_language),
+        courses: list_courses,
         selected_course: '',
-        texts: list_texts.filter(text => text.language == list_languages[0].id_language),
+        texts: list_texts,
         selected_text: '',
-        text_types: list_text_types.filter(text_type => text_type.language_id == list_languages[0].id_language),
+        text_types: list_text_types,
         selected_text_type: ''
     },
     methods: {
@@ -355,29 +353,10 @@ var filters = new Vue({
         },
         async update_diagrams() {
             await post_request_data()
-            update_data_for_language()
-        },
-        update_text_filters_for_language() {
-            selected_language = document.getElementById("selected_language").value
-            this.texts = list_texts.filter(text => text.language == selected_language)
-            this.text_types = list_text_types.filter(text_type => text_type.language_id == selected_language)
-        },
-        update_text_and_student_filters_for_language(flag_text) {
-            selected_language = document.getElementById("selected_language").value
-            this.groups = list_groups.filter(group => group.language == selected_language)
-            this.courses = list_courses.filter(course => course.language == selected_language)
-
-            if (flag_text) {
-                this.text_types = list_text_types.filter(text_type => text_type.language_id == selected_language)
-            }
-            else {
-                this.texts = list_texts.filter(text => text.language == selected_language)
-            }
         },
         async on_change_choice_all() {
             if (legend_filters.emotion == '' && legend_filters.self_rating == '') {
                 await post_request_all(this.selected_text, this.selected_text_type)
-                this.update_text_filters_for_language()
             }
 
             this.update_diagrams()
@@ -423,8 +402,7 @@ var filters = new Vue({
             if (this.selected_group != '' && this.selected_date != '') {
                 if (legend_filters.emotion == '' && legend_filters.self_rating == '') {
                     await post_request_group(this.selected_group, this.selected_date, this.selected_text,
-                                                this.selected_text_type)
-                    this.update_text_filters_for_language()
+                                            this.selected_text_type)
                 }
 
                 this.update_diagrams()
@@ -468,7 +446,6 @@ var filters = new Vue({
                 if (legend_filters.emotion == '' && legend_filters.self_rating == '') {
                     await post_request_student(this.surname, this.name, this.patronymic, this.selected_text,
                                                 this.selected_text_type)
-                    this.update_text_filters_for_language()
                 }
 
                 this.update_diagrams()
@@ -488,7 +465,6 @@ var filters = new Vue({
         async on_change_course() {
             if (legend_filters.emotion == '' && legend_filters.self_rating == '') {
                 await post_request_course(this.selected_course, this.selected_text, this.selected_text_type)
-                this.update_text_filters_for_language()
             }
 
             this.update_diagrams()
@@ -515,7 +491,6 @@ var filters = new Vue({
                     await post_request_text(this.selected_group, this.selected_date, this.surname, this.name,
                                             this.patronymic, this.selected_course, this.selected_text,
                                             this.selected_text_type)
-                    this.update_text_and_student_filters_for_language(true)
                 }
 
                 this.update_diagrams()
@@ -533,7 +508,6 @@ var filters = new Vue({
                 await post_request_text(this.selected_group, this.selected_date, this.surname, this.name,
                                         this.patronymic, this.selected_course, this.selected_text,
                                         this.selected_text_type)
-                this.update_text_and_student_filters_for_language(true)
             }
 
             this.update_diagrams()
@@ -549,10 +523,9 @@ var filters = new Vue({
                 this.selected_text_type = ''
 
                 if (legend_filters.emotion == '' && legend_filters.self_rating == '') {
-                    await post_request_text_type(this.selected_group, this.selected_date, this.surname, this.name,
-                                                 this.patronymic, this.selected_course, this.selected_text,
-                                                 this.selected_text_type)
-                    this.update_text_and_student_filters_for_language(false)
+                    await post_request_text_type(this.selected_group, this.selected_date, this.surname,
+                                                this.name, this.patronymic, this.selected_course, this.selected_text,
+                                                this.selected_text_type)
                 }
 
                 this.update_diagrams()
@@ -568,32 +541,14 @@ var filters = new Vue({
 
             if (legend_filters.emotion == '' && legend_filters.self_rating == '') {
                 await post_request_text_type(this.selected_group, this.selected_date, this.surname, this.name,
-                                             this.patronymic, this.selected_course, this.selected_text,
-                                             this.selected_text_type)
-                this.update_text_and_student_filters_for_language(false)
+                                            this.patronymic, this.selected_course, this.selected_text,
+                                            this.selected_text_type)
             }
 
             this.update_diagrams()
 
-            selected_text_type = list_text_types.filter(text_type => text_type.id_text_type == this.selected_text_type)
-            legend_filters.text_type = selected_text_type[0].text_type_name
+            legend_filters.text_type = this.selected_text_type
             document.getElementById("card_text_type").style.display = 'block'
-        }
-    }
-})
-
-var legend_filters = new Vue({
-    el: '#legend_checked_filters',
-    data: {
-        group: '',
-        enrollment_date: '',
-        surname: '',
-        name: '',
-        patronymic: '',
-        course: '',
-        text: '',
-        text_type: '',
-        emotion: '',
-        self_rating:''
+        },
     }
 })
