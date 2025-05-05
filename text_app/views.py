@@ -216,13 +216,31 @@ def annotate_text(request, text_id=2379):
     else:
         grade_form = AddTextAnnotationForm(instance=text)
     
+
     if request.method == 'POST' and request.POST.get('action') == 'delete':
         error_id = request.POST.get('error_id')
         
         if not error_id:
             return JsonResponse({'success': False, 'error': 'ID ошибки не передан'})
 
-        Error.objects.filter(iderror=error_id).delete()
+        try:
+            error = Error.objects.get(iderror=error_id)
+        except Error.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'Ошибка не найдена'})
+
+        # Получаем id токенов, связанных с этой аннотацией
+        token_ids = list(ErrorToken.objects.filter(iderror=error).values_list('idtoken', flat=True))
+        tokens_to_check = Token.objects.filter(idtoken__in=token_ids, tokentext='-EMPTY-')
+
+        # Удаляем ErrorToken и саму ошибку
+        ErrorToken.objects.filter(iderror=error).delete()
+        error.delete()
+
+        # Теперь удаляем пустые токены, если они больше ни к чему не привязаны
+        for token in tokens_to_check:
+            if not ErrorToken.objects.filter(idtoken=token).exists():
+                token.delete()
+
         return JsonResponse({'success': True})
                 
     if request.method == "POST" and "annotation-form" in request.POST:
@@ -266,11 +284,10 @@ def annotate_text(request, text_id=2379):
                                 )
                                 print("Создан токен с порядковым номером:", new_token.tokenordernumber)
 
-                                # Если вписано исправление
-                                correct_text = annotation_form.cleaned_data.get('correct', '').strip()
-                                if correct_text:
-                                    new_token.tokentext = correct_text
-                                    new_token.save()
+                                # # Если вписано исправление
+                                # correct_text = annotation_form.cleaned_data.get('correct', '').strip()
+                                # if correct_text:
+                                #     new_token.save()
 
                                 print(f"Токен обновлен с исправлением: {new_token.tokentext}")
 
