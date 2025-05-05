@@ -153,7 +153,7 @@ class AddErrorAnnotationForm(forms.ModelForm):
     correct = forms.CharField(
         label="Исправление",
         widget=forms.TextInput(attrs={'class': 'form-control'}),
-        required=True
+        required=False
     )
 
     comment = forms.CharField(
@@ -164,7 +164,7 @@ class AddErrorAnnotationForm(forms.ModelForm):
 
     class Meta:
         model = Error
-        fields = ['iderrortag', 'idreason', 'iderrorlevel', 'comment']
+        fields = ['iderrortag', 'idreason', 'iderrorlevel', 'comment', 'correct']
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)

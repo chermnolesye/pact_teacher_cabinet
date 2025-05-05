@@ -1,4 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.utils import timezone
+import json
+from django.http import JsonResponse
+from django.db import transaction
+from django.db.models import F
 from django.http import JsonResponse
 from .forms import TeacherLoadTextForm, AddTextAnnotationForm, AddErrorAnnotationForm
 from nltk.tokenize import sent_tokenize, word_tokenize
@@ -151,21 +156,20 @@ def annotate_text(request, text_id=2379):
 
     sentences = text.sentence_set.all()
     sentence_data = []
-
     selected_markup = request.GET.get("markup", "tagtext")
 
     for sentence in sentences:
-        tokens = Token.objects.filter(idsentence=sentence).select_related("idpostag")
+        # tokens = Token.objects.filter(idsentence=sentence).select_related("idpostag")
+        tokens = Token.objects.filter(idsentence=sentence).select_related("idpostag").order_by('tokenordernumber')
+
 
         tokens_data = []
         for token in tokens:
-            # Разметка для частей речи
             pos_tag = token.idpostag.tagtext if token.idpostag else None
             pos_tag_russian = token.idpostag.tagtextrussian if token.idpostag else None
             pos_tag_abbrev = token.idpostag.tagtextabbrev if token.idpostag else None
             pos_tag_color = token.idpostag.tagcolor if token.idpostag else None
 
-            # Разметка для ошибок
             error_tokens = token.errortoken_set.select_related(
                 "iderror__iderrortag", "iderror__iderrorlevel", "iderror__idreason"
             ).all()
@@ -197,14 +201,102 @@ def annotate_text(request, text_id=2379):
                 "errors": errors_list,
             })
 
-        sentence_data.append(
-            {
-                "id_sentence": sentence.idsentence,
-                "sentence": sentence,
-                "tokens": tokens_data,
-            }
-        )
+        sentence_data.append({
+            "id_sentence": sentence.idsentence,
+            "sentence": sentence,
+            "tokens": tokens_data,
+        })
 
+    if request.method == "POST" and "grade-form" in request.POST:
+        grade_form = AddTextAnnotationForm(request.POST, instance=text)
+        if grade_form.is_valid():
+            grade_form.save()
+            return redirect(request.path + f"?text_id={text.idtext}&markup={selected_markup}")
+    else:
+        grade_form = AddTextAnnotationForm(instance=text)
+    
+    if request.method == 'POST' and 'delete-annotation' in request.POST:
+            chosen_ids = json.loads(request.POST.get('chosen_ids', '[]'))
+            
+            error_tokens = ErrorToken.objects.filter(idtoken__in=chosen_ids)
+        
+            error_ids = error_tokens.values_list('iderror', flat=True).distinct()
+            
+            Error.objects.filter(iderror__in=error_ids).delete()
+            
+    if request.method == "POST" and "annotation-form" in request.POST:
+        annotation_form = AddErrorAnnotationForm(request.POST, user=request.user)
+
+        if annotation_form.is_valid():
+            try:
+                chosen_ids = json.loads(request.POST.get('chosen_ids', '[]'))
+                sentences_data = json.loads(request.POST.get('sentences', '[]'))
+
+                # Логи тупые
+                print("Chosen IDs:", chosen_ids)
+                print("Sentences data:", sentences_data)
+                print("Form data:", request.POST)
+
+                with transaction.atomic():
+                    #Сохраняем объект ошибки
+                    new_error = annotation_form.save(commit=False)
+                    new_error.correct = annotation_form.cleaned_data.get('correct', '')
+                    new_error.changedate = timezone.now()
+                    new_error.save()
+
+                    #Если есть новые пустые токены — создаём их
+                    for sentence_info in sentences_data:
+                        sentence_id = sentence_info['id_sentence']
+                        empty_token_positions = sentence_info['empty_token_pos']
+
+                        try:
+                            sentence = Sentence.objects.get(idsentence=sentence_id)
+                            for position in sorted([int(p) for p in empty_token_positions]):
+                                print("Сдвигаем токены начиная с позиции:", position)
+                                Token.objects.filter(
+                                    idsentence=sentence,
+                                    tokenordernumber__gte=position
+                                ).update(tokenordernumber=F('tokenordernumber') + 1)
+                                # Создаём новый токен
+                                new_token = Token.objects.create(
+                                    idsentence=sentence,
+                                    tokentext='-EMPTY-',  
+                                    tokenordernumber=position
+                                )
+                                print("Создан токен с порядковым номером:", new_token.tokenordernumber)
+
+                                # Если вписано исправление
+                                correct_text = annotation_form.cleaned_data.get('correct', '').strip()
+                                if correct_text:
+                                    new_token.tokentext = correct_text
+                                    new_token.save()
+
+                                print(f"Токен обновлен с исправлением: {new_token.tokentext}")
+
+                                # Добавляем его id в список выделенных 
+                                chosen_ids.append(str(new_token.idtoken))
+                        except Sentence.DoesNotExist:
+                            continue
+
+                    #Привязываем ошибку ко всем выделенным 
+                    for token_id in chosen_ids:
+                        try:
+                            token = Token.objects.get(idtoken=token_id)
+                            ErrorToken.objects.create(idtoken=token, iderror=new_error)
+                        except Token.DoesNotExist:
+                            continue
+
+                print("Annotation successfully saved.")
+                return redirect(request.path + f"?text_id={text.idtext}&markup={selected_markup}")
+
+            except Exception as e:
+                print(f"Error saving annotation: {str(e)}")
+        else:
+            print("Form errors:", annotation_form.errors)
+    else:
+        annotation_form = AddErrorAnnotationForm()
+        
+    # Контекст
     student = text.idstudent
     user = student.iduser
     group = student.idgroup
@@ -216,20 +308,6 @@ def annotate_text(request, text_id=2379):
     year_study_language = text.educationlevel
     self_rating = text.selfrating
     assesment = text.selfassesment
-
-    if request.method == "POST" and "grade-form" in request.POST:
-        grade_form = AddTextAnnotationForm(request.POST, instance=text)
-        if grade_form.is_valid():
-            grade_form.save()
-            return redirect(request.path + f"?text_id={text.idtext}&markup={selected_markup}")
-    else:
-        grade_form = AddTextAnnotationForm(instance=text)
-
-    if "annotation-form" in request.POST:
-        annotation_form = AddErrorAnnotationForm(request.POST)
-        # if form.is_valid():
-    else:
-        annotation_form = AddErrorAnnotationForm()
 
     context = {
         "grade_form": grade_form,
@@ -264,8 +342,6 @@ def annotate_text(request, text_id=2379):
 # # АХТУНГ ACHTUNG ATTENTION # #
 # # НЕ УДАЛЯТЬ # #
 # def annotate_text(request, text_id=2379):
-#     # Если вам  нужен доступ только для зарегестрированных пользователей  (преподавателей)
-#     # if has_teacher_rights(request):
 #     text_id = request.GET.get("text_id")
 #     if text_id:
 #         text = get_object_or_404(Text, idtext=text_id)
@@ -283,68 +359,42 @@ def annotate_text(request, text_id=2379):
 #         tokens_data = []
 #         for token in tokens:
 #             # Разметка для частей речи
-#             pos_tag = None
-#             pos_tag_russian = None
-#             pos_tag_abbrev = None
-#             pos_tag_color = None
-#             if token.idpostag:
-#                 pos_tag = token.idpostag.tagtext
-#                 pos_tag_russian = token.idpostag.tagtextrussian
-#                 pos_tag_abbrev = token.idpostag.tagtextabbrev
-#                 pos_tag_color = token.idpostag.tagcolor
+#             pos_tag = token.idpostag.tagtext if token.idpostag else None
+#             pos_tag_russian = token.idpostag.tagtextrussian if token.idpostag else None
+#             pos_tag_abbrev = token.idpostag.tagtextabbrev if token.idpostag else None
+#             pos_tag_color = token.idpostag.tagcolor if token.idpostag else None
 
 #             # Разметка для ошибок
 #             error_tokens = token.errortoken_set.select_related(
-#                 "iderror__iderrortag", "iderror__iderrorlevel"
+#                 "iderror__iderrortag", "iderror__iderrorlevel", "iderror__idreason"
 #             ).all()
 
 #             errors_list = []
-#             for error_token in error_tokens:
-#                 error = error_token.iderror
+#             for et in error_tokens:
+#                 error = et.iderror
 #                 if error and error.iderrortag:
-#                     errors_list.append(
-#                         {
-#                             "error_tag": error.iderrortag.tagtext,
-#                             "error_tag_russian": error.iderrortag.tagtextrussian,
-#                             "error_tag_abbrev": error.iderrortag.tagtextabbrev,
-#                             "error_color": error.iderrortag.tagcolor,
-#                             "error_level": error.iderrorlevel.errorlevelname
-#                             if error.iderrorlevel
-#                             else "Не указано",
-#                             "error_correct": error.correct
-#                             if error.correct
-#                             else "Не указано",
-#                             "error_comment": error.comment
-#                             if error.comment
-#                             else "Не указано",
-#                             "all_errors": errors_list,  # Все ошибки для токена
-#                             "error_reason": error.idreason.reasonname if error.idreason else "Не указано",
-#                             "idtagparent": error.iderrortag.idtagparent,
-#                         }
-#                     )
+#                     errors_list.append({
+#                         "error_tag": error.iderrortag.tagtext,
+#                         "error_tag_russian": error.iderrortag.tagtextrussian,
+#                         "error_tag_abbrev": error.iderrortag.tagtextabbrev,
+#                         "error_color": error.iderrortag.tagcolor,
+#                         "error_level": error.iderrorlevel.errorlevelname if error.iderrorlevel else "Не указано",
+#                         "error_correct": error.correct or "Не указано",
+#                         "error_comment": error.comment or "Не указано",
+#                         "error_reason": error.idreason.reasonname if error.idreason else "Не указано",
+#                         "idtagparent": error.iderrortag.idtagparent,
+#                     })
 
-#             # Основная ошибка для отображения (первая)
-#             main_error = errors_list[0] if errors_list else {}
-
-#             tokens_data.append(
-#                 {
-#                     "token_id": token.idtoken,
-#                     "token": token.tokentext,
-#                     "pos_tag": pos_tag,
-#                     "pos_tag_russian": pos_tag_russian,
-#                     "pos_tag_abbrev": pos_tag_abbrev,
-#                     "pos_tag_color": pos_tag_color,
-#                     "error_tag": main_error.get("error_tag"),
-#                     "error_tag_russian": main_error.get("error_tag_russian"),
-#                     "error_tag_abbrev": main_error.get("error_tag_abbrev"),
-#                     "error_color": main_error.get("error_color"),
-#                     "error_level": main_error.get("error_level"),
-#                     "error_correct": main_error.get("error_correct"),
-#                     "error_comment": main_error.get("error_comment"),
-#                     "all_errors": errors_list,  # Все ошибки для токена
-#                     "token_order_number": token.tokenordernumber,
-#                 }
-#             )
+#             tokens_data.append({
+#                 "token_id": token.idtoken,
+#                 "token": token.tokentext,
+#                 "pos_tag": pos_tag,
+#                 "pos_tag_russian": pos_tag_russian,
+#                 "pos_tag_abbrev": pos_tag_abbrev,
+#                 "pos_tag_color": pos_tag_color,
+#                 "token_order_number": token.tokenordernumber,
+#                 "errors": errors_list,
+#             })
 
 #         sentence_data.append(
 #             {
@@ -409,11 +459,6 @@ def annotate_text(request, text_id=2379):
 #     }
 
 #     return render(request, "annotate_text.html", context)
-
-# Если вам  нужен доступ только для зарегестрированных пользователей
-# else:
-#     return redirect("/text/show_texts")
-
 
 def show_texts(request):
     groups = (
@@ -641,7 +686,7 @@ def teacher_load_text(request):
                         f"Токенизируем предложение {order}, количество слов: {len(tokens)}"
                     )
 
-                    for t_order, token_text in enumerate(tokens, start=1):
+                    for t_order, token_text in enumerate(tokens, start=0):
                         Token.objects.create(
                             tokentext=token_text,
                             tokenordernumber=t_order,
@@ -691,13 +736,13 @@ def has_teacher_rights(request):
             return False
     return True
 
-def send_changes(request):
-    if request.method == 'POST':
-        try:
-            print('Raw Data:', request.body)
-            return JsonResponse({'status': 'success'})
-        except:
-            return JsonResponse({'error': 'Invalid JSON'}, status=400)
+# def send_changes(request):
+#     if request.method == 'POST':
+#         try:
+#             print('Raw Data:', request.body)
+#             return JsonResponse({'status': 'success'})
+#         except:
+#             return JsonResponse({'error': 'Invalid JSON'}, status=400)
 
 #функция для получения тэгов
 def get_tags(request):

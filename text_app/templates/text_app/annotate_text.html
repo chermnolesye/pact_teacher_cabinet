@@ -416,6 +416,8 @@
 
                 <form method="post" id="annotation-form">
                     {% csrf_token %}
+                    <input type="hidden" id="chosen-ids" name="chosen_ids">
+                    <input type="hidden" id="sentences" name="sentences">
                     <div class="annotation-modal-content">
                         <div style="width: 100%; overflow: hidden;">
                             <label id="tags-label" for="id_iderrortag" style="width: 550px; float: left; margin-top:15px;">Выберите тег:</label>
@@ -441,12 +443,11 @@
                         {{ annotation_form.comment.label_tag }}
                         {{ annotation_form.comment }}
 
-                        <p id="author_id">Создатель аннотации: <p>
+                        <p id="author_id">Создатель аннотации: </p>
 
                             <div class="grade-buttons">
-                                <!-- Нужно написать функцию  для добавления в бд аннотации -->
-                                <button type="submit" name="annotation-form" class="button" id="save-annotation" onclick="addErrorAnnotation()">Сохранить</button>
-                                <button class="button red-button" id="delete-annotation">Удалить</button>
+                                <button type="button" class="button" id="save-annotation" onclick="addErrorAnnotation()">Сохранить</button>
+                                <button type="button" class="button red-button" id="delete-annotation" onclick="deleteErrorAnnotation()">Удалить</button>
                             </div>
                     </div>
                 </form>
@@ -473,7 +474,7 @@
     </script> -->
         <script>
         const chosen = [];
-        const chosen_ids = [];
+        // const chosen_ids = [];
 
         // Скрипт для отображения разметки (НЕ ДЫШАТЬ НА НЕГО!!!)
         document.addEventListener('DOMContentLoaded', function() {
@@ -547,8 +548,6 @@
             const popup = document.getElementById('error-popup');
             const closePopupBtn = document.getElementById('close-popup');
             let list_tags = {};
-
-            
 
             function AddEllWithChildren(category_content, inner_tag, children) {
                 const iconSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -647,6 +646,14 @@
                         inner_tag.innerHTML = tag['tag_text'];
                         inner_tag.addEventListener('click', () => {
                             document.getElementById('selected-tag-name').innerHTML = inner_tag.innerHTML;
+
+                            // найти iderrortag и установить его значение в tag_id
+                            const idErrorTagInput = document.getElementById('id_iderrortag'); 
+                            if (idErrorTagInput) {
+                                idErrorTagInput.value = inner_tag.id;
+                            } else {
+                                console.warn("Не найден элемент с id 'id_iderrortag'");
+                            }
                         })
 
                         const children = document.createElement('div');
@@ -1209,51 +1216,83 @@
             // });
         });
 
-        async function addErrorAnnotation() {
+        function addErrorAnnotation() {
+            const chosen_ids = [];
             const sentence_ids = [];
             const positions = [];
             const sentencesMap = {};
 
+            // Собираем ID выбранных токенов и информацию о новых пустых токенах
             chosen.forEach(word => {
+                let token = word.parentElement;
+                
+                // Если это новый пустой токен
                 if (word.classList.contains('empty-token')) {
-                    let token = word.parentElement;
-                    sentence_id = token.getAttribute('sentence_id');
+                    let sentence_id = token.getAttribute('sentence_id');
+                    let position = token.getAttribute('data-position');
 
                     if (!sentencesMap[sentence_id]) {
                         sentencesMap[sentence_id] = {
                             id_sentence: sentence_id,
-                            empty_token_pos: [token.getAttribute('data-position')]
+                            empty_token_pos: [position]
                         };
+                    } else {
+                        sentencesMap[sentence_id].empty_token_pos.push(position);
                     }
-                    else {
-                        let sentence = sentencesMap[sentence_id];
-                        let token_pos = sentence[empty_token_pos];
-                        token_pos.push(token.getAttribute('data-position'));
-                    }
+                }
+                // Если это обычный токен
+                else if (token.hasAttribute('id_token')) {
+                    chosen_ids.push(token.getAttribute('id_token'));
                 }
             });
 
             const sentences = Object.values(sentencesMap);
 
+            // Прокидываем данные в скрытые поля
+            document.getElementById('chosen-ids').value = JSON.stringify(chosen_ids);
+            document.getElementById('sentences').value = JSON.stringify(sentences);
 
-            const data = {
-                token_ids: chosen_ids,
-                sentences: sentences,
-                tag: document.getElementById('selected-tag-name').innerHTML,
-                reason: document.getElementById('id_idreason').value,
-                degree: document.getElementById('id_iderrorlevel').value,
-                fix: document.getElementById('id_correct').value,
-                comment: document.getElementById('id_comment').value
-            };
-            console.log(data);
+            // Устанавливаем флаг формы
+            const form = document.getElementById('annotation-form');
+            const formInput = document.createElement('input');
+            formInput.type = 'hidden';
+            formInput.name = 'annotation-form';
+            formInput.value = 'true';
+            form.appendChild(formInput);
 
-            const response = fetch('/text/send_changes/', {
-                method: 'POST',
-                body: JSON.stringify(data),
-                headers: {
-                    'X-CSRFToken': '{{ csrf_token }}', // CSRF-токен для Django
-                },
+            form.submit();
+        }
+
+        function deleteErrorAnnotation() {
+            const chosen_ids = [];
+            const tokenElements = document.querySelectorAll('.chosen');
+            
+            // Собираем ID выбранных токенов
+            tokenElements.forEach(word => {
+                let token = word.parentElement;
+                if (token.hasAttribute('id_token')) {
+                    chosen_ids.push(token.getAttribute('id_token'));
+                }
             });
+
+            if (chosen_ids.length === 0) {
+                alert('Не выбраны токены для удаления аннотации');
+                return;
+            }
+
+            // Прокидываем данные в скрытые поля
+            document.getElementById('chosen-ids').value = JSON.stringify(chosen_ids);
+            document.getElementById('sentences').value = JSON.stringify([]); 
+
+            // Устанавливаем флаг удаления
+            const form = document.getElementById('annotation-form');
+            const deleteInput = document.createElement('input');
+            deleteInput.type = 'hidden';
+            deleteInput.name = 'delete-annotation';
+            deleteInput.value = 'true';
+            form.appendChild(deleteInput);
+
+            form.submit();
         }
 
         function addAnnotation() {
