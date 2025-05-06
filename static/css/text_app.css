@@ -10,8 +10,6 @@
     margin: 5px;
 }
 
-/* Стили для загрузки текста */
-
 .add-text-container {
     display: flex;
     flex-direction: column;

@@ -91,13 +91,6 @@
   text-decoration: underline;
 }
 
-/* .new-text-button {
-  margin: 20px auto;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-} */
-
 .new-text-button {
   display: flex;
   justify-content: center;
@@ -107,16 +100,6 @@
 .new-text-button svg {
   margin-right: 10px; 
 }
-/* 
-.highlighted-header {
-  max-width: 600px;
-  margin: 20px auto;
-  padding: 40px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-} */
 
 .text-types {
   width: 700px;
@@ -144,7 +127,7 @@
   padding: 8px 0;
   border-top: 1px solid #eee;
   display: flex;
-  flex-direction: column; /* Изменено на колонку */
+  flex-direction: column;
   align-items: flex-start;
 }
 
@@ -200,16 +183,10 @@
   gap: 0.5rem;
 }
 
-/* Общие стили для оберток поиска */
 .search-wrapper {
   max-width: 960px;
-  /* margin: 0 auto; */
   padding: 1rem;
 }
-
-/* .search-results {
-  margin-top: 1rem;
-} */
 
 .results-title {
   font-size: 1.5rem;
@@ -221,10 +198,9 @@
 .results-grid {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem; /* расстояние между текстами */
+  gap: 0.5rem;
 }
 
-/* Карточка результата */
 .result-card {
   background-color: #ffffff;
   border: 1px solid #e2e8f0;
@@ -248,7 +224,6 @@
   text-decoration: underline;
 }
 
-/* Для блока, если ничего не найдено */
 .no-results {
   margin-top: 1rem;
   padding: 1rem;
@@ -258,7 +233,6 @@
   border-radius: 0.5rem;
 }
 
-/* Стили для группировки */
 .group {
   margin-top: 1.5rem;
 }
@@ -284,8 +258,6 @@
   background-color: #f0f8ff;
 }
 
-
-/* Стили для кнопки */
 .toggle-results-button {
   text-align: center;
   margin-top: 20px;
@@ -306,9 +278,8 @@
   text-align: left;
 }
 
-/* Стили для скрытого состояния */
 .search-results {
-  display: block;  /* По умолчанию отображаем */
+  display: block;
   transition: opacity 0.3s ease;
 }
 
@@ -327,7 +298,6 @@
   text-decoration: none;
 }
 
-/* Стили для отображения содержимого папок */
 .texts-table {
   width: 100%;
   border-collapse: collapse;

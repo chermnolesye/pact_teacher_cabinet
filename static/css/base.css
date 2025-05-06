@@ -1,4 +1,4 @@
-/* Fonts */
+
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Rubik:wght@400;500;700&display=swap');
 
 :root {
@@ -173,9 +173,6 @@ input:not([type="checkbox"], [type="radio"]) {
     background-color: white;
 }
 
-/* select:focus,
-textarea:focus,
-input:not([type="checkbox"], [type="radio"]):focus { */
 :where(select, textarea, input:not([type="checkbox"], [type="radio"])):focus {
     outline: none;
     border-color: var(--secondary-color);
@@ -247,22 +244,6 @@ textarea {
 
 .container > *:last-child {
     margin-bottom: 0;
-}
-
-
-/* Это не наше но вдруг надо будет */
-.card-rounded {
-	border-radius: 12px;
-	overflow: hidden;
-}
-
-.card-rounded .card-header {
-	border-top-left-radius: 12px;
-	border-top-right-radius: 12px;
-}
-
-.table thead th {
-	border-bottom: 1px solid rgb(222, 226, 230) !important;
 }
 
 a {
@@ -376,7 +357,6 @@ nav label {
 }
 
 
-  /* Стили модального окна */
 .modal-overlay {
     display: none;
     position: fixed;
