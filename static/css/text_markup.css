@@ -1,6 +1,6 @@
 
 .text-header {
-    width: calc(100%-10px);
+    width: 100%;
     box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
     background-color: #ffffff;
     margin: 0px 10px;
@@ -23,7 +23,7 @@ form {
 
 .watch-text {
     flex-grow: 1; 
-    margin: 1%;
+    margin: 0px;
     flex-direction: column;
     padding: 10px;
     font-size: 16px;
@@ -33,7 +33,7 @@ form {
 .text-title {
     color: var(--primary-color);
     font-size: 28px;
-    margin: 5px;
+    margin: 10px 0px;
 }
 
 .sentence {
