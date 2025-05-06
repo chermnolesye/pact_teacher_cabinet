@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'css/base.css' %}">
+  <link rel="stylesheet" href="{% static 'css/search.css' %}" />  
+  <title>ПАКТ</title>
+</head>
+<body>
+
+
+<div class="container">
+    <div class="highlighted-header">
+        <svg width="351" height="81" viewBox="0 0 351 81" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0 80.1976V0.0874489H66.8309C69.2675 0.0874489 71.5126 0.713989 73.514 1.98447C75.5682 3.1092 77.2763 4.77346 78.4541 6.79772C79.6318 8.82197 80.2345 11.1294 80.1971 13.471V36.9663C80.1971 39.4028 79.6054 41.6305 78.4045 43.6494C77.2063 45.6608 75.5255 47.3417 73.514 48.5399C71.4919 49.7367 69.1806 50.3567 66.8309 50.3325H9.01522V80.1802H0V80.1976ZM13.3662 41.2128H66.8309C68.0144 41.2128 69.0238 40.7951 69.8418 39.9946C70.712 39.1766 71.1645 38.1672 71.1645 36.9837V13.4884C71.1645 12.2876 70.7294 11.2782 69.8418 10.4602C69.4659 10.0346 69.0019 9.69583 68.482 9.46743C67.9621 9.23904 67.3987 9.12645 66.8309 9.13747H13.3662C12.1827 9.13747 11.1385 9.57257 10.2335 10.4602C9.43291 11.2782 9.01522 12.2876 9.01522 13.471V36.9663C9.01522 38.1672 9.43291 39.1766 10.2335 39.9772C11.1385 40.7952 12.1827 41.1954 13.3662 41.1954V41.2128ZM89.4212 80.1976V13.3666C89.4212 10.9127 90.0129 8.68497 91.1964 6.68352C92.3314 4.65439 93.9825 2.96126 95.9825 1.77563C98.0481 0.593979 100.39 -0.0185831 102.77 0.00042947H156.252C158.689 0.00042947 160.916 0.592162 162.935 1.77563C164.983 2.94175 166.674 4.6447 167.826 6.70093C169.023 8.72305 169.643 11.0344 169.618 13.384V80.215H160.586V50.9068H98.4538V80.1976H89.4038H89.4212ZM98.4364 41.8742H160.586V13.3666C160.586 12.1832 160.151 11.1737 159.246 10.3557C158.873 9.92923 158.413 9.58856 157.896 9.3572C157.379 9.12585 156.818 9.00932 156.252 9.01565H102.787C101.587 9.01565 100.56 9.46815 99.6547 10.3557C98.8541 11.1737 98.4364 12.1832 98.4364 13.3666V41.8568V41.8742ZM195.672 80.1976C193.235 80.1976 190.955 79.6058 188.884 78.405C186.901 77.2459 185.247 75.5982 184.081 73.6189C182.899 71.5532 182.287 69.2111 182.306 66.8314V13.3666C182.306 10.9127 182.897 8.68497 184.081 6.68352C185.216 4.65439 186.867 2.96126 188.867 1.77563C190.933 0.593979 193.275 -0.0185831 195.655 0.00042947H262.277V9.01565H195.689C194.506 9.01565 193.462 9.46815 192.557 10.3557C191.756 11.1737 191.338 12.1832 191.338 13.3666V66.8314C191.338 68.0148 191.756 69.0591 192.557 69.9467C193.462 70.7646 194.506 71.1649 195.689 71.1649H262.294V80.1976H195.689H195.672ZM305.525 80.1976V9.01565H269.882V0.00042947H350.079V9.01565H314.541V80.1976H305.525Z" fill="#0D6EFD"/>
+        </svg>
+    </div>
+  
+    <!-- Форма для поиска и фильтрации текстов -->
+    <form method="post" id="text-search-form">
+      {% csrf_token %}
+      <div class="search-bar">
+        <input type="text" name="text" placeholder="Название текста" value="{{ selected_text }}">
+  
+        <button type="button" class="filter" onclick="toggleFilterBlock()">
+            <svg width="20" height="20" viewBox="0 0 70 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M58.5025 28.3587C61.2675 26.8012 62.6529 26.0225 63.4083 24.7654C64.1666 23.5113 64.1666 21.9975 64.1666 18.97V16.9575C64.1666 13.09 64.1666 11.1533 62.8833 9.95167C61.6058 8.75 59.5437 8.75 55.4166 8.75H14.5833C10.4591 8.75 8.39706 8.75 7.11665 9.95167C5.83331 11.1533 5.83331 13.09 5.83331 16.9604V18.9729C5.83331 21.9975 5.83331 23.5113 6.59165 24.7654C7.34998 26.0196 8.72956 26.8012 11.4975 28.3587L19.9937 33.1421C21.8487 34.1863 22.7791 34.7083 23.4441 35.2858C24.8266 36.4846 25.6783 37.8963 26.0633 39.6317C26.25 40.46 26.25 41.4342 26.25 43.3796V51.1671C26.25 53.8183 26.25 55.1454 26.985 56.1779C27.72 57.2133 29.0266 57.7238 31.6341 58.7446C37.1146 60.8854 39.8533 61.9558 41.8016 60.7367C43.75 59.5204 43.75 56.735 43.75 51.1642V43.3767C43.75 41.4342 43.75 40.46 43.9366 39.6288C44.3029 37.9288 45.2256 36.3995 46.5587 35.2829" stroke="#0D6EFD" stroke-width="4" stroke-linecap="round"/>
+            </svg>
+          </button>
+    
+          <button type="submit" name="search" class="search">
+            <svg width="20" height="20" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M50.9583 50.9583L61.1666 61.1666M16.6875 6.53745C22.5094 3.17781 29.3541 2.04905 35.9465 3.36146C42.5389 4.67386 48.4294 8.33792 52.5208 13.6711C56.6122 19.0043 58.6254 25.6429 58.1854 32.3502C57.7455 39.0576 54.8823 45.3763 50.1293 50.1293C45.3763 54.8823 39.0576 57.7455 32.3502 58.1854C25.6429 58.6254 19.0043 56.6122 13.6711 52.5208C8.33792 48.4294 4.67386 42.5389 3.36146 35.9465C2.04905 29.3541 3.17781 22.5094 6.53745 16.6875" stroke="#FFFDFD" stroke-width="4" stroke-linecap="round"/>
+            </svg>
+          </button>
+      </div>
+  
+      <div class="filter-block">
+        <label>Учебный год</label>
+        <select name="year">
+        <option value="">Все года</option>
+        {% for year in years %}
+            <option value="{{ year.id }}" {% if year.id|stringformat:"s" == selected_year %}selected{% endif %}>
+            {{ year.name }}
+            </option>
+        {% endfor %}
+        </select>
+    
+        <label>Учебная группа</label>
+        <select name="group">
+          <option value="">Все группы</option>
+          {% for group in groups %}
+            <option value="{{ group.id }}" {% if group.id|stringformat:"s" == selected_group %}selected{% endif %}>
+              {{ group.name }} ({{ group.year }})
+            </option>
+          {% endfor %}
+        </select>
+    
+        <label>Тип текста</label>
+        <select name="text_type">
+          <option value="">Все типы текста</option>
+          {% for text_type in text_types %}
+            <option value="{{ text_type.id }}" {% if text_type.id|stringformat:"s" == selected_text_type %}selected{% endif %}>
+              {{ text_type.name }}
+            </option>
+          {% endfor %}
+        </select>
+    
+        <div class="grouping-wrapper">
+          <label>Группировка по:</label>
+          <div class="grouping-options">
+            <label>
+              <input type="radio" name="grouping" value="category" {% if selected_grouping == "category" %}checked{% endif %}>
+              Категориям текстов
+            </label>
+            <label>
+              <input type="radio" name="grouping" value="fio" {% if selected_grouping == "fio" %}checked{% endif %}>
+              ФИО студентов
+            </label>
+          </div>
+        </div>
+    
+        <div class="filter-buttons">
+          <!-- Эта кнопка также отправляет форму – можно различать её по name -->
+          <button type="submit" name="filter" class="btn-primary button">Найти</button>
+          <!-- Кнопка сброса фильтров -->
+          <button type="button" class="btn-link button grey-button" onclick="window.location.href = window.location.pathname;">Сбросить фильтры</button>
+        </div>
+      </div>
+    </form>
+  
+    <a href="{% url 'teacher_load_text' %}">
+      <button class="new-text-button button">
+        <svg width="24" height="24" viewBox="0 0 54 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M34.5 27H27M27 27H19.5M27 27V19.5M27 27V34.5M14.5 5.34503C18.2988 3.14728 22.6113 1.99327 27 2.00003C40.8075 2.00003 52 13.1925 52 27C52 40.8075 40.8075 52 27 52C13.1925 52 2 40.8075 2 27C2 22.4475 3.2175 18.175 5.345 14.5" stroke="white" stroke-width="4" stroke-linecap="round"/>
+        </svg> 
+        Новый текст
+      </button>
+    </a>
+
+    {% if request.method == "POST" and not grouped_texts and not finded_text_by_name %}
+      <div class="no-results">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 8V12M12 16H12.01M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12Z" stroke="#6C757D" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <p>По вашему запросу ничего не найдено</p>
+      </div>
+    {% endif %}
+  
+    <!-- Основной контент страницы -->
+    {% if texts_of_type %}       
+      <div class="texts-of-type-container text-types-container">
+        <div class="text-types-header">
+            <svg class="bi flex-shrink-0" xmlns="http://www.w3.org/2000/svg" height="1.6em" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-width="1.5" d="M4 7h3m13 0h-9M20 17h-3M4 17h9M4 12h16"></path>
+            </svg>
+            Тексты типа:  {{ texts_of_type.0.text_type }}
+        </div>  
+
+        <a href="{% url 'search_texts' %}" class="back-button text-types-back">
+            <svg width="30" height="30" viewBox="0 0 70 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M11.6666 20.4167H43.75C47.6177 20.4167 51.327 21.9532 54.0619 24.6881C56.7968 27.423 58.3333 31.1323 58.3333 35.0001C58.3333 38.8678 56.7968 42.5772 54.0619 45.3121C51.327 48.047 47.6177 49.5834 43.75 49.5834M11.6666 20.4167L20.4166 11.6667M11.6666 20.4167L20.4166 29.1667M23.3333 49.5834H32.0833" stroke="#A8ABAF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg> 
+          Назад к списку типов
+        </a>       
+        
+        <div class="texts-list">
+          {% for text in texts_of_type %}
+              <a href="{% url 'annotate_text' %}?text_id={{ text.id }}" class="text-link text-card">
+                <span class="text-name">
+                    <svg class="bi flex-shrink-0" xmlns="http://www.w3.org/2000/svg" height="1.6em" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+                        <path stroke-width="1.5" d="m18.18 8.04.463-.464a1.966 1.966 0 1 1 2.781 2.78l-.463.464M18.18 8.04s.058.984.927 1.853 1.854.927 1.854.927M18.18 8.04l-4.26 4.26c-.29.288-.434.433-.558.592-.146.188-.271.39-.374.606-.087.182-.151.375-.28.762l-.413 1.24-.134.401m8.8-5.081-4.26 4.26c-.29.29-.434.434-.593.558-.188.146-.39.271-.606.374-.182.087-.375.151-.762.28l-1.24.413-.401.134m0 0-.401.134a.53.53 0 0 1-.67-.67l.133-.402m.938.938-.938-.938"></path>
+                        <path stroke-linecap="round" stroke-width="1.5" d="M8 13h2.5M8 9h6.5M8 17h1.5M3 14v-4c0-3.771 0-5.657 1.172-6.828C5.343 2 7.229 2 11 2h2c3.771 0 5.657 0 6.828 1.172M21 14c0 3.771 0 5.657-1.172 6.828m-15.656 0C5.343 22 7.229 22 11 22h2c3.771 0 5.657 0 6.828-1.172m0 0c.944-.943 1.127-2.348 1.163-4.828"></path>
+                    </svg>
+                    {{ text.header_text }}
+                </span>
+                <span class="author">
+                {{ text.author_lastname }} {{ text.author_firstname }}
+                </span>
+                <span class="date">
+                {{ text.date_modificate|date:"d.m.Y" }}
+                </span>
+              </a>
+          {% endfor %}
+        </div>
+      </div>
+    
+    {% else %}
+      <!-- Отображение списка типов текстов (главная страница) -->
+       {% if not grouped_texts and not finded_text_by_name %}
+      <div class="text-types-container">
+        <div class="text-types-header">
+            <svg width="30" height="30" viewBox="0 0 70 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M32.0833 32.0833H8.75M35 46.6666H8.75" stroke="#0D6EFD" stroke-width="3" stroke-linecap="round"/>
+                <path d="M43.75 33.5417L51.0417 26.25M51.0417 26.25L58.3333 33.5417M51.0417 26.25V49.5833" stroke="#0D6EFD" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M58.3333 17.5H27.7083M8.75 17.5H15.3125" stroke="#0D6EFD" stroke-width="3" stroke-linecap="round"/>
+            </svg>
+          Типы текстов
+        </div>
+        
+        <div class="types-body">
+          {% for text_type, texts in texts_type_folders.items %}
+            <a href="?text_type={% for type in text_types %}{% if type.name == text_type %}{{ type.id }}{% endif %}{% endfor %}" 
+               class="type-header">
+                <svg width="19" height="20" viewBox="0 0 39 40" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 10px;">
+                    <path d="M29.25 16.6666H21.125M35.75 19.6633C35.75 15.2766 35.75 13.0816 34.4987 11.6566C34.384 11.525 34.2625 11.3999 34.1348 11.2816C32.7454 9.99992 30.6052 9.99992 26.3282 9.99992H25.7205C23.8469 9.99992 22.9093 9.99992 22.035 9.74492C21.5552 9.60426 21.0929 9.40741 20.657 9.15825C19.864 8.70658 19.201 8.02492 17.875 6.66659L16.9812 5.74992C16.536 5.29325 16.315 5.06659 16.081 4.86659C15.0746 4.01098 13.84 3.48649 12.5385 3.36159C12.2363 3.33325 11.921 3.33325 11.2937 3.33325C9.85887 3.33325 9.14225 3.33325 8.54425 3.44992C7.26024 3.69862 6.07912 4.33848 5.155 5.286C4.23087 6.23353 3.60664 7.44473 3.36375 8.76159C3.25 9.37659 3.25 10.1133 3.25 11.5833M35.7354 26.6666C35.6769 30.7999 35.3779 33.1416 33.8455 34.7132C31.9426 36.6666 28.8779 36.6666 22.75 36.6666H16.25C10.1221 36.6666 7.05737 36.6666 5.1545 34.7132C3.25 32.7616 3.25 29.6183 3.25 23.3333V18.3333" stroke="#0D6EFD" stroke-width="3" stroke-linecap="round"/>
+                  </svg>
+                <p>{{ text_type }}</p>
+            </a>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+      
+      <!-- Результаты поиска (если есть) -->
+      {% if grouped_texts or finded_text_by_name %}
+        <div class="search-results">
+          {% if grouped_texts %}
+            <div class="text-types-header">
+                <svg width="30" height="30" viewBox="0 0 70 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M32.0833 32.0833H8.75M35 46.6666H8.75" stroke="#0D6EFD" stroke-width="3" stroke-linecap="round"/>
+                    <path d="M43.75 33.5417L51.0417 26.25M51.0417 26.25L58.3333 33.5417M51.0417 26.25V49.5833" stroke="#0D6EFD" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M58.3333 17.5H27.7083M8.75 17.5H15.3125" stroke="#0D6EFD" stroke-width="3" stroke-linecap="round"/>
+                </svg>
+            Сгруппированные тексты
+            </div>
+
+            <a href="{% url 'search_texts' %}" class="back-button text-types-back">
+                <svg width="30" height="30" viewBox="0 0 70 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M11.6666 20.4167H43.75C47.6177 20.4167 51.327 21.9532 54.0619 24.6881C56.7968 27.423 58.3333 31.1323 58.3333 35.0001C58.3333 38.8678 56.7968 42.5772 54.0619 45.3121C51.327 48.047 47.6177 49.5834 43.75 49.5834M11.6666 20.4167L20.4166 11.6667M11.6666 20.4167L20.4166 29.1667M23.3333 49.5834H32.0833" stroke="#A8ABAF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg> 
+              Назад к списку типов
+            </a>  
+
+            {% for group_pole, texts in grouped_texts.items %}
+              <div class="group-section">
+                <div class="text-type-header">
+                    {{ group_pole }}
+                </div>
+                <div class="results">
+                  {% for text in texts %}
+                    <a href="{% url 'annotate_text' %}?text_id={{ text.id }}" class="result-card">
+                        <span class="text-name">
+                            <svg class="bi flex-shrink-0" xmlns="http://www.w3.org/2000/svg" height="1.6em" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+                                <path stroke-width="1.5" d="m18.18 8.04.463-.464a1.966 1.966 0 1 1 2.781 2.78l-.463.464M18.18 8.04s.058.984.927 1.853 1.854.927 1.854.927M18.18 8.04l-4.26 4.26c-.29.288-.434.433-.558.592-.146.188-.271.39-.374.606-.087.182-.151.375-.28.762l-.413 1.24-.134.401m8.8-5.081-4.26 4.26c-.29.29-.434.434-.593.558-.188.146-.39.271-.606.374-.182.087-.375.151-.762.28l-1.24.413-.401.134m0 0-.401.134a.53.53 0 0 1-.67-.67l.133-.402m.938.938-.938-.938"></path>
+                                <path stroke-linecap="round" stroke-width="1.5" d="M8 13h2.5M8 9h6.5M8 17h1.5M3 14v-4c0-3.771 0-5.657 1.172-6.828C5.343 2 7.229 2 11 2h2c3.771 0 5.657 0 6.828 1.172M21 14c0 3.771 0 5.657-1.172 6.828m-15.656 0C5.343 22 7.229 22 11 22h2c3.771 0 5.657 0 6.828-1.172m0 0c.944-.943 1.127-2.348 1.163-4.828"></path>
+                            </svg>
+                            {{ text.header_text }}
+                        </span>
+                        <span class="author">
+                            {{ text.author_lastname }} {{ text.author_firstname }}
+                        </span>
+                        <span class="date">
+                            {{ text.date_modificate|date:"d.m.Y" }}
+                        </span>
+                    </a>
+                  {% endfor %}
+                </div>
+              </div>
+            {% endfor %}
+          {% endif %}
+          
+          {% if finded_text_by_name %}
+            <div class="text-types-header">
+                <svg width="30" height="30" viewBox="0 0 70 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M32.0833 32.0833H8.75M35 46.6666H8.75" stroke="#0D6EFD" stroke-width="3" stroke-linecap="round"/>
+                    <path d="M43.75 33.5417L51.0417 26.25M51.0417 26.25L58.3333 33.5417M51.0417 26.25V49.5833" stroke="#0D6EFD" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M58.3333 17.5H27.7083M8.75 17.5H15.3125" stroke="#0D6EFD" stroke-width="3" stroke-linecap="round"/>
+                </svg>
+            Найденные тексты
+            </div>
+
+            <a href="{% url 'search_texts' %}" class="back-button text-types-back">
+                <svg width="30" height="30" viewBox="0 0 70 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M11.6666 20.4167H43.75C47.6177 20.4167 51.327 21.9532 54.0619 24.6881C56.7968 27.423 58.3333 31.1323 58.3333 35.0001C58.3333 38.8678 56.7968 42.5772 54.0619 45.3121C51.327 48.047 47.6177 49.5834 43.75 49.5834M11.6666 20.4167L20.4166 11.6667M11.6666 20.4167L20.4166 29.1667M23.3333 49.5834H32.0833" stroke="#A8ABAF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg> 
+              Назад к списку типов
+            </a>   
+
+            <div class="results">
+              {% for text in finded_text_by_name %}
+                <a href="{% url 'annotate_text' %}?text_id={{ text.id }}" class="result-card">
+                    <span class="text-name">
+                        <svg class="bi flex-shrink-0" xmlns="http://www.w3.org/2000/svg" height="1.6em" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+                            <path stroke-width="1.5" d="m18.18 8.04.463-.464a1.966 1.966 0 1 1 2.781 2.78l-.463.464M18.18 8.04s.058.984.927 1.853 1.854.927 1.854.927M18.18 8.04l-4.26 4.26c-.29.288-.434.433-.558.592-.146.188-.271.39-.374.606-.087.182-.151.375-.28.762l-.413 1.24-.134.401m8.8-5.081-4.26 4.26c-.29.29-.434.434-.593.558-.188.146-.39.271-.606.374-.182.087-.375.151-.762.28l-1.24.413-.401.134m0 0-.401.134a.53.53 0 0 1-.67-.67l.133-.402m.938.938-.938-.938"></path>
+                            <path stroke-linecap="round" stroke-width="1.5" d="M8 13h2.5M8 9h6.5M8 17h1.5M3 14v-4c0-3.771 0-5.657 1.172-6.828C5.343 2 7.229 2 11 2h2c3.771 0 5.657 0 6.828 1.172M21 14c0 3.771 0 5.657-1.172 6.828m-15.656 0C5.343 22 7.229 22 11 22h2c3.771 0 5.657 0 6.828-1.172m0 0c.944-.943 1.127-2.348 1.163-4.828"></path>
+                        </svg>
+                        {{ text.header_text }}
+                    </span>
+                    <span class="author">
+                        {{ text.author_lastname }} {{ text.author_firstname }}
+                    </span>
+                    <span class="date">
+                        {{ text.date_modificate|date:"d.m.Y" }}
+                    </span>
+                </a>
+              {% endfor %}
+            </div>
+          {% endif %}
+        </div>
+      {% endif %}
+  </div>
+  {% endif %}
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      function toggleFilterBlock() {
+        const filterBlock = document.querySelector(".filter-block");
+        filterBlock.classList.toggle("hidden");
+      }
+      const filterButton = document.querySelector('.filter');
+      const filterBlock = document.querySelector('.filter-block');
+
+      filterButton.addEventListener('click', function() {
+        filterBlock.classList.toggle('visible');
+      });
+      
+      // Обработчик для кнопки "сбросить фильтры"
+      const resetButton = document.querySelector('.btn-link');
+      if (resetButton) {
+        resetButton.addEventListener('click', function(e) {
+          e.preventDefault();
+          const filterBlock = document.querySelector('.filter-block');
+          const elements = filterBlock.querySelectorAll('input, select');
+          elements.forEach(function(element) {
+            if (element.tagName.toLowerCase() === 'select') {
+              element.selectedIndex = 0;
+            } else if (element.type === 'radio' || element.type === 'checkbox') {
+              element.checked = false;
+            } else {
+              element.value = '';
+            }
+          });
+        });
+      }
+    });
+
+    function toggleFilterBlock() {
+      const filterBlock = document.querySelector(".filter-block");
+      filterBlock.classList.toggle("hidden");
+    }
+    
+    document.addEventListener('DOMContentLoaded', function() {
+    const toggleButton = document.getElementById('toggle-results');
+    const resultsContainer = document.querySelector('.search-results');
+    const toggleButtonContainer = document.querySelector('.toggle-results-button');
+
+    // Функция, которая активирует кнопку после загрузки результатов
+    function showToggleButton() {
+      toggleButtonContainer.style.display = 'block'; // Показываем кнопку
+    }
+
+    // Включаем кнопку, если результаты есть
+    if (resultsContainer && resultsContainer.children.length > 0) {
+      showToggleButton();
+    }
+
+    toggleButton.addEventListener('click', function() {
+      if (resultsContainer.classList.contains('hidden')) {
+        resultsContainer.classList.remove('hidden');
+        toggleButton.textContent = 'Скрыть результаты';
+      } else {
+        resultsContainer.classList.add('hidden');
+        toggleButton.textContent = 'Показать результаты';
+      }
+    });
+  });
+  </script>
+</body>
+</html>

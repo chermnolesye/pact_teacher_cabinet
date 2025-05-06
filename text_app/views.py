@@ -805,3 +805,215 @@ def get_tags(request):
     #print(len(sorted_tags))
     
     return JsonResponse(context)
+
+
+
+
+
+
+
+
+def search_texts(request):
+    # Получаем параметры из GET-запроса (для типа текста)
+    text_type_id = request.GET.get('text_type', '')
+    
+    # Получаем базовые данные для фильтров
+    groups = (
+        Group.objects.select_related("idayear")
+        .all()
+        .values("idgroup", "groupname", "idayear__title")
+        .distinct()
+    )
+    group_data = [
+        {
+            "id": group["idgroup"],
+            "name": group["groupname"],
+            "year": group["idayear__title"],
+        }
+        for group in groups
+    ]
+
+    years = AcademicYear.objects.all().values("idayear", "title").distinct()
+    years_data = [
+        {
+            "id": year["idayear"],
+            "name": year["title"],
+        }
+        for year in years
+    ]
+
+    text_types = TextType.objects.all().values("idtexttype", "texttypename").distinct()
+    text_type_data = [
+        {
+            "id": text_type["idtexttype"],
+            "name": text_type["texttypename"],
+        }
+        for text_type in text_types
+    ]
+
+    # Если выбран конкретный тип текста
+    if text_type_id:
+        texts = Text.objects.filter(idtexttype_id=text_type_id)
+        texts = texts.values(
+            "idtext",
+            "header",
+            "idstudent__iduser__lastname",
+            "idstudent__iduser__firstname",
+            "idstudent__iduser__middlename",
+            "idtexttype__texttypename",
+            "modifieddate",
+        )
+        
+        texts_of_type = [
+            {
+                "id": text["idtext"],
+                "header_text": text["header"],
+                "author_lastname": text["idstudent__iduser__lastname"],
+                "author_firstname": text["idstudent__iduser__firstname"],
+                "author_middlename": text["idstudent__iduser__middlename"],
+                "date_modificate": text["modifieddate"],
+                "text_type": text["idtexttype__texttypename"],
+            }
+            for text in texts
+        ]
+        
+        context = {
+            "texts_of_type": texts_of_type,
+            "selected_text_type": text_type_id,
+            "text_types": text_type_data,
+            "fio": get_teacher_fio(request),
+        }
+        return render(request, "search_texts.html", context)
+
+    # Если выполняется поиск (POST-запрос)
+    text_name = ""
+    year_id = ""
+    group_id = ""
+    text_type_id = ""
+    grouping = ""
+
+    finded_text_by_name_data = []
+    grouped_texts = {}
+    if request.method == "POST":
+        # Получаем параметры из формы
+        text_name = request.POST.get("text", "")
+        year_id = request.POST.get("year", "")
+        group_id = request.POST.get("group", "")
+        text_type_id = request.POST.get("text_type", "")
+        grouping = request.POST.get("grouping", "")
+
+        # Начинаем с выборки всех текстов
+        texts = Text.objects.all()
+
+        if text_name:
+            texts = texts.filter(header__icontains=text_name)
+        if year_id:
+            texts = texts.filter(idstudent__idgroup__idayear=year_id)
+        if group_id:
+            texts = texts.filter(idstudent__idgroup=group_id)
+        if text_type_id:
+            texts = texts.filter(idtexttype_id=text_type_id)
+
+        texts = texts.values(
+            "idtext",
+            "header",
+            "idstudent__iduser__lastname",
+            "idstudent__iduser__firstname",
+            "idstudent__iduser__middlename",
+            "idtexttype__texttypename",
+            "modifieddate",
+        )
+
+        # Обновляем структуру данных для результатов поиска
+        finded_text_by_name_data = [
+            {
+                "id": text["idtext"],
+                "header_text": text["header"],
+                "author_lastname": text["idstudent__iduser__lastname"],
+                "author_firstname": text["idstudent__iduser__firstname"],
+                "author_middlename": text["idstudent__iduser__middlename"],
+                "date_modificate": text["modifieddate"],
+            }
+            for text in texts
+        ]
+
+        if grouping == "fio":
+            finded_text_by_name_data = []
+            grouped_texts = {}
+            for text in texts:
+                fio_user = (
+                    f"{text['idstudent__iduser__lastname']} "
+                    f"{text['idstudent__iduser__firstname']} "
+                    f"{text['idstudent__iduser__middlename'] or ''}"
+                )
+                if fio_user not in grouped_texts:
+                    grouped_texts[fio_user] = []
+                grouped_texts[fio_user].append({
+                    "id": text["idtext"],
+                    "header_text": text["header"],
+                    "author_lastname": text["idstudent__iduser__lastname"],
+                    "author_firstname": text["idstudent__iduser__firstname"],
+                    "date_modificate": text["modifieddate"],
+                })
+
+        elif grouping == "category":
+            finded_text_by_name_data = []
+            grouped_texts = {}
+            for text in texts:
+                category = (
+                    text["idtexttype__texttypename"]
+                    if text["idtexttype__texttypename"]
+                    else "Не указано"
+                )
+                if category not in grouped_texts:
+                    grouped_texts[category] = []
+                grouped_texts[category].append({
+                    "id": text["idtext"],
+                    "header_text": text["header"],
+                    "author_lastname": text["idstudent__iduser__lastname"],
+                    "author_firstname": text["idstudent__iduser__firstname"],
+                    "date_modificate": text["modifieddate"],
+                })
+
+    # Получаем тексты сгруппированные по типам для главной страницы
+    texts = Text.objects.all()
+    texts = texts.values(
+        "idtext",
+        "header",
+        "idstudent__iduser__lastname",
+        "idstudent__iduser__firstname",
+        "idstudent__iduser__middlename",
+        "idtexttype__texttypename",
+        "modifieddate",
+    )
+    texts_by_types_for_folders = {}
+    for text in texts:
+        text_type = text["idtexttype__texttypename"]
+        if text_type not in texts_by_types_for_folders:
+            texts_by_types_for_folders[text_type] = []
+        texts_by_types_for_folders[text_type].append(
+            {
+                "id": text["idtext"],
+                "header_text": text["header"],
+                "author_lastname": text["idstudent__iduser__lastname"],
+                "author_firstname": text["idstudent__iduser__firstname"],
+                "author_middlename": text["idstudent__iduser__middlename"],
+                "date_modificate": text["modifieddate"],
+            }
+        )
+
+    context = {
+        "groups": group_data,
+        "years": years_data,
+        "text_types": text_type_data,
+        "finded_text_by_name": finded_text_by_name_data,
+        "grouped_texts": grouped_texts,
+        "texts_type_folders": texts_by_types_for_folders,
+        "selected_text": text_name,  
+        "selected_year": year_id,
+        "selected_group": group_id,
+        "selected_text_type": text_type_id,
+        "selected_grouping": grouping,
+        "fio": get_teacher_fio(request),
+    }
+    return render(request, "search_texts.html", context)
