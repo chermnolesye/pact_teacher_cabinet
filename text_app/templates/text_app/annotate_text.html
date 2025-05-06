@@ -647,7 +647,7 @@
                         inner_tag.innerHTML = tag['tag_text'];
                         inner_tag.addEventListener('click', () => {
                             document.getElementById('selected-tag-name').innerHTML = inner_tag.innerHTML;
-
+                            document.getElementById('selected-tag-name').setAttribute('tag_id', inner_tag.id)
                             // найти iderrortag и установить его значение в tag_id
                             const idErrorTagInput = document.getElementById('id_iderrortag'); 
                             if (idErrorTagInput) {
@@ -794,8 +794,15 @@
                 if (reasonSelect) {
                     const reasonText = tokenElement.dataset.errorReason;
                     if (reasonText) {
+                        let chosen = '';
+                        let i = 0;
                         Array.from(reasonSelect.options).forEach(option => {
-                            option.selected = (option.text === reasonText);
+                            i = i + 1;
+                            //option.selected = (option.text === reasonText);
+                            if (option.text === reasonText) {
+                                reasonSelect.children[0].removeAttribute("selected");
+                                reasonSelect.children[i].setAttribute("selected", '');
+                            }
                         });
                     }
                 }
@@ -805,8 +812,16 @@
                 if (levelSelect) {
                     const levelText = tokenElement.dataset.errorLevel;
                     if (levelText) {
+                        let chosen = '';
+                        let i = 0;
                         Array.from(levelSelect.options).forEach(option => {
-                            option.selected = (option.text === levelText);
+                            if (option.text === levelText) {
+                                i = i + 1;
+                                levelSelect.children[0].removeAttribute("selected");
+                                levelSelect.children[i].setAttribute("selected", '');
+                            }
+                            //option.selected = (option.text === levelText);
+                            //console.log(levelSelect.options);
                         });
                     }
                 }
@@ -846,7 +861,7 @@
             function saveAnnotation(errorId) {
                 const form = document.getElementById('annotation-form');
                 const formData = new FormData(form);
-
+                
                 // Добавляем action и error_id (если редактируем существующую аннотацию)
                 if (errorId) {
                     formData.append('action', 'edit');
@@ -855,7 +870,10 @@
                     formData.append('action', 'add');
                 }
 
-                fetch(window.location.href, {  // Замените на ваш API-эндпоинт
+                for (const value of formData.values()) {
+                    console.log(value);
+                }
+                fetch(window.location.href, {
                     method: 'POST',
                     body: formData,
                     headers: {
@@ -891,6 +909,8 @@
                 const formData = new FormData();
                 formData.append('action', 'delete');
                 formData.append('error_id', errorId);
+
+                //formData.append('id_iderrortag', 'delete');
                 formData.append('csrfmiddlewaretoken', document.querySelector('[name=csrfmiddlewaretoken]').value);
 
                 fetch(window.location.href, {
@@ -1286,6 +1306,7 @@
             function updateSelectedTagDisplay() {
                 const selectedOption = select.options[select.selectedIndex];
                 selectedTagDisplay.textContent = selectedOption ? selectedOption.text : 'Не выбран';
+                selectedTagDisplay.setAttribute('tag_id', selectedOption.id);
             }
 
             /*function renderTags() {
