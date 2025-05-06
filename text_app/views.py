@@ -749,7 +749,7 @@ def teacher_load_text(request):
                 f"Всего предложений: {len(sentences)}, слов: {sum(len(word_tokenize(s, language='german')) for s in sentences)}."
             )
 
-            return redirect("show_texts")
+            return redirect("search_texts")
         else:
             print(f"Форма невалидна. Ошибки: {form.errors}")
     else:
