@@ -15,7 +15,7 @@
 	<h2 class="text-primary text-center my-5">Количество ошибок для заданного типа ошибки и выбранных групп</h2>
 
 	<div class="d-flex flex-column flex-md-row my-4 gap-4 justify-content-evenly">
-		<div class="col">
+		<!-- <div class="col">
 			<label class="text-center text-primary"> Язык </label>
 			<hr class="mt-1" />
 			<select id="selected_language" class="form-select" onchange="on_change_language()">
@@ -23,7 +23,7 @@
 				<option value="{{language.id_language}}">{{ language.language_name }}</option>
 				{% endfor %}
 			</select>
-		</div>
+		</div> -->
 
 		<div class="col">
 			<label class="text-center text-primary"> Статистика </label>
@@ -42,7 +42,7 @@
 				<label class="text-center text-primary"> Группы </label>
 				{% verbatim %}
 				<select id="filter_group" class="form-select" v-model="selected_groups" multiple>
-					<option v-for="group in groups">{{ group.group_name }} ( {{ group.enrollment_date }} )</option>
+					<option v-for="group in groups">{{ group.groupname }} ( {{ group.enrollment_date }} )</option>
 				</select>
 				{% endverbatim %}
 				<div id="error_group" class="form-text error-message"> выберете хотя бы одну группу </div>
@@ -170,7 +170,7 @@
 										@change="on_change_text_type"
 									>
 										<option v-for="text_type in text_types":value="text_type.id_text_type">
-											{{ text_type.text_type_name }}
+											{{ text_type.texttypename }}
 										</option>
 									</select>
 									{% endverbatim %}
