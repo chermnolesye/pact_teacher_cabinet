@@ -216,6 +216,28 @@ def annotate_text(request, text_id=2379):
             return redirect(request.path + f"?text_id={text.idtext}&markup={selected_markup}")
     else:
         grade_form = AddTextAnnotationForm(instance=text)
+
+    
+    if request.method == "POST":
+        action = request.POST.get('action')
+        if action == 'edit':
+            error_id = request.POST.get('error_id')
+            if not error_id:
+                return JsonResponse({'success': False, 'error': 'Не передан ID аннотации для редактирования'})
+
+            try:
+                error = Error.objects.get(iderror=error_id)
+            except Error.DoesNotExist:
+                return JsonResponse({'success': False, 'error': 'Аннотация не найдена'})
+
+            # Обновляем поля из формы
+            error.idreason_id = request.POST.get('id_idreason')  #  id_idreason — имя select-а
+            error.iderrorlevel_id = request.POST.get('id_iderrorlevel')
+            error.comment = request.POST.get('comment', '')
+            error.correct = request.POST.get('correct', '')
+            error.save()
+
+            return JsonResponse({'success': True})
     
 
     if request.method == 'POST' and request.POST.get('action') == 'delete':
