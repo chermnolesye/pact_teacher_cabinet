@@ -448,7 +448,7 @@
                         <p id="author_id">Создатель аннотации: </p>
 
                             <div class="grade-buttons">
-                                <button type="button" class="button" id="save-annotation" onclick="addErrorAnnotation()">Сохранить</button>
+                                <button type="button" class="button" id="save-annotation">Сохранить</button>
                                 <button type="button" class="button red-button" id="delete-annotation">Удалить</button>
                             </div>
                     </div>
@@ -753,6 +753,7 @@
                 console.log("РЕДАКТИРОВАНИЕ ОТКРЫТО")
                 // let iderror = tokenElement.data.errorId;
                 let iderror = tokenElement?.dataset.errorId || null;
+                document.getElementById('save-annotation').onclick = function () { saveAnnotation(iderror); };
 
                 // document.getElementById('selected-tag-name').innerHTML = tokenElement.dataset.errorTag;
 
@@ -789,24 +790,31 @@
                 // Заполняем выбранный тег
                 document.getElementById('selected-tag-name').textContent = 
                     tokenElement.dataset.errorTag || "Не указано";
-
+                
                 document.getElementById('selected-tag-name').setAttribute('tag_id', tokenElement.getAttribute('tag_id'))
 
                 // Устанавливаем причину ошибки (idreason)
                 const reasonSelect = document.getElementById('id_idreason');
                 if (reasonSelect) {
                     const reasonText = tokenElement.dataset.errorReason;
+                    
+
                     if (reasonText) {
                         let chosen = '';
                         let i = 0;
                         Array.from(reasonSelect.options).forEach(option => {
-                            i = i + 1;
                             //option.selected = (option.text === reasonText);
                             if (option.text === reasonText) {
+                                console.log(reasonText, i);
+                                console.log(reasonSelect.children[3]);
                                 reasonSelect.children[0].removeAttribute("selected");
                                 reasonSelect.children[i].setAttribute("selected", '');
+                                option.selected = option.text;
+
                             }
+                            i = i + 1;
                         });
+                        console.log(reasonSelect.children);
                     }
                 }
 
@@ -819,10 +827,12 @@
                         let i = 0;
                         Array.from(levelSelect.options).forEach(option => {
                             if (option.text === levelText) {
-                                i = i + 1;
+                                
                                 levelSelect.children[0].removeAttribute("selected");
                                 levelSelect.children[i].setAttribute("selected", '');
+                                option.selected = option.text;
                             }
+                            i = i + 1;
                             //option.selected = (option.text === levelText);
                             //console.log(levelSelect.options);
                         });
@@ -847,21 +857,33 @@
                 }
 
                 // Назначаем обработчики кнопок
-                document.getElementById('save-annotation').onclick = () => {
-                    saveAnnotation(iderror);
-                };
+                //document.getElementById('save-annotation').removeEventListener('click');
+                //document.getElementById('save-annotation').addEventListener('click', () => {
+                    //saveAnnotation(iderror);
+                //});
 
                 // document.getElementById('delete-annotation').onclick = () => {
                 //     //  deleteErrorAnnotation(iderror);
                 //     deleteAnnotation(iderror);
-                // };    
-                document.getElementById('delete-annotation').addEventListener('click', () => {
-                    deleteAnnotation(iderror);
-                });           
+                // };
+                //document.getElementById('delete-annotation').addEventListener('click', () => {
+                //    console.log('deleteAnnotation', iderror)
+                //    //deleteAnnotation(iderror);
+                //});
+                document.getElementById('delete-annotation').onclick = function () { deleteAnnotation(iderror); };
             }
+
+            /*function deleteA (errorId) {
+                console.log('deleteAnnotation', errorId)
+                document.getElementById('delete-annotation').onclick = function () {  };
+            }*/
 
             // Функция для сохранения отредактированной аннотации
             function saveAnnotation(errorId) {
+                console.log('saveAnnotation', errorId);
+                //location.reload();
+                document.getElementById('save-annotation').onclick = function () { };
+                
                 const form = document.getElementById('annotation-form');
                 const formData = new FormData(form);
                 
@@ -900,7 +922,8 @@
 
             // Функция для удаления аннотации
             function deleteAnnotation(errorId) {
-                console.log("Удаление");
+                console.log('deleteAnnotation', errorId)
+                document.getElementById('delete-annotation').onclick = function () { };
                 if (!errorId) {
                     alert("Невозможно удалить: аннотация не найдена.");
                     return;
@@ -1271,11 +1294,34 @@
 
             // Показать модальное окно
             document.getElementById('annotation-modal').style.display = 'flex';
+            document.getElementById('save-annotation').onclick = function () { addErrorAnnotation(); };
         });
 
         // Закрытие модального окна
         document.getElementById('close-modal').addEventListener('click', function() {
             document.getElementById('annotation-modal').style.display = 'none';
+            document.getElementById('delete-annotation').onclick = function () { };
+            //
+            document.getElementById('selected-tag-name').textContent = "Не указано";
+            document.getElementById('selected-tag-name').removeAttribute('tag_id')
+
+            // Устанавливаем причину ошибки (idreason)
+            const reasonSelect = document.getElementById('id_idreason');
+            reasonSelect.children[0].setAttribute("selected", '');
+            
+
+            // Устанавливаем уровень ошибки (iderrorlevel)
+            const levelSelect = document.getElementById('id_iderrorlevel');
+            levelSelect.children[0].setAttribute("selected", '');
+            
+
+            // Заполняем комментарий и исправление (если есть)
+            const commentField = document.getElementById('id_comment');
+            commentField.value ="";
+
+            const correctField = document.getElementById('id_correct');
+            correctField.value = "";
+            document.getElementById('save-annotation').onclick = function () { };
         });
 
         // Закрытие модального окна, если кликнут вне окна
@@ -1374,6 +1420,9 @@
 */
 
         function addErrorAnnotation() {
+            console.log('addErrorAnnotation');
+            document.getElementById('save-annotation').onclick = function () { };
+            //location.reload();
             const chosen_ids = [];
             const sentence_ids = [];
             const positions = [];
