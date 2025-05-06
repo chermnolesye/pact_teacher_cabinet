@@ -790,6 +790,8 @@
                 document.getElementById('selected-tag-name').textContent = 
                     tokenElement.dataset.errorTag || "Не указано";
 
+                document.getElementById('selected-tag-name').setAttribute('tag_id', tokenElement.getAttribute('tag_id'))
+
                 // Устанавливаем причину ошибки (idreason)
                 const reasonSelect = document.getElementById('id_idreason');
                 if (reasonSelect) {
@@ -870,6 +872,7 @@
                 } else {
                     formData.append('action', 'add');
                 }
+                formData.append('id_iderrortag', document.getElementById('selected-tag-name').getAttribute('tag_id'));
 
                 for (const value of formData.values()) {
                     console.log(value);
@@ -1307,7 +1310,8 @@
             function updateSelectedTagDisplay() {
                 const selectedOption = select.options[select.selectedIndex];
                 selectedTagDisplay.textContent = selectedOption ? selectedOption.text : 'Не выбран';
-                selectedTagDisplay.setAttribute('tag_id', selectedOption.id);
+                //console.log()
+                //selectedTagDisplay.setAttribute('tag_id', selectedOption.id);
             }
 
             /*function renderTags() {
