@@ -41,7 +41,7 @@
 			<hr class="mt-1"/>
 			{% verbatim %}
 			<select class="form-select" v-model="selected_level_detail" @change="on_change_level_detail">
-				<option v-for="level in levels":value="level.id_level">{{ level.level_text }}</option>
+				<option v-for="level in levels" :value="level.id_level">{{ level.level_text }}</option>
 			</select>
 			{% endverbatim %}
 		</div>
@@ -189,7 +189,7 @@
 													v-model="selected_group"
 													@change="on_change_group_number"
 												>
-													<option v-for="group in groups">{{ group.group_name }}</option>
+													<option v-for="group in groups">{{ group.groupname }}</option>
 												</select>
 												{% endverbatim %}
 											</div>
@@ -552,18 +552,17 @@
 	}
 
 	var level_detail = new Vue({
-		el: '#level_detail',
-		data: {
-			levels: list_levels.filter(level => level.level_language == list_languages[0].id_language),
-			selected_level_detail: list_levels.filter(level => level.level_language ==
-																		list_languages[0].id_language)[0].id_level
-		},
-		methods:{
-			on_change_level_detail() {
-				filters.update_diagrams()
-			}
-		}
-	})
+    el: '#level_detail',
+    data: {
+        levels: list_levels, // Используем все уровни без фильтрации
+        selected_level_detail: list_levels[0].id_level // Выбираем первый уровень по умолчанию
+    },
+    methods:{
+        on_change_level_detail() {
+            filters.update_diagrams()
+        }
+    }
+})
 
 	var tag_parents = new Vue({
 		el: '#tag_parents',
