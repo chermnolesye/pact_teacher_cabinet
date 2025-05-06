@@ -758,6 +758,7 @@
                 // let iderror = tokenElement.data.errorId;
                 let iderror = tokenElement?.dataset.errorId || null;
                 document.getElementById('save-annotation').onclick = function () { saveAnnotation(iderror); };
+                document.getElementById('delete-annotation').style.display = "block";
 
                 // document.getElementById('selected-tag-name').innerHTML = tokenElement.dataset.errorTag;
 
@@ -1299,6 +1300,7 @@
             // Показать модальное окно
             document.getElementById('annotation-modal').style.display = 'flex';
             document.getElementById('save-annotation').onclick = function () { addErrorAnnotation(); };
+            document.getElementById('delete-annotation').style.display="none";
         });
 
         // Закрытие модального окна
