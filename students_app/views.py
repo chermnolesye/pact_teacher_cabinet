@@ -53,6 +53,7 @@ def show_students(request):
 
 def student_info(request, student_id):
     query = request.GET.get('q', '').strip()
+    course_filter = request.GET.get('course', '').strip()  # Добавляем параметр для фильтрации по курсу
 
     student = get_object_or_404(Student.objects.select_related('iduser'), pk=student_id)
     user = student.iduser
@@ -65,6 +66,10 @@ def student_info(request, student_id):
 
     if query:
         texts = texts.filter(header__icontains=query)
+    
+    # Добавляем фильтрацию по курсу, если параметр передан
+    if course_filter:
+        texts = texts.filter(idstudent__idgroup__studycourse=course_filter)
 
     if request.method == 'POST':
         form = EditStudentForm(request.POST, instance=user)
@@ -73,6 +78,11 @@ def student_info(request, student_id):
             return redirect('student_info', student_id=student.idstudent)
     else:
         form = EditStudentForm(instance=user)
+
+    # Получаем уникальные номера курсов для фильтра
+    available_courses = Group.objects.filter(
+        student__in=all_student_records
+    ).values_list('studycourse', flat=True).distinct().order_by('studycourse')
 
     context = {
         'user_id': user.iduser,
@@ -88,6 +98,8 @@ def student_info(request, student_id):
         'texts': texts,
         'query': query,
         'form': form,
+        'available_courses': available_courses,  # Добавляем список доступных курсов
+        'selected_course': course_filter,  # Добавляем выбранный курс
     }
 
     return render(request, 'student_info.html', context)
