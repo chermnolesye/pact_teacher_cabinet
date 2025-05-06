@@ -180,6 +180,7 @@ def annotate_text(request, text_id=2379):
                 error = et.iderror
                 if error and error.iderrortag:
                     errors_list.append({
+                        "erorr_tag_id": error.iderrortag,
                         "error_id": error.iderror,
                         "error_tag": error.iderrortag.tagtext,
                         "error_tag_russian": error.iderrortag.tagtextrussian,
@@ -218,9 +219,7 @@ def annotate_text(request, text_id=2379):
         grade_form = AddTextAnnotationForm(instance=text)
 
     
-    if request.method == "POST":
-        action = request.POST.get('action')
-        if action == 'edit':
+    if request.method == "POST" and request.POST.get('action') == 'edit':
             error_id = request.POST.get('error_id')
             if not error_id:
                 return JsonResponse({'success': False, 'error': 'Не передан ID аннотации для редактирования'})
@@ -230,16 +229,16 @@ def annotate_text(request, text_id=2379):
             except Error.DoesNotExist:
                 return JsonResponse({'success': False, 'error': 'Аннотация не найдена'})
 
-            # Обновляем поля из формы
-            error.idreason_id = request.POST.get('id_idreason')  #  id_idreason — имя select-а
-            error.iderrorlevel_id = request.POST.get('id_iderrorlevel')
+            # 
+            # error.iderrortag_id = request.POST.get('id_iderrortag') or error.iderrortag_id
+            error.idreason_id = request.POST.get('id_idreason') or error.idreason_id
+            error.iderrorlevel_id = request.POST.get('id_iderrorlevel') or error.iderrorlevel_id
             error.comment = request.POST.get('comment', '')
             error.correct = request.POST.get('correct', '')
             error.save()
 
             return JsonResponse({'success': True})
     
-
     if request.method == 'POST' and request.POST.get('action') == 'delete':
         error_id = request.POST.get('error_id')
         
