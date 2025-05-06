@@ -115,8 +115,7 @@ class ErrorTag(models.Model):
         db_table = 'tblerrortag'
 
     def __str__(self):
-        #return f"{self.tagtext} ({self.idtagparent})"
-        return self.tagtext
+        return f"{self.iderrortag}"
 
 class ErrorToken(models.Model):
     iderrortoken = models.AutoField(primary_key=True)
