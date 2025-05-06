@@ -1,14 +1,14 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Разметка текста</title>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'css/base.css' %}" />
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}Аннотирование{% endblock %}
+
+{% block extra_head %}
     <link rel="stylesheet" href="{% static 'css/text_markup.css' %}" />
-</head>
-<body>
+    {% endblock %}
+
+{% block content %}   
     <div class="text-app-container">
 
         <div class="menu-container">
@@ -432,15 +432,20 @@
 
                         {{ annotation_form.iderrortag.label_tag }}
                         {{ annotation_form.iderrortag }}
+                        <div class="annotation-wrap">
+                            {{ annotation_form.idreason.label_tag }}
+                            {{ annotation_form.idreason }}
+                        </div>  
 
-                        {{ annotation_form.idreason.label_tag }}
-                        {{ annotation_form.idreason }}
+                        <div class="annotation-wrap">
+                            {{ annotation_form.iderrorlevel.label_tag }}
+                            {{ annotation_form.iderrorlevel }}
+                        </div>
 
-                        {{ annotation_form.iderrorlevel.label_tag }}
-                        {{ annotation_form.iderrorlevel }}
-
-                        {{ annotation_form.correct.label_tag}}
-                        {{ annotation_form.correct }}
+                        <div class="annotation-wrap">
+                            {{ annotation_form.correct.label_tag}}
+                            {{ annotation_form.correct }}
+                        </div>
 
                         {{ annotation_form.comment.label_tag }}
                         {{ annotation_form.comment }}
@@ -1513,6 +1518,4 @@
             console.log(data);
         }
         </script>
-
-</body>
-</html>
+{% endblock %}
