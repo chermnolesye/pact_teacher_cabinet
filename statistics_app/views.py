@@ -714,14 +714,15 @@ def chart_grade_errors(request):
 		
 	if request.method != 'POST':
 		languages = ['Deustache']
-		groups = list(Group.objects.values('groupname').distinct().order_by('groupname'))
+		groups = list(Group.objects.values('groupname', 'idyear__title').distinct().order_by('groupname'))
 		courses = list(
 			Group.objects.values('studycourse').filter(studycourse__gt=0).distinct().order_by(
 				'studycourse'))
 		texts = list(
 			Text.objects.values('header').filter(errorcheckflag=True).distinct().order_by('header'))
 		text_types = list(
-			TextType.objects.values().filter(text__errorcheckflag=True).distinct().order_by('idtexttype'))
+			TextType.objects.values('idtexttype','texttypename').filter(text__errorcheckflag=True).distinct().order_by('idtexttype'))
+
 		
 		data_errorlevel = list(Error.objects.values('iderrorlevel__iderrorlevel', 'iderrorlevel__errorlevelname', 
 							   'errortoken__idtoken__idsentence__idtext__idtext')
@@ -735,6 +736,8 @@ def chart_grade_errors(request):
 		data_errorlevel = dashboards.get_data_on_tokens(data_errorlevel, 'iderrorlevel__iderrorlevel',  True, False)
 		data_errorlevel = dashboards.get_zero_count_grade_errors(data_errorlevel)
 		data_errorlevel = sorted(data_errorlevel, key=lambda d: d['count_data'], reverse=True)
+
+		# print(groups)
 		
 		return render(request, 'dashboard_error_grade.html', {'right': True, 'languages': languages, 'groups': groups,
 								      'courses': courses, 'texts': texts,
@@ -749,6 +752,7 @@ def chart_grade_errors(request):
 			
 		if flag_post == 'choice_all':
 			texts, text_types = dashboards.get_filters_for_choice_all(list_filters)
+			# print(texts, text_types)
 			return JsonResponse({'texts': texts, 'text_types': text_types}, status=200)
 			
 		if flag_post == 'choice_group':
@@ -1392,7 +1396,9 @@ def chart_student_dynamics(request):
 		
 	if request.method != 'POST':
 		languages = ['Deustache']
-		tags = list(Error.objects.values('iderrortag__iderrortag', 'iderrortag__tagtext', 'iderrortag__tagtextrussian').order_by('iderrortag__iderrortag'))
+		tags = list(Error.objects.values('iderrortag__iderrortag', 'iderrortag__tagtext', 'iderrortag__tagtextrussian').order_by('iderrortag__iderrortag').distinct())
+
+		print(tags)
 		
 		return render(request, 'dashboard_student_dynamics.html', {'right': True, 'languages': languages, 'tags': tags})
 	else:
