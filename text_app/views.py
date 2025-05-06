@@ -220,6 +220,9 @@ def annotate_text(request, text_id=2379):
 
     
     if request.method == "POST" and request.POST.get('action') == 'edit':
+            print("Мы в функции edit")
+            print(request.POST)
+
             error_id = request.POST.get('error_id')
             if not error_id:
                 return JsonResponse({'success': False, 'error': 'Не передан ID аннотации для редактирования'})
@@ -230,9 +233,9 @@ def annotate_text(request, text_id=2379):
                 return JsonResponse({'success': False, 'error': 'Аннотация не найдена'})
 
             # 
-            # error.iderrortag_id = request.POST.get('id_iderrortag') or error.iderrortag_id
-            error.idreason_id = request.POST.get('id_idreason') or error.idreason_id
-            error.iderrorlevel_id = request.POST.get('id_iderrorlevel') or error.iderrorlevel_id
+            error.iderrortag_id = request.POST.get('id_iderrortag') or error.iderrortag_id
+            error.idreason_id= request.POST.get('idreason') or error.idreason_id
+            error.iderrorlevel_id = request.POST.get('iderrorlevel') or error.iderrorlevel_id
             error.comment = request.POST.get('comment', '')
             error.correct = request.POST.get('correct', '')
             error.save()
@@ -240,6 +243,7 @@ def annotate_text(request, text_id=2379):
             return JsonResponse({'success': True})
     
     if request.method == 'POST' and request.POST.get('action') == 'delete':
+        print("Мы в функции delete")
         error_id = request.POST.get('error_id')
         
         if not error_id:
@@ -271,6 +275,7 @@ def annotate_text(request, text_id=2379):
         return JsonResponse({'success': True})
                 
     if request.method == "POST" and "annotation-form" in request.POST:
+        print("Мы в функции добавления")
         annotation_form = AddErrorAnnotationForm(request.POST, user=request.user)
 
         if annotation_form.is_valid():
