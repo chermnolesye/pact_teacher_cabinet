@@ -691,7 +691,8 @@
                 tags_info=list_tags["tags_info"];
 
                 TagAddChildren(0, 0, newToken);
-                newToken.style.height = "250px";
+                newToken.style.height = "auto";
+                newToken.style.maxHeight = "200px";
                 newToken.style.overflowY = "scroll";
                 parent.insertBefore(newToken, nextElement);
             }

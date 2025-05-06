@@ -636,14 +636,22 @@ label[for="id_iderrortag"] {
 
 .annotation-wrap {
     display: flex;
-    margin: 5px 0px;
+    margin: 5px 0;
     width: 100%;
     align-items: center;
+    gap: 10px;
+}
+
+.annotation-wrap label {
+    white-space: nowrap;
+    min-width: fit-content;
 }
 
 .annotation-wrap select,
 .annotation-wrap input {
     width: 100%;
+    min-width: 0;
+    flex-grow: 1;
 }
 
 .text-header, .menu-container {
