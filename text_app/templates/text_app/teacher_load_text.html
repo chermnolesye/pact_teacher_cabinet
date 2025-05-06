@@ -1,14 +1,14 @@
+{% extends "base.html" %}
+
 {% load static %}
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <title>Загрузка текста от имени студента</title>
-    <link rel="stylesheet" href="{% static 'css/base.css' %}">
-    <link rel="stylesheet" href="{% static 'css/text_app.css' %}">
-</head>
-<body>
-    <div id="header-container"></div>
+
+{% block title %}Загрузка текста{% endblock %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'css/text_app.css' %}" />
+    {% endblock %}
+
+{% block content %}   
 
     <div class="add-text-container">
 
@@ -85,19 +85,6 @@
         </form>
 
     </div>
-    <script> 
-        document.addEventListener('DOMContentLoaded', function() {
-        fetch('/static/templates/base.html')
-            .then(response => response.text()) 
-            .then(data => {
-            document.getElementById('header-container').innerHTML = data;
-            let user_fio = "{{ fio|escapejs }}"; 
-            document.getElementById('user-link').textContent = user_fio;
-            });
-            
-        });
-
-    </script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const groupSelect = document.getElementById("id_group");
@@ -130,6 +117,4 @@
             });
         });
     </script>
-        
-</body>
-</html>
+{% endblock %}

@@ -1,16 +1,14 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Управление группами</title>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'css/base.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/manage.css' %}" />
-</head>
-<body>
+{% extends "base.html" %}
 
-<div id="header-container"></div>
+{% load static %}
+
+{% block title %}Список групп{% endblock %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'css/manage.css' %}" />
+{% endblock %}
+
+{% block content %}
 
 <div class="show-groups-container">
 
@@ -83,19 +81,4 @@
 
 </div>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        fetch('/static/templates/base.html')
-            .then(response => response.text())
-            .then(data => {
-                document.getElementById('header-container').innerHTML = data;
-                let user_fio = "{{ fio|escapejs }}";
-                if (user_fio) {
-                    document.getElementById('user-link').textContent = user_fio;
-                }
-            });
-    });
-</script>
-
-</body>
-</html>
+{% endblock %}

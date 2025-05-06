@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/base.css' %}" />
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+
+    <header class="header">    
+            <nav>      
+                <input type="checkbox" name="menu" id="btn-menu" />
+                <label for="btn-menu" class="burger">
+                    <svg class="bi flex-shrink-0" xmlns="http://www.w3.org/2000/svg" height="1.6em" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-width="1.5" d="M4 7h3m13 0h-9M20 17h-3M4 17h9M4 12h16"></path>
+                    </svg>
+                </label>
+                <ul>
+                    <li>
+                        <a href="/text/search_texts/" class="header__link">
+                            <svg class="header-svg" xmlns="http://www.w3.org/2000/svg" height="32" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2 12h14m0 0-3.5-3m3.5 3-3.5 3"></path>
+                                <path stroke-linecap="round" stroke-width="1.5" d="M9 7c.01-2.18.11-3.35.88-4.12C10.76 2 12.18 2 15 2h1c2.83 0 4.24 0 5.12.88.88.88.88 2.3.88 5.12v8c0 2.83 0 4.24-.88 5.12-.77.77-1.94.87-4.12.88m-8-5c.01 2.18.11 3.35.88 4.12.64.64 1.57.82 3.12.86"></path>
+                            </svg>
+                            ПАКТ
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/years_groups/show_groups" class="header__link" >
+                            <svg class="header-svg" xmlns="http://www.w3.org/2000/svg" height="32" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <circle cx="12" cy="12" r="3" stroke-width="1.5"></circle>
+                                <path stroke-linecap="round" stroke-width="1.5" d="M3.66 10.64c.47.3.78.8.78 1.36s-.3 1.06-.78 1.36A2 2 0 0 0 2.6 15.4c.05.4.28.8.75 1.61.47.8.7 1.21 1.01 1.45a2 2 0 0 0 1.48.4c.24-.03.49-.13.82-.3.5-.27 1.09-.28 1.57 0s.77.8.79 1.35c.01.38.05.64.14.87a2 2 0 0 0 1.08 1.08c.37.15.84.15 1.77.15s1.4 0 1.77-.15a2 2 0 0 0 1.08-1.08c.09-.23.13-.49.14-.87.02-.56.3-1.07.8-1.35a1.62 1.62 0 0 1 1.56 0c.33.17.58.27.82.3a2 2 0 0 0 1.48-.4c.31-.24.54-.64 1.01-1.45l.49-.87m-.81-2.77c-.47-.3-.78-.8-.78-1.36s.3-1.06.78-1.36A2 2 0 0 0 21.4 8.6c-.05-.4-.28-.8-.75-1.61-.47-.8-.7-1.21-1.01-1.45a2 2 0 0 0-1.48-.4c-.24.03-.49.13-.82.3-.5.27-1.09.28-1.57 0s-.77-.8-.79-1.35a2.47 2.47 0 0 0-.14-.87 2 2 0 0 0-1.08-1.08C13.4 2 12.93 2 12 2s-1.4 0-1.77.15a2 2 0 0 0-1.08 1.08c-.09.23-.13.49-.14.87-.02.56-.3 1.07-.8 1.35-.47.28-1.06.27-1.56 0a2.46 2.46 0 0 0-.82-.3 2 2 0 0 0-1.48.4c-.31.24-.54.64-1.01 1.45l-.49.87"></path>
+                            </svg>
+                        Управление
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/students/show_students" class="header__link" >
+                        <svg class="header-svg"  viewBox="0 0 74 77" fill="none"  height="32" stroke="currentColor" xmlns="http://www.w3.org/2000/svg" >
+                            <path fill="currentColor"  d="M0.557646 74.9334C0.599016 75.7608 1.30329 76.398 2.13068 76.3566C2.95807 76.3152 3.59527 75.611 3.5539 74.7836L0.557646 74.9334ZM30.2278 36.972L30.1794 38.4712L31.7278 38.5212V36.972H30.2278ZM30.2278 30.172H31.7278V28.9013L30.4743 28.6924L30.2278 30.172ZM3.5539 74.7836C3.23856 68.4767 4.24358 59.0975 8.19673 51.4558C10.164 47.6529 12.8362 44.3276 16.3931 41.9971C19.9364 39.6756 24.4405 38.2861 30.1794 38.4712L30.2761 35.4728C23.969 35.2694 18.8477 36.8023 14.749 39.4878C10.6639 42.1643 7.67734 45.9306 5.53215 50.0774C1.26038 58.335 0.225357 68.2876 0.557646 74.9334L3.5539 74.7836ZM31.7278 36.972V30.172H28.7278V36.972H31.7278ZM30.4743 28.6924C28.1117 28.2986 26.147 26.7136 24.8091 24.3485C23.4678 21.9775 22.8219 18.9164 23.1 15.8575C23.3772 12.8081 24.5636 9.8427 26.7867 7.59273C28.9942 5.35846 32.326 3.7256 37.0992 3.4983L36.9565 0.501698C31.5296 0.760126 27.4541 2.64876 24.6526 5.48423C21.8666 8.30401 20.4423 11.9566 20.1123 15.5859C19.7832 19.2057 20.5339 22.8841 22.1979 25.8256C23.8654 28.7732 26.5151 31.0739 29.9812 31.6516L30.4743 28.6924Z" />
+                            <path   d="M43.7722 30.172V36.972C67.8641 36.1949 72.5919 61.9058 71.9442 74.8585H2M43.7722 30.172C49.6363 29.1946 53.0421 22.3177 52.3824 15.6003C53.0086 25.7033 46.9032 29.5243 43.7722 30.172ZM36.9721 2C41.622 2.22142 45.1111 3.70458 47.5889 5.88579" stroke-width="3"/>
+                        </svg>                    
+                    Студенты
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/statistics/" class="header__link" >
+                            <svg class="header-svg" xmlns="http://www.w3.org/2000/svg" height="32" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-width="1.5" d="M4 18V6M20 12v6"></path>
+                            <path stroke-width="1.5" d="M12 10c4.42 0 8-1.8 8-4s-3.58-4-8-4-8 1.8-8 4 3.58 4 8 4Z"></path>
+                            <path stroke-linecap="round" stroke-width="1.5" d="M20 12c0 2.2-3.58 4-8 4s-8-1.8-8-4"></path>
+                            <path stroke-width="1.5" d="M20 18c0 2.2-3.58 4-8 4s-8-1.8-8-4"></path>
+                            </svg>
+                    Статистика
+                        </a>
+                    </li>
+                    <!-- <li>
+                        <a href="/authors" class="header__link" >
+                            <svg class="header-svg" xmlns="http://www.w3.org/2000/svg" height="32" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path fill="currentColor" stroke-linecap="round" stroke-width="1.5" d="M12 17v-6"></path>
+                                <circle cx="1" cy="1" r="0.5" fill="currentColor" transform="matrix(1 0 0 -1 11 9)"></circle>
+                                <path stroke-linecap="round" stroke-width="1.5" d="M7 3.338A9.954 9.954 0 0 1 12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12c0-1.821.487-3.53 1.338-5"></path>
+                            </svg>
+                    Разработчики
+                        </a>
+                    </li>     -->
+                </ul>
+            </nav>
+        <div class="header__right">
+            <a href="/auth/logout" class="header__link" > 
+                <div id="user-link"></div>
+                <svg class="header-svg" xmlns="http://www.w3.org/2000/svg" height="32" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-width="1.5" d="M9 4.5H8c-2.357 0-3.536 0-4.268.732C3 5.964 3 7.143 3 9.5v.5m6 9.5H8c-2.357 0-3.536 0-4.268-.732C3 18.035 3 16.857 3 14.5V14M13.658 2.347c-2.162-.377-3.243-.565-3.95.062C9 3.036 9 4.183 9 6.476v11.048c0 2.293 0 3.44.707 4.067.707.627 1.788.439 3.95.062l2.33-.406c2.394-.418 3.591-.627 4.302-1.505.711-.879.711-2.149.711-4.69V8.948c0-2.54 0-3.81-.71-4.689-.476-.587-1.168-.875-2.29-1.126M12 11v2"></path>
+                </svg>
+            </a>
+        </div>
+    </header> 
+
+    {% block content %}{% endblock %}
+
+</body>
+</html>

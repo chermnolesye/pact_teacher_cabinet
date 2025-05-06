@@ -1,15 +1,14 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Студенты</title>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'css/base.css' %}" />
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}Редактирование группы{% endblock %}
+
+{% block extra_head %}
     <link rel="stylesheet" href="{% static 'css/manage.css' %}" />
-</head>
-<body>
-    <div id="header-container"></div>
+{% endblock %}
+
+{% block content %}
 
     <div class="show-groups-container">    
 
@@ -406,5 +405,4 @@
             });
         });
     </script>
-</body>
-</html>
+{% endblock %}

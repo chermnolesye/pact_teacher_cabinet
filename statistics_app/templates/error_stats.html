@@ -1,20 +1,14 @@
-<!DOCTYPE html>
-<html lang="ru">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'css/base.css' %}" />
-    <link
-      rel="stylesheet"
-      type="text/css"
-      href="{% static 'css/error_stats.css' %}"
-    />
-    <title>Суммарная статистика по ошибкам</title>
-  </head>
+{% extends "base.html" %}
 
-  <body>
-    <div id="header-container"></div>
+{% load static %}
+
+{% block title %}Суммарная статистика{% endblock %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'css/error_stats.css' %}" />
+    {% endblock %}
+
+{% block content %}  
 
     <main class="page">
       <h2 class="title">Суммарная статистика ошибок</h2>
@@ -75,17 +69,4 @@
         </table>
       </div>
     </main>
-
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        fetch("/static/templates/base.html")
-          .then((response) => response.text())
-          .then((data) => {
-            document.getElementById("header-container").innerHTML = data;
-            let user_fio = "{{ fio|escapejs }}";
-            document.getElementById("user-link").textContent = user_fio;
-          });
-      });
-    </script>
-  </body>
-</html>
+{% endblock %}

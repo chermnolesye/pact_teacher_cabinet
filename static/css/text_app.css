@@ -15,7 +15,7 @@
 .add-text-container {
     display: flex;
     flex-direction: column;
-    margin-top: 50px;
+    margin-top: 60px;
     align-items: center;
 }
 
