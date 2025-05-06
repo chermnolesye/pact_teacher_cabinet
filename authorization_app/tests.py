@@ -3,21 +3,23 @@ from django.urls import reverse
 from django.contrib.auth import get_user_model
 from django.contrib import messages
 from django.shortcuts import get_object_or_404
-
+from django.test import RequestFactory
 from .forms import LoginForm
-from core_app.models import Rights 
-
+from core_app.models import Rights, User 
+from .views import user_login
+from unittest.mock import patch, Mock
 
 class UserLoginTest(TestCase):
     def setUp(self):
         self.client = Client() 
-        self.User = get_user_model()
+        self.factory = RequestFactory()
+        #self.User = get_user_model()
         self.password = 'user1'
         Rights.objects.create(pk=2, rightsname="Преподаватель")
         self.rights = get_object_or_404(Rights, pk=2) 
 
         # Создание тестового пользователя с правами учителя
-        self.teacher = self.User.objects.create_user(
+        self.teacher = User.objects.create_user(
             login='user1',
             password=self.password,
             lastname='TeacherLastname',
@@ -25,6 +27,50 @@ class UserLoginTest(TestCase):
             middlename='TeacherMidName',
             idrights=self.rights 
         )
+        self.teacher.save()
+        
+
+    # def tearDown(self):
+    #     User.objects.filter(login='user1').delete()
+
+    # def test_login_with_valid_credentials_module(self):
+    #     """Тест: Проверка блочного теста успешного входа с существующими логином и паролем."""
+
+    # def test_user_login_valid_form(self, mock_render, mock_redirect, mock_login, mock_authenticate):
+    #     """
+    #     Модульный тест: Проверяет, что при валидной форме происходит аутентификация, вход и редирект.
+    #     (Требует мокирования всех зависимостей).
+    #     """
+    #     # Создаем Mock request
+    #     request = Mock()
+    #     request.method = "POST"
+    #     request.POST = {'login': 'user1', 'password': 'user1'}
+
+    #     # Мокируем LoginForm, чтобы он всегда был валидным
+    #     form = LoginForm(request.POST)
+    #     form.is_valid = Mock(return_value=True) # Всегда возвращает True
+
+    #     # Мокируем cleaned_data
+    #     form.cleaned_data = {'login': 'user1', 'password': 'user1'}
+
+    #     # Мокируем authenticate, чтобы возвращал пользователя
+    #     mock_authenticate.return_value = Mock()  # Поддельный пользователь
+
+    #     # Вызываем view
+    #     user_login(request)
+
+    #     # Проверяем, что authenticate был вызван с правильными аргументами
+    #     mock_authenticate.assert_called_once_with(request, login='testuser', password='testpassword')
+
+    #     # Проверяем, что login был вызван
+    #     mock_login.assert_called_once()
+
+    #     # Проверяем, что redirect был вызван
+    #     mock_redirect.assert_called_once()
+
+    #     # Проверяем, что render не был вызван (т.к. успешный логин)
+    #     mock_render.assert_not_called()
+
 
 
     def test_login_page(self):
