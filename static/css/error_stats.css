@@ -20,8 +20,6 @@
       width: 80%;
   }
 
-  
-  /* Легенда */
   .legend {
     display: flex;
     flex-direction: column;
@@ -40,7 +38,6 @@
     color: #6c757d;
   }
   
-  /* Квадратики */
   .legend-box {
     width: 20px;
     height: 20px;
@@ -67,8 +64,7 @@
   .lvl-2 {
     background-color: #cfe2ff;
   }
-  
-  /* Таблица */
+
   .errors-table {
     width: 100%;
     border-collapse: collapse;
@@ -88,7 +84,6 @@
     background-color: #f8f9fa;
   }
   
-  /* Цвета строк по уровню */
   tr[data-level="error-level-0"] {
     background-color: #ffffff;
   }
@@ -101,7 +96,6 @@
     background-color: #cfe2ff;
   }
   
-  /* Ссылки-счётчики */
   .errors-table a {
     color: #0d6efd;
     text-decoration: none;

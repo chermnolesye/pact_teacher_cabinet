@@ -1,15 +1,4 @@
 
-/* .menu, .text-header {
-    display: flex;
-    flex-direction: row;
-    align-items: center;  
-    justify-content: space-between;  
-    width: 100%;
-    padding: 1%;
-    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-    gap: 15px;
-} */
-
 .text-header {
     width: calc(100%-10px);
     box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
@@ -34,7 +23,6 @@ form {
 .watch-text {
     flex-grow: 1; 
     margin: 1%;
-    /* overflow-y: auto; */
     flex-direction: column;
     padding: 10px;
     font-size: 16px;
@@ -99,7 +87,7 @@ form {
 .abbr {  
     display: none;             
     margin: 2px;              
-    white-space: nowrap; /* Запрещает перенос на новую строку */
+    white-space: nowrap;
     text-align: center;
             box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
     padding: 10px;
@@ -135,8 +123,6 @@ form {
 }
 
 .word:hover {
-    /* box-sizing: border-box !important;
-    border: dashed 1px #4285f4; */
     outline: 1px dashed var(--primary-color);
     outline-offset: -1px;
 }
@@ -144,7 +130,7 @@ form {
 .error-tag {
     display: none;
     margin: 2px;              
-    white-space: nowrap; /* Запрещает перенос на новую строку */
+    white-space: nowrap;
     text-align: center;
     box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
     padding: 10px;
@@ -154,7 +140,6 @@ form {
     width: 100%;
 }
 
-/* Стили для модального окна с информацией об ошибке */
 .error-popup {
     display: none;
     position: absolute;
@@ -166,17 +151,16 @@ form {
     border-radius: var(--border-radius);
     display: flex;
     flex-direction: column;
-    /* Для плавного появления и исчезновения */
-    opacity: 0; /* Начальная непрозрачность */
+    opacity: 0;
     transition: opacity 0.3s ease, transform 0.3s ease;
-    transform: translateY(-10px); /* Начальное смещение вверх */
+    transform: translateY(-10px);
 }
 
 .error-popup.show {
     display: flex;
     z-index: 1000;
-    opacity: 1; /* Конечная непрозрачность */
-    transform: translateY(0); /* Сбрасываем смещение */
+    opacity: 1;
+    transform: translateY(0);
 }
 
 .error-popup .close-btn {
@@ -185,8 +169,6 @@ form {
     right: 10px;
     cursor: pointer;
 }
-
-/* МЕНЮ ТЕКСТА */
 
 .menu-container {
     width: calc(100%-10px);
@@ -308,7 +290,6 @@ form {
     padding-right: 20px;
 }
   
-  /* Стили модального окна */
   .modal-overlay {
     display: none;
     position: fixed;
@@ -418,7 +399,6 @@ form {
     gap: 30px;
   }
 
-  /* Общие стили для группы опций */
 .option-group {
     display: flex;
     flex-direction: column;
@@ -435,7 +415,6 @@ form {
     margin-bottom: 10px;
 }
 
-/* Стили для радио-кнопок */
 .radio-group {
     display: flex;
     flex-direction: column;
@@ -480,7 +459,6 @@ form {
     transform: translate(-50%, -50%);
 }
 
-/* Стили для переключателей (ползунков) */
 .switch {
     position: relative;
     display: inline-block;
@@ -527,7 +505,6 @@ input:checked + .slider:before {
 }
 
 .chosen_token {
-    /* border: solid 2px var(--secondary-color) !important; */
     outline: solid 2px var(--secondary-color) !important;
     outline-offset: -1px;
 }
@@ -543,7 +520,6 @@ input:checked + .slider:before {
     box-shadow: 0 -0.125rem 0.25rem rgba(0, 0, 0, 0.075);
 }
 
-/* Стили для меню после выделения */
 .button-menu-select {
     margin: 5px;
     display: inline-block;
@@ -574,8 +550,6 @@ input:checked + .slider:before {
     display: none;
 }
 
-/* Добавление аннотации */
-
 #id_iderrortag {
     display: none;
 }
@@ -584,7 +558,6 @@ label[for="id_iderrortag"] {
     display: none;
 }
 
-/* Оставляем видимым label для стилизованного селекта */
 #tags-label {
     display: block;
 }
@@ -592,7 +565,6 @@ label[for="id_iderrortag"] {
 #tag-search {
     border: 1px solid var(--grey-color);
     border-radius: var(--border-radius);
-    /* box-shadow: 0 5px 10px rgba(26, 93, 159, 0.1); */
     margin: 10px 5px;
     color: var(--primary-color);
 }
@@ -624,8 +596,6 @@ label[for="id_iderrortag"] {
 }
 
 .tag.selected {
-    /* outline: 1px solid var(--primary-color);
-    outline-offset: -1px; */
     background-color: var(--secondary-color);
     color: #ffffff;
 }

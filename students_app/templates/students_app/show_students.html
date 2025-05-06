@@ -1,16 +1,14 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Студенты</title>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'css/base.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/manage.css' %}" />
-</head>
+{% extends "base.html" %}
 
-<body>
-    <div id="header-container"></div>
+{% load static %}
+
+{% block title %}Список студентов{% endblock %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'css/manage.css' %}" />
+    {% endblock %}
+
+{% block content %}   
 
     <div class="students-container">
         <h2 class="highlighted-header">
@@ -84,5 +82,4 @@
             {% endfor %}
         </div>       
     </div>
-</body>
-</html>
+{% endblock %}
