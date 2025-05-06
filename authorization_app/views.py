@@ -139,9 +139,9 @@ def user_login(request):
                 # Сохраняем ФИО в сессии
                 request.session['teacher_fio'] = fio
                 if user.idrights.idrights == 2: 
-                    return redirect("/text/show_texts/") #Поменять!
+                    return redirect("/text/search_texts/") #Поменять!
                 elif user.idrights.idrights == 1:  
-                    return redirect("/text/show_texts/")  #Поменять!
+                    return redirect("/text/search_texts/")  #Поменять!
             else:
                 messages.error(request, "Неверный логин или пароль.")
     else:
