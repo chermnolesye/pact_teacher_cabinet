@@ -645,3 +645,8 @@ label[for="id_iderrortag"] {
 .annotation-wrap input {
     width: 100%;
 }
+
+.text-header, .menu-container {
+    margin-left: 0;
+    margin-right: 0;
+}
