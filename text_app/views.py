@@ -180,7 +180,7 @@ def annotate_text(request, text_id=2379):
                 error = et.iderror
                 if error and error.iderrortag:
                     errors_list.append({
-                        "erorr_tag_id": error.iderrortag,
+                        "error_tag_id": error.iderrortag,
                         "error_id": error.iderror,
                         "error_tag": error.iderrortag.tagtext,
                         "error_tag_russian": error.iderrortag.tagtextrussian,
