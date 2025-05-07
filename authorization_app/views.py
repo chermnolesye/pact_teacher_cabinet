@@ -124,7 +124,14 @@ def login_teacher(request):
 
 
 # --------------
+
 def user_login(request):
+    if request.user.is_authenticated:
+        if request.user.idrights_id in [2, 4]:
+            return redirect("/text/search_texts/")
+        else:
+            return redirect("/text/home/") #!!!!
+
     if request.method == "POST":
         form = LoginForm(request.POST)
         if form.is_valid():
@@ -134,14 +141,13 @@ def user_login(request):
 
             if user is not None:
                 login(request, user)
-                # Получаем ФИО для шапки !!
-                fio = f"{user.lastname} {user.firstname} {user.middlename}"
-                # Сохраняем ФИО в сессии
+                fio = f"{user.lastname} {user.firstname} {user.middlename or ''}".strip()
                 request.session['teacher_fio'] = fio
-                if user.idrights.idrights == 2: 
-                    return redirect("/text/search_texts/") #Поменять!
-                elif user.idrights.idrights == 1:  
-                    return redirect("/text/search_texts/")  #Поменять!
+
+                if user.idrights.idrights in [2, 4]:
+                    return redirect("/text/search_texts/")
+                else:
+                    return redirect("/text/home/") #!!!!
             else:
                 messages.error(request, "Неверный логин или пароль.")
     else:
@@ -149,8 +155,7 @@ def user_login(request):
 
     return render(request, "authorization_app/login.html", {"form": form})
 
-#Прости Саша, но мне надо было проверить load_text, она вроде работает, но хз
 def logout_teacher(request):
-    logout(request)  # Вызываем функцию logout 
+    logout(request) 
     messages.success(request, 'Вы успешно вышли из системы.')
     return redirect('/auth/login')  

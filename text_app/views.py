@@ -1,3 +1,5 @@
+from authorization_app.utils import has_teacher_rights
+from django.contrib.auth.decorators import user_passes_test
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 from django.db.models import F
@@ -11,7 +13,6 @@ from nltk.tokenize import sent_tokenize, word_tokenize
 from core_app.models import (
     Text,
     Token,
-    PosTag,
     Error,
     ErrorToken,
     ErrorTag,
@@ -23,10 +24,7 @@ from core_app.models import (
     User,
 )
 
-
 def show_text_markup(request, text_id=2379):
-    # Если вам  нужен доступ только для зарегестрированных пользователей (преподавателей)
-    # if has_teacher_rights(request):
     if text_id is not None:
         text = get_object_or_404(Text, idtext=text_id)
     else:
@@ -148,6 +146,7 @@ def show_text_markup(request, text_id=2379):
     return render(request, "show_text_markup.html", context)
 
 
+@user_passes_test(has_teacher_rights, login_url='/auth/login/')
 def annotate_text(request, text_id=2379):
     text_id = request.GET.get("text_id")
     if text_id:
@@ -160,7 +159,6 @@ def annotate_text(request, text_id=2379):
     selected_markup = request.GET.get("markup", "tagtext")
 
     for sentence in sentences:
-        # tokens = Token.objects.filter(idsentence=sentence).select_related("idpostag")
         tokens = Token.objects.filter(idsentence=sentence).select_related("idpostag").order_by('tokenordernumber')
 
 
@@ -232,7 +230,6 @@ def annotate_text(request, text_id=2379):
             except Error.DoesNotExist:
                 return JsonResponse({'success': False, 'error': 'Аннотация не найдена'})
 
-            # 
             error.iderrortag_id = request.POST.get('id_iderrortag') or error.iderrortag_id
             error.idreason_id= request.POST.get('idreason') or error.idreason_id
             error.iderrorlevel_id = request.POST.get('iderrorlevel') or error.iderrorlevel_id
@@ -283,13 +280,11 @@ def annotate_text(request, text_id=2379):
                 chosen_ids = json.loads(request.POST.get('chosen_ids', '[]'))
                 sentences_data = json.loads(request.POST.get('sentences', '[]'))
 
-                # Логи тупые
                 print("Chosen IDs:", chosen_ids)
                 print("Sentences data:", sentences_data)
                 print("Form data:", request.POST)
 
                 with transaction.atomic():
-                    #Сохраняем объект ошибки
                     new_error = annotation_form.save(commit=False)
                     new_error.correct = annotation_form.cleaned_data.get('correct', '')
                     new_error.changedate = timezone.now()
@@ -315,13 +310,6 @@ def annotate_text(request, text_id=2379):
                                     tokenordernumber=position
                                 )
                                 print("Создан токен с порядковым номером:", new_token.tokenordernumber)
-
-                                # # Если вписано исправление
-                                # correct_text = annotation_form.cleaned_data.get('correct', '').strip()
-                                # if correct_text:
-                                #     new_token.save()
-
-                                print(f"Токен обновлен с исправлением: {new_token.tokentext}")
 
                                 # Добавляем его id в список выделенных 
                                 chosen_ids.append(str(new_token.idtoken))
@@ -389,126 +377,6 @@ def annotate_text(request, text_id=2379):
 
     return render(request, "annotate_text.html", context)
 
-# # АХТУНГ ACHTUNG ATTENTION # #
-# # НЕ УДАЛЯТЬ # #
-# def annotate_text(request, text_id=2379):
-#     text_id = request.GET.get("text_id")
-#     if text_id:
-#         text = get_object_or_404(Text, idtext=text_id)
-#     else:
-#         text = Text.objects.first()
-
-#     sentences = text.sentence_set.all()
-#     sentence_data = []
-
-#     selected_markup = request.GET.get("markup", "tagtext")
-
-#     for sentence in sentences:
-#         tokens = Token.objects.filter(idsentence=sentence).select_related("idpostag")
-
-#         tokens_data = []
-#         for token in tokens:
-#             # Разметка для частей речи
-#             pos_tag = token.idpostag.tagtext if token.idpostag else None
-#             pos_tag_russian = token.idpostag.tagtextrussian if token.idpostag else None
-#             pos_tag_abbrev = token.idpostag.tagtextabbrev if token.idpostag else None
-#             pos_tag_color = token.idpostag.tagcolor if token.idpostag else None
-
-#             # Разметка для ошибок
-#             error_tokens = token.errortoken_set.select_related(
-#                 "iderror__iderrortag", "iderror__iderrorlevel", "iderror__idreason"
-#             ).all()
-
-#             errors_list = []
-#             for et in error_tokens:
-#                 error = et.iderror
-#                 if error and error.iderrortag:
-#                     errors_list.append({
-#                         "error_tag": error.iderrortag.tagtext,
-#                         "error_tag_russian": error.iderrortag.tagtextrussian,
-#                         "error_tag_abbrev": error.iderrortag.tagtextabbrev,
-#                         "error_color": error.iderrortag.tagcolor,
-#                         "error_level": error.iderrorlevel.errorlevelname if error.iderrorlevel else "Не указано",
-#                         "error_correct": error.correct or "Не указано",
-#                         "error_comment": error.comment or "Не указано",
-#                         "error_reason": error.idreason.reasonname if error.idreason else "Не указано",
-#                         "idtagparent": error.iderrortag.idtagparent,
-#                     })
-
-#             tokens_data.append({
-#                 "token_id": token.idtoken,
-#                 "token": token.tokentext,
-#                 "pos_tag": pos_tag,
-#                 "pos_tag_russian": pos_tag_russian,
-#                 "pos_tag_abbrev": pos_tag_abbrev,
-#                 "pos_tag_color": pos_tag_color,
-#                 "token_order_number": token.tokenordernumber,
-#                 "errors": errors_list,
-#             })
-
-#         sentence_data.append(
-#             {
-#                 "id_sentence": sentence.idsentence,
-#                 "sentence": sentence,
-#                 "tokens": tokens_data,
-#             }
-#         )
-
-#     student = text.idstudent
-#     user = student.iduser
-#     group = student.idgroup
-#     academic_year = group.idayear
-#     text_type = text.idtexttype
-#     write_place = text.idwriteplace
-#     write_tool = text.idwritetool
-#     emotion = text.idemotion
-#     year_study_language = text.educationlevel
-#     self_rating = text.selfrating
-#     assesment = text.selfassesment
-
-#     if request.method == "POST" and "grade-form" in request.POST:
-#         grade_form = AddTextAnnotationForm(request.POST, instance=text)
-#         if grade_form.is_valid():
-#             grade_form.save()
-#             return redirect(request.path + f"?text_id={text.idtext}&markup={selected_markup}")
-#     else:
-#         grade_form = AddTextAnnotationForm(instance=text)
-
-#     if "annotation-form" in request.POST:
-#         annotation_form = AddErrorAnnotationForm(request.POST)
-#         # if form.is_valid():
-#     else:
-#         annotation_form = AddErrorAnnotationForm()
-
-#     context = {
-#         "grade_form": grade_form,
-#         "annotation_form": annotation_form,
-#         "text": text,
-#         "sentence_data": sentence_data,
-#         "selected_markup": selected_markup,
-#         "author": f"{user.lastname} {user.firstname}",
-#         "group": group.groupname,
-#         "academic_year": academic_year.title,
-#         "create_date": text.createdate,
-#         "write_place": write_place.writeplacename if write_place else "Не указано",
-#         "write_tool": write_tool.writetoolname if write_tool else "Не указано",
-#         "text_type": text_type.texttypename if text_type else "Не указано",
-#         "emotion": emotion.emotionname if emotion else "Не указано",
-#         "year_study_language": year_study_language if text_type == None else "Не указано",
-#         "self_rating": text.get_selfrating_display() if text.selfrating else "Нет данных",
-#         "self_assesment": text.get_selfassesment_display() if text.selfassesment else "Нет данных",
-#         "fio": get_teacher_fio(request),
-#         "textgrade": text.get_textgrade_display() if text.textgrade else "Нет данных",
-#         "completeness": text.get_completeness_display() if text.completeness else "Нет данных",
-#         "structure": text.get_structure_display() if text.structure else "Нет данных",
-#         "coherence": text.get_coherence_display() if text.coherence else "Нет данных",
-#         "poscheckflag": text.poscheckflag,
-#         "errorcheckflag": text.errorcheckflag,
-#         "usererrorcheck": text.idusererrorcheck.get_full_name() if text.idusererrorcheck else "Не указано", 
-#         "userteacher": text.iduserteacher.get_full_name() if text.iduserteacher else "Не указано", 
-#     }
-
-#     return render(request, "annotate_text.html", context)
 
 def show_texts(request):
     groups = (
@@ -663,6 +531,7 @@ def show_texts(request):
     return render(request, "show_texts.html", context)
 
 
+@user_passes_test(has_teacher_rights, login_url='/auth/login/')
 def teacher_load_text(request):
     if (
         request.headers.get("x-requested-with") == "XMLHttpRequest"
@@ -766,6 +635,7 @@ def teacher_load_text(request):
     )
 
 
+@user_passes_test(has_teacher_rights, login_url='/auth/login/')
 def home_view(request):
     return render(request, "home.html")
 
@@ -774,27 +644,6 @@ def get_teacher_fio(request):
     return request.session.get("teacher_fio", "")
 
 
-def has_teacher_rights(request):
-    if not request.user.is_authenticated:
-        return False
-    else:
-        if not hasattr(request.user, "idrights"):
-            print("У вас нет прав доступа к этой странице.")
-            return False
-        if request.user.idrights.idrights != 2:
-            print("У вас нет прав доступа к этой странице.")
-            return False
-    return True
-
-# def send_changes(request):
-#     if request.method == 'POST':
-#         try:
-#             print('Raw Data:', request.body)
-#             return JsonResponse({'status': 'success'})
-#         except:
-#             return JsonResponse({'error': 'Invalid JSON'}, status=400)
-
-#функция для получения тэгов
 def get_tags(request):
     # Получаем все теги из базы данных
     tags = ErrorTag.objects.all().values(
@@ -827,23 +676,14 @@ def get_tags(request):
     context = {
         'tags_info': sorted_tags,  # преобразуем QuerySet в список
     }
-
-    #print(len(sorted_tags))
     
     return JsonResponse(context)
 
 
-
-
-
-
-
-
+@user_passes_test(has_teacher_rights, login_url='/auth/login/')
 def search_texts(request):
-    # Получаем параметры из GET-запроса (для типа текста)
     text_type_id = request.GET.get('text_type', '')
     
-    # Получаем базовые данные для фильтров
     groups = (
         Group.objects.select_related("idayear")
         .all()
@@ -929,7 +769,8 @@ def search_texts(request):
         grouping = request.POST.get("grouping", "")
 
         # Начинаем с выборки всех текстов
-        texts = Text.objects.all()
+        texts = Text.objects.exclude(idtexttype__isnull=True)
+
 
         if text_name:
             texts = texts.filter(header__icontains=text_name)
@@ -1002,7 +843,7 @@ def search_texts(request):
                 })
 
     # Получаем тексты сгруппированные по типам для главной страницы
-    texts = Text.objects.all()
+    texts = Text.objects.exclude(idtexttype__isnull=True)
     texts = texts.values(
         "idtext",
         "header",

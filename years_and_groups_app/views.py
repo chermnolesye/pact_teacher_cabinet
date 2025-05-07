@@ -1,6 +1,6 @@
+from authorization_app.utils import has_teacher_rights
+from django.contrib.auth.decorators import user_passes_test
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib import messages
-from django.urls import reverse
 from django.http import JsonResponse
 from core_app.models import (
     Group,
@@ -15,10 +15,8 @@ from .forms import (
     AddStudentToGroupForm,
     TransferStudentForm
 )
-from django.forms import formset_factory
-from django.views.decorators.http import require_POST
-from django.views.decorators.csrf import csrf_protect
 
+@user_passes_test(has_teacher_rights, login_url='/auth/login/')
 def show_groups(request):
     query = request.GET.get('q', '')
     course = request.GET.get('course')
@@ -51,6 +49,8 @@ def show_groups(request):
         'academic_years': academic_years,
     })
 
+
+@user_passes_test(has_teacher_rights, login_url='/auth/login/')
 def add_group(request):
     if request.method == 'POST':
         form = AddGroupForm(request.POST)
@@ -64,6 +64,8 @@ def add_group(request):
 
     return render(request, 'add_group.html', {'form': form})
 
+
+@user_passes_test(has_teacher_rights, login_url='/auth/login/')
 def edit_group(request, group_id):
     group = get_object_or_404(Group, idgroup=group_id)
     students = Student.objects.filter(idgroup=group)
