@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 {% extends "base.html" %}
 
 {% load static %}
@@ -406,3 +407,53 @@
         });
     </script>
 {% endblock %}
+=======
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Студенты</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/base.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/students.css' %}" />
+</head>
+<body>
+    <div id="header-container"></div>
+    <form method="post" id="add-group-form">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="button" id="add-student-button">Добавить студента</button>
+        <h2>Студенты в группе:</h2>
+        <ul id="student-list">
+            {% for student in group_students %}
+            <li data-student-id="{{ student.pk }}">
+                {{ student.iduser.firstname }} {{ student.iduser.lastname }}
+                    <button type="button" class="remove-student">Удалить</button>
+                </li>
+            {% empty %}
+                <li>В группе нет студентов.</li>
+            {% endfor %}
+        </ul>
+        <button type="submit">Сохранить</button>
+    </form>
+        <!--В добаление студента желательно сделать ограничение на добавление студнтов по уол-ву их без группы, но оно все равно работать не будет-->
+    <!--Если что у меня (Лиза есть какие-то скрипты js для добавления/удаления студентов, если надо скину, но они выкидывают какие-то непонятные ошибки, я хз как их исправить)-->
+    
+    <script> 
+    
+        document.addEventListener('DOMContentLoaded', function() {
+        fetch('/static/templates/base.html')
+            .then(response => response.text()) 
+            .then(data => {
+            document.getElementById('header-container').innerHTML = data;
+            let user_fio = "{{ fio|escapejs }}"; 
+            document.getElementById('user-link').textContent = user_fio;
+            });
+            
+        });
+
+    </script>
+</body>
+</html>
+>>>>>>> Stashed changes

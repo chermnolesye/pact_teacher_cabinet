@@ -55,10 +55,15 @@ def add_group(request):
     if request.method == 'POST':
         form = AddGroupForm(request.POST)
         if form.is_valid():
+<<<<<<< Updated upstream
             form.save()
             return redirect('add_group')
         else:
             print(form.errors)  
+=======
+            group = form.save()
+            return redirect('/years_groups/add_group')
+>>>>>>> Stashed changes
     else:
         form = AddGroupForm()
 
@@ -67,6 +72,7 @@ def add_group(request):
 
 @user_passes_test(has_teacher_rights, login_url='/auth/login/')
 def edit_group(request, group_id):
+<<<<<<< Updated upstream
     group = get_object_or_404(Group, idgroup=group_id)
     students = Student.objects.filter(idgroup=group)
 
@@ -74,6 +80,37 @@ def edit_group(request, group_id):
     add_form = AddStudentToGroupForm(group=group)
     transfer_form = TransferStudentForm(current_course=group.studycourse, current_group=group)
     same_course_groups = Group.objects.filter(studycourse=group.studycourse).exclude(idgroup=group.idgroup)
+=======
+    group = get_object_or_404(Group, pk=group_id)
+    if request.method == "POST":
+        form = EditGroupForm(request.POST, instance=group)
+        if form.is_valid():
+            form.save()
+            return redirect(f'/years_groups/edit_group/{group_id}')
+        else: 
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f"Ошибка в поле {field}: {error}")
+    else:
+        form = EditGroupForm(instance=group)
+    return render(request, "edit_group.html", {'form': form, 'group': group, 'group_students': form.group_students})
+
+####### не работает в связи с невозможностью поставить null пока изменяет группу на 95, хз есть ли такая у вас, если нет создайте или поменяйте id 
+# скорее всего придется создавть url для него хз
+def remove_student_from_group(request):
+    if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':  
+        student_id = request.POST.get('student_id')
+        try:
+            student = Student.objects.get(pk=student_id)
+            # так как нельзя установить null проверяем по изменению руппы - хз как иначе
+            group = Group.objects.get(pk=95)
+            student.idgroup = group  # Удаляем студента из группы (или student.delete() для полного удаления)
+            student.save()
+            return JsonResponse({'status': 'success'})
+        except Student.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'Студент не найден'}, status=404)
+    return JsonResponse({'status': 'error', 'message': 'Неверный запрос'}, status=400)
+>>>>>>> Stashed changes
 
     if request.method == 'POST':
         if 'save_group' in request.POST:

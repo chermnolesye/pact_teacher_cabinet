@@ -1,4 +1,26 @@
+<<<<<<< Updated upstream
 {% extends "base.html" %}
+=======
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Студенты</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/base.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/students.css' %}" />
+</head>
+<body>
+    <div id="header-container"></div>
+    <form method="post" id="add-group-form">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="button" id="add-student-button">Добавить студента</button>
+        <button type="submit">Сохранить</button>
+    </form>
+    
+>>>>>>> Stashed changes
 
 {% load static %}
 
@@ -51,6 +73,7 @@
         const endYearInput = document.getElementById('end-year');
         const hiddenInput = document.getElementById('idayear-hidden');
 
+<<<<<<< Updated upstream
         function updateAcademicYear() {
             const startYear = parseInt(startYearInput.value);
             if (!isNaN(startYear)) {
@@ -69,3 +92,11 @@
 </script>
 
 {% endblock %}
+=======
+    </script>
+    <!--В добаление студента желательно сделать ограничение на добавление студнтов по уол-ву их без группы, но оно все равно работать не будет-->
+    <!--Если что у меня (Лиза есть какие-то скрипты js для добавления студентов, если надо скину, но они выкидывают какие-то непонятные ошибки, я хз как их исправить)-->
+
+</body>
+</html>
+>>>>>>> Stashed changes
