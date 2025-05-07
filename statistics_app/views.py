@@ -93,6 +93,7 @@ def export_group_error_stats(request):
     wb.save(response)
     return response
 
+
 def statistics_view(request):
     groups = (
         Group.objects.select_related("idayear")
@@ -114,27 +115,6 @@ def statistics_view(request):
     context = {"groups": group_data, "selected_group": group_id}
 
     return render(request, "statistics.html", context)
-
-
-##Пример для Юли
-# <h1>Теги ошибок</h1>
-# <ul>
-#     {% for parent_tag, sub_tags in tags_error.items %}
-#         <li>
-#             <h2>{{ parent_tag }}</h2>
-#             <ul>
-#                 {% for tag in sub_tags %}
-#                     <li style="background-color: {{ tag.color }}; padding: 5px; margin: 5px; border-radius: 5px;">
-#                         <strong>{{ tag.nametag }}</strong> (ID: {{ tag.id }})<br>
-#                         Уровень 1: {{ tag.level1 }}<br>
-#                         Уровень 2: {{ tag.level2 }}<br>
-#                         Уровень 3: {{ tag.level3 }}
-#                     </li>
-#                 {% endfor %}
-#             </ul>
-#         </li>
-#     {% endfor %}
-# </ul>
 
 
 def error_stats(request):
@@ -444,14 +424,7 @@ def chart_types_errors2(request):
             return JsonResponse({"data_type_errors": data}, status=200)
 
 
-
-# Дальше бога нет
-
-
-def chart_types_errors(request):
-	# if not (request.user.is_authenticated and request.user.is_teacher()):
-	# 	return render(request, 'access_denied.html', status=403)
-		
+def chart_types_errors(request):	
 	if request.method != 'POST':
 		languages = ['Deustache']
 		levels = dashboards.get_levels()
@@ -709,9 +682,6 @@ def chart_types_errors(request):
 
 
 def chart_grade_errors(request):
-	# if not (request.user.is_authenticated and request.user.is_teacher()):
-	# 	return render(request, 'access_denied.html', status=403)
-		
 	if request.method != 'POST':
 		languages = ['Deustache']
 		#groups = list(Group.objects.values('groupname', 'idyear__title').distinct().order_by('groupname'))
@@ -968,10 +938,7 @@ def chart_grade_errors(request):
 			return JsonResponse({'data_grade_errors': data_errorlevel}, status=200)
 
 
-def chart_types_grade_errors(request):
-	# if not (request.user.is_authenticated and request.user.is_teacher()):
-	# 	return render(request, 'access_denied.html', status=403)
-		
+def chart_types_grade_errors(request):		
 	if request.method != 'POST':
 		languages = ['Deustache']
 		levels = dashboards.get_levels()
@@ -1393,10 +1360,7 @@ def chart_types_grade_errors(request):
 
 
 # НУЖНО ПЕРЕПИСАТЬ ПОСЛЕ ELSE ЗАПРОСЫ
-def chart_student_dynamics(request):
-	# if not (request.user.is_authenticated and request.user.is_teacher()):
-	# 	return render(request, 'access_denied.html', status=403)
-		
+def chart_student_dynamics(request):		
 	if request.method != 'POST':
 		languages = ['Deustache']
 		tags = list(Error.objects.values('iderrortag__iderrortag', 'iderrortag__tagtext', 'iderrortag__tagtextrussian').order_by('iderrortag__iderrortag').distinct())
@@ -1527,10 +1491,7 @@ def chart_student_dynamics(request):
 		return JsonResponse({'data': data_count_errors, 'text_types': text_types}, status=200)
 
 
-def chart_groups_errors(request):
-	# if not (request.user.is_authenticated and request.user.is_teacher()):
-	# 	return render(request, 'access_denied.html', status=403)
-		
+def chart_groups_errors(request):		
 	if request.method != 'POST':
 		languages = ['Deustache']
 		tags = list(Error.objects.values('iderrortag__iderrortag', 'iderrortag__tagtext', 'iderrortag__tagtextrussian').order_by('iderrortag__iderrortag'))
@@ -1667,10 +1628,7 @@ def chart_groups_errors(request):
 		return JsonResponse({'data': data_all, 'texts': texts, 'text_types': text_types}, status=200)
 
 
-def chart_emotions_errors(request):
-	# if not (request.user.is_authenticated and request.user.is_teacher()):
-	# 	return render(request, 'access_denied.html', status=403)
-		
+def chart_emotions_errors(request):		
 	if request.method != 'POST':
 		languages = ['Deustache']
 		levels = dashboards.get_levels()
@@ -1898,10 +1856,7 @@ def chart_emotions_errors(request):
 					     'text_types': text_types}, status=200)
 
 
-def chart_self_rating_errors(request):
-	# if not (request.user.is_authenticated and request.user.is_teacher()):
-	# 	return render(request, 'access_denied.html', status=403)
-		
+def chart_self_rating_errors(request):	
 	if request.method != 'POST':
 		languages = ['Deustache']
 		levels = dashboards.get_levels()
@@ -2140,10 +2095,7 @@ def chart_self_rating_errors(request):
 					     'text_types': text_types}, status=200)
 
 
-def chart_relation_assessment_self_rating(request):
-	# if not (request.user.is_authenticated and request.user.is_teacher()):
-	# 	return render(request, 'access_denied.html', status=403)
-		
+def chart_relation_assessment_self_rating(request):	
 	if request.method != 'POST':
 		languages = ['Deustache']
 		
@@ -2199,11 +2151,7 @@ def chart_relation_assessment_self_rating(request):
 
 # ПОИСК ЗАВИСИМОСТЕЙ
 
-
-def relation_emotions_self_rating(request):
-	# if not (request.user.is_authenticated and request.user.is_teacher()):
-	# 	return render(request, 'access_denied.html', status=403)
-		
+def relation_emotions_self_rating(request):	
 	if request.method != 'POST':
 		languages = ['Deustache']
 		courses = list(
@@ -2262,10 +2210,7 @@ def relation_emotions_self_rating(request):
 		return JsonResponse({'data_relation': data, 'relation': relation, 'data_fisher': data_fisher}, status=200)
 
 
-def relation_emotions_assessment(request):
-	# if not (request.user.is_authenticated and request.user.is_teacher()):
-	# 	return render(request, 'access_denied.html', status=403)
-		
+def relation_emotions_assessment(request):	
 	if request.method != 'POST':
 		languages = ['Deustache']
 		courses = list(
@@ -2323,10 +2268,7 @@ def relation_emotions_assessment(request):
 		return JsonResponse({'data_relation': data, 'relation': relation, 'data_fisher': data_fisher}, status=200)
 
 
-def relation_self_rating_assessment(request):
-	# if not (request.user.is_authenticated and request.user.is_teacher()):
-	# 	return render(request, 'access_denied.html', status=403)
-		
+def relation_self_rating_assessment(request):	
 	if request.method != 'POST':
 		languages = ['Deustache']
 		courses = list(
@@ -2381,10 +2323,7 @@ def relation_self_rating_assessment(request):
 		return JsonResponse({'data_relation': data, 'relation': relation, 'data_fisher': data_fisher}, status=200)
 
 
-def relation_course_errors(request):
-	# if not (request.user.is_authenticated and request.user.is_teacher()):
-	# 	return render(request, 'access_denied.html', status=403)
-		
+def relation_course_errors(request):	
 	if request.method != 'POST':
 		languages = ['Deustache']
 		tags = list(Error.objects.values('iderrortag__iderrortag', 'iderrortag__tagtext', 'iderrortag__tagtextrussian').order_by('iderrortag__iderrortag'))

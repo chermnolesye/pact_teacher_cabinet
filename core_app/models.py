@@ -287,7 +287,6 @@ class Token(models.Model):
     def __str__(self):
         return f"Token {self.idtoken}: {self.tokentext}"
 
-
 class WritePlace(models.Model):
     idwriteplace = models.AutoField(primary_key=True)
     writeplacename = models.CharField(max_length=100, unique=True)

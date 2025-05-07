@@ -1,18 +1,18 @@
+from authorization_app.utils import has_teacher_rights
+from django.contrib.auth.decorators import user_passes_test
 from django.shortcuts import render, get_object_or_404, redirect
-from django.http import JsonResponse
 from django.db.models import Count, Q, F
 from .forms import EditStudentForm, AddStudentForm
 from core_app.models import (
     Student,
-    Error,
-    ErrorToken,
     Text,
     Group,
-    AcademicYear,
     Student,
     User,
 )
 
+
+@user_passes_test(has_teacher_rights, login_url='/auth/login/')
 def show_students(request):
     query = request.GET.get('q', '').strip()
     group_id = request.GET.get('group', '').strip()
@@ -51,6 +51,8 @@ def show_students(request):
 
     return render(request, "show_students.html", context)
 
+
+@user_passes_test(has_teacher_rights, login_url='/auth/login/')
 def student_info(request, student_id):
     query = request.GET.get('q', '').strip()
     course_filter = request.GET.get('course', '').strip()  # Добавляем параметр для фильтрации по курсу
@@ -104,6 +106,8 @@ def student_info(request, student_id):
 
     return render(request, 'student_info.html', context)
 
+
+@user_passes_test(has_teacher_rights, login_url='/auth/login/')
 def add_student(request):
     if request.method == 'POST':
         form = AddStudentForm(request.POST)
