@@ -260,6 +260,7 @@ async function post_request_text(group, enrollment_date, surname, name, patronym
     list_groups = groups
     list_courses = courses
     list_text_types = text_types
+
 }
 
 async function post_request_text_type(group, enrollment_date, surname, name, patronymic, course, text, text_type) {
@@ -279,6 +280,7 @@ async function post_request_text_type(group, enrollment_date, surname, name, pat
             'course': course,
             'text': text,
             'text_type': text_type,
+            
             'flag_post': 'choice_text_type'
         },
         headers: {
@@ -289,11 +291,13 @@ async function post_request_text_type(group, enrollment_date, surname, name, pat
         groups = response.data.groups
         courses = response.data.courses
         texts = response.data.texts
+        text_types = response.text_types
     })
 
     list_groups = groups
     list_courses = courses
     list_texts = texts
+    list_text_types = text_types
 }
 
 function on_change_font_size() {
@@ -302,12 +306,12 @@ function on_change_font_size() {
     update_data()
 }
 
-var filters = new Vue({
+var filters = new Vue({ 
     el: '#form_filters',
     data: {
         groups: list_groups,
         selected_group: '',
-        group_dates: list_enrollment_date,
+        group_dates: '',
         selected_date: '',
         surname: '',
         name: '',
@@ -317,9 +321,19 @@ var filters = new Vue({
         texts: list_texts,
         selected_text: '',
         text_types: list_text_types,
-        selected_text_type: ''
+        selected_text_type: '',
+        legend_filters: { // Определяем this.legend_filters здесь
+            emotion: '',
+            self_rating: '',
+            group: '',
+            enrollment_date: '',
+            surname: '',
+            name: '',
+            patronymic: '',
+            course: ''
+        }
     },
-    methods: {
+    methods: { 
         on_change_choice_student_filters() {
             if (document.getElementById('groups').checked) {
                 document.getElementById("enrollment_date").style.visibility = "visible"
@@ -355,18 +369,19 @@ var filters = new Vue({
             await post_request_data()
         },
         async on_change_choice_all() {
-            if (legend_filters.emotion == '' && legend_filters.self_rating == '') {
+            if (this.legend_filters.emotion == '' && this.legend_filters.self_rating == '') {
                 await post_request_all(this.selected_text, this.selected_text_type)
             }
 
             this.update_diagrams()
 
-            legend_filters.group = ''
-            legend_filters.enrollment_date = ''
-            legend_filters.surname = ''
-            legend_filters.name = ''
-            legend_filters.patronymic = ''
-            legend_filters.course = ''
+            this.legend_filters.group = ''
+            this.legend_filters.enrollment_date = ''
+            this.legend_filters.surname = ''
+            this.legend_filters.name = ''
+            this.legend_filters.patronymic = ''
+            this.legend_filters.course = ''
+            // this.legend_filters.self_rating = ''
 
             document.getElementById("card_group").style.display = 'none'
             document.getElementById("card_student").style.display = 'none'
@@ -400,19 +415,19 @@ var filters = new Vue({
             }
 
             if (this.selected_group != '' && this.selected_date != '') {
-                if (legend_filters.emotion == '' && legend_filters.self_rating == '') {
+                if (this.legend_filters.emotion == '' && this.legend_filters.self_rating == '') {
                     await post_request_group(this.selected_group, this.selected_date, this.selected_text,
                                             this.selected_text_type)
                 }
 
                 this.update_diagrams()
 
-                legend_filters.group = this.selected_group
-                legend_filters.enrollment_date = this.selected_date
-                legend_filters.surname = ''
-                legend_filters.name = ''
-                legend_filters.patronymic = ''
-                legend_filters.course = ''
+                this.legend_filters.group = this.selected_group
+                this.legend_filters.enrollment_date = this.selected_date
+                this.legend_filters.surname = ''
+                this.legend_filters.name = ''
+                this.legend_filters.patronymic = ''
+                this.legend_filters.course = ''
 
                 document.getElementById("card_group").style.display = 'block'
                 document.getElementById("card_student").style.display = 'none'
@@ -443,19 +458,19 @@ var filters = new Vue({
             }
 
             if (this.surname != '' && this.name != ''){
-                if (legend_filters.emotion == '' && legend_filters.self_rating == '') {
+                if (this.legend_filters.emotion == '' && this.legend_filters.self_rating == '') {
                     await post_request_student(this.surname, this.name, this.patronymic, this.selected_text,
                                                 this.selected_text_type)
                 }
 
                 this.update_diagrams()
 
-                legend_filters.group = ''
-                legend_filters.enrollment_date = ''
-                legend_filters.surname = this.surname
-                legend_filters.name = this.name
-                legend_filters.patronymic = this.patronymic
-                legend_filters.course = ''
+                this.legend_filters.group = ''
+                this.legend_filters.enrollment_date = ''
+                this.legend_filters.surname = this.surname
+                this.legend_filters.name = this.name
+                this.legend_filters.patronymic = this.patronymic
+                this.legend_filters.course = ''
 
                 document.getElementById("card_group").style.display = 'none'
                 document.getElementById("card_student").style.display = 'block'
@@ -463,18 +478,18 @@ var filters = new Vue({
             }
         },
         async on_change_course() {
-            if (legend_filters.emotion == '' && legend_filters.self_rating == '') {
+            if (this.legend_filters.emotion == '' && this.legend_filters.self_rating == '') {
                 await post_request_course(this.selected_course, this.selected_text, this.selected_text_type)
             }
 
             this.update_diagrams()
 
-            legend_filters.group = ''
-            legend_filters.enrollment_date = ''
-            legend_filters.surname = ''
-            legend_filters.name = ''
-            legend_filters.patronymic = ''
-            legend_filters.course = this.selected_course
+            this.legend_filters.group = ''
+            this.legend_filters.enrollment_date = ''
+            this.legend_filters.surname = ''
+            this.legend_filters.name = ''
+            this.legend_filters.patronymic = ''
+            this.legend_filters.course = this.selected_course
 
             document.getElementById("card_group").style.display = 'none'
             document.getElementById("card_student").style.display = 'none'
@@ -487,7 +502,7 @@ var filters = new Vue({
                 this.group_dates = []
                 this.selected_text = ''
 
-                if (legend_filters.emotion == '' && legend_filters.self_rating == '') {
+                if (this.legend_filters.emotion == '' && this.legend_filters.self_rating == '') {
                     await post_request_text(this.selected_group, this.selected_date, this.surname, this.name,
                                             this.patronymic, this.selected_course, this.selected_text,
                                             this.selected_text_type)
@@ -495,16 +510,18 @@ var filters = new Vue({
 
                 this.update_diagrams()
 
-                legend_filters.text = ''
+                this.legend_filters.text = ''
                 document.getElementById("card_text").style.display = 'none'
             }
         },
         async on_change_text() {
+            console.log("Groups data:", groups);
+
             this.selected_group = ''
             this.selected_date = ''
             this.group_dates = []
 
-            if (legend_filters.emotion == '' && legend_filters.self_rating == '') {
+            if (this.legend_filters.emotion == '' && this.legend_filters.self_rating == '') {
                 await post_request_text(this.selected_group, this.selected_date, this.surname, this.name,
                                         this.patronymic, this.selected_course, this.selected_text,
                                         this.selected_text_type)
@@ -512,7 +529,7 @@ var filters = new Vue({
 
             this.update_diagrams()
 
-            legend_filters.text = this.selected_text
+            this.legend_filters.text = this.selected_text
             document.getElementById("card_text").style.display = 'block'
         },
         async on_change_choice_text_types() {
@@ -522,7 +539,7 @@ var filters = new Vue({
                 this.group_dates = []
                 this.selected_text_type = ''
 
-                if (legend_filters.emotion == '' && legend_filters.self_rating == '') {
+                if (this.legend_filters.emotion == '' && this.legend_filters.self_rating == '') {
                     await post_request_text_type(this.selected_group, this.selected_date, this.surname,
                                                 this.name, this.patronymic, this.selected_course, this.selected_text,
                                                 this.selected_text_type)
@@ -530,7 +547,7 @@ var filters = new Vue({
 
                 this.update_diagrams()
 
-                legend_filters.text_type = ''
+                this.legend_filters.text_type = ''
                 document.getElementById("card_text_type").style.display = 'none'
             }
         },
@@ -539,7 +556,7 @@ var filters = new Vue({
             this.selected_date = ''
             this.group_dates = []
 
-            if (legend_filters.emotion == '' && legend_filters.self_rating == '') {
+            if (this.legend_filters.emotion == '' && this.legend_filters.self_rating == '') {
                 await post_request_text_type(this.selected_group, this.selected_date, this.surname, this.name,
                                             this.patronymic, this.selected_course, this.selected_text,
                                             this.selected_text_type)
@@ -547,7 +564,7 @@ var filters = new Vue({
 
             this.update_diagrams()
 
-            legend_filters.text_type = this.selected_text_type
+            this.legend_filters.text_type = this.selected_text_type
             document.getElementById("card_text_type").style.display = 'block'
         },
     }

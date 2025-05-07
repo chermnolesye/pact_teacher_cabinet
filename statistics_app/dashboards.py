@@ -63,7 +63,7 @@ def get_levels():
 
 
 def get_texts_id_keys(data_count, texts_id):
-    print(data_count[0])
+    #print(data_count[0])
     """Создаёт словарь: {id тега: [id текстов]}"""
     for data in data_count:
         if "iderrortag__iderrortag" in data:
@@ -242,7 +242,7 @@ def get_data_errors(data_count_errors, level, is_sorted):
         ):
             s += 1
 
-    print(len(data_count_errors + data_tags_not_in_errors), s)
+    #print(len(data_count_errors + data_tags_not_in_errors), s)
 
     data = [
         {
@@ -416,14 +416,14 @@ def get_filters_for_choice_student(list_filters):
     name = list_filters["name"]
     text = list_filters.get("text")
     text_type = list_filters.get("text_type")
-    user_filter = Q(idstudent__iduser__lastname=surname) & Q(
-        idstudent__iduser__firstname=name
+    user_filter = Q(text__idstudent__iduser__lastname=surname) & Q(
+        text__idstudent__iduser__firstname=name
     )
 
     if text:
         text_types = list(
             TextType.objects.filter(
-                text__errorcheckflag=True, text__header=text, **user_filter
+                Q(text__errorcheckflag=True, text__header=text) & user_filter
             )
             .values()
             .distinct()
@@ -431,7 +431,7 @@ def get_filters_for_choice_student(list_filters):
         )
     else:
         text_types = list(
-            TextType.objects.filter(text__errorcheckflag=True, **user_filter)
+            TextType.objects.filter(Q(text__errorcheckflag=True) &  user_filter)
             .values()
             .distinct()
             .order_by("idtexttype")
@@ -440,7 +440,9 @@ def get_filters_for_choice_student(list_filters):
     if text_type:
         texts = list(
             Text.objects.filter(
-                errorcheckflag=True, idtexttype__texttypename=text_type, **user_filter
+                Q(errorcheckflag=True, idtexttype__texttypename=text_type) & Q(idstudent__iduser__lastname=surname) & Q(
+        idstudent__iduser__firstname=name
+    )
             )
             .values("header")
             .distinct()
@@ -448,7 +450,9 @@ def get_filters_for_choice_student(list_filters):
         )
     else:
         texts = list(
-            Text.objects.filter(errorcheckflag=True, **user_filter)
+            Text.objects.filter(Q(errorcheckflag=True)  & Q(idstudent__iduser__lastname=surname) & Q(
+        idstudent__iduser__firstname=name
+    ))
             .values("header")
             .distinct()
             .order_by("header")

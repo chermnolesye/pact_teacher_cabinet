@@ -148,7 +148,7 @@
 													v-model="selected_group"
 													@change="on_change_group_number"
 												>
-													<option v-for="group in groups">{{ group.groupname }}</option>
+													<option v-for="group in groups":value="group.groupname">{{ group.groupname }}</option>
 												</select>
 												{% endverbatim %}
 											</div>
@@ -285,7 +285,7 @@
 													v-model="selected_course"
 													@change="on_change_course"
 												>
-													<option v-for="course in courses">
+													<option v-for="course in courses":value="course.studycourse">
 														{{ course.studycourse }}
 													</option>
 												</select>
@@ -343,7 +343,6 @@
 											<input
 												id="filter_text_types"
 												type="checkbox"
-												value=""
 												class="form-check-input"
 												data-bs-toggle="collapse"
 												data-bs-target="#text_type"
@@ -475,7 +474,8 @@
 	        })
 
 	    list_data = data
-		console.log(list_data)
+		// console.log(list_data)
+		update_data();
 	}
 
 
@@ -498,6 +498,7 @@
 	}
 
 	function update_data() {
+		data_for_language = list_data.filter(data => data.grade__grade_language == list_languages[0].id_language);
 		grade_errors_bar.get_data()
 		grade_errors_bar.update_chart()
 		grade_errors_pie.get_data()
@@ -521,6 +522,7 @@
 			labels: [],
 			stars: [],
 			chart_type: 'bar',
+			
 			chartColor: 'crimson',
 			loading: false
 		},

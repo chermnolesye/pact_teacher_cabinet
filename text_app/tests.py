@@ -121,17 +121,26 @@ class AnnotationTest(TestCase):
     #     self.assertContains(response, "some_text")
 
 
-    # def test_show_texts_page_search (self):
-    #     """Проверка загрузки страницы просмотра текстов после поиска по названию текста в графе поиска при нажатии кнопки “Поиск”."""
-    #     response = self.client.get(reverse('show_texts'))
-    
-    # def test_show_texts_page_filter  (self):
-    #     """Проверка просмотра текстов по введенным значениям фильтров."""
-    #     response = self.client.get(reverse('show_texts'))
+    def test_show_texts_page_search (self):
+        """Проверка загрузки страницы просмотра текстов после поиска по названию текста в графе поиска при нажатии кнопки “Поиск”."""
+        response = self.client.get('/show_texts?text_name=some_text')
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "some_text")
 
-    # def test_show_texts_page_text_type  (self):
-    #     """Проверка открытия страницы с текстами выбранного типа при нажатии кнопки “Название типа текста”."""
-    #     response = self.client.get(reverse('show_texts'))
+    
+    def test_show_texts_page_filter  (self):
+        """Проверка просмотра текстов по введенным значениям фильтров."""
+        response = self.app.get('/show_texts?year=2025')
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "2025")
+
+    def test_show_texts_page_text_type  (self):
+        """Проверка открытия страницы с текстами выбранного типа при нажатии кнопки “Название типа текста”."""
+        response = self.client.get(reverse('show_texts'))
+        response = self.app.get('/show_texts?text_type=essay')  # Замените 'essay' на имя вашего типа текста
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "essay")
+
 
 #teacher_load_text
     def test_teacher_load_text_page   (self):
@@ -156,8 +165,27 @@ class AnnotationTest(TestCase):
     #     self.assertRedirects(response, login_url)
     #     self.assertFalse(response.wsgi_request.user.is_authenticated)
 
-    # def test_teacher_load_text     (self):
-    #     """Загрузка текста от имени студента"""
-    #     response = self.client.get(reverse('teacher_load_text'))
+    def test_teacher_load_text     (self):
+        """Загрузка текста от имени студента"""
+        response = self.client.get(reverse('teacher_load_text'))
+        self.client.login(login="user1", password="user1")  
+        
+        
+        form_data = {
+            'idstudent': 1,
+            'header': 'название',
+            'text': 'Текст...',
+            'idtexttype': 1,
+            'idwriteplace': 1,
+            'idwritetool': 1,
+            'idemotion': 1,
+        }
+        
+
+        response = self.client.post(reverse('teacher_load_text'), form_data)
+        
+        self.assertEqual(response.status_code, 302)  
+        self.assertRedirects(response, reverse('show_texts'))
+
 
 

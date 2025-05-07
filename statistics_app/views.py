@@ -714,7 +714,8 @@ def chart_grade_errors(request):
 		
 	if request.method != 'POST':
 		languages = ['Deustache']
-		groups = list(Group.objects.values('groupname', 'idyear__title').distinct().order_by('groupname'))
+		#groups = list(Group.objects.values('groupname', 'idyear__title').distinct().order_by('groupname'))
+		groups = list(Group.objects.values('groupname').distinct().order_by('groupname'))
 		courses = list(
 			Group.objects.values('studycourse').filter(studycourse__gt=0).distinct().order_by(
 				'studycourse'))
@@ -737,8 +738,7 @@ def chart_grade_errors(request):
 		data_errorlevel = dashboards.get_zero_count_grade_errors(data_errorlevel)
 		data_errorlevel = sorted(data_errorlevel, key=lambda d: d['count_data'], reverse=True)
 
-		# print(groups)
-		
+
 		return render(request, 'dashboard_error_grade.html', {'right': True, 'languages': languages, 'groups': groups,
 								      'courses': courses, 'texts': texts,
 								      'text_types': text_types, 'data': data_errorlevel})
@@ -775,6 +775,7 @@ def chart_grade_errors(request):
 			groups, courses, texts = dashboards.get_filters_for_choice_text_type(list_filters)
 			return JsonResponse({'groups': groups, 'courses': courses, 'texts': texts}, status=200)
 			
+		
 		if flag_post == 'update_diagrams':
 			group = list_filters['group']
 			date = list_filters['enrollment_date']
@@ -783,185 +784,187 @@ def chart_grade_errors(request):
 			patronymic = list_filters['patronymic']
 			course = list_filters['course']
 			text = list_filters['text']
-			text_type = list_filters['text_type']
+			text_type = list_filters.get('text_type')
+			
 			
 			if surname and name and patronymic and text and text_type:
 				data_errorlevel = list(
 					Error.objects.values('iderrorlevel__iderrorlevel', 'iderrorlevel__errorlevelname', 
 								 'errortoken__idtoken__idsentence__idtext__idtext').filter(
-						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
-							sentence__text_id__user__last_name=surname) & Q(sentence__text_id__user__name=name) & Q(
-							sentence__text_id__user__patronymic=patronymic) & Q(sentence__text_id__header=text) & Q(
-							sentence__text_id__text_type=text_type)).annotate(count_data=Count('iderrorlevel__iderrorlevel')))
+						Q(errortoken__idtoken__idsentence__idtext__errorcheckflag=True) & Q(
+							errortoken__idtoken__idsentence__idtext__idstudent__iduser__lastname=surname) & Q(errortoken__idtoken__idsentence__idtext__idstudent__iduser__firstname=name) & Q(
+							errortoken__idtoken__idsentence__idtext__idstudent__iduser__middlename=patronymic) & Q(errortoken__idtoken__idsentence__idtext__header=text) & Q(
+							errortoken__idtoken__idsentence__idtext__idtexttype__texttypename=text_type)).annotate(count_data=Count('iderrorlevel__iderrorlevel')))
 				
-			elif surname and name and patronymic and text:
+			elif surname and name and patronymic and text: #
 				data_errorlevel = list(
 					Error.objects.values('iderrorlevel__iderrorlevel', 'iderrorlevel__errorlevelname', 
 								 'errortoken__idtoken__idsentence__idtext__idtext').filter(
-						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
-							sentence__text_id__user__last_name=surname) & Q(sentence__text_id__user__name=name) & Q(
-							sentence__text_id__user__patronymic=patronymic) & Q(
-							sentence__text_id__header=text)).annotate(count_data=Count('iderrorlevel__iderrorlevel')))
+						Q(errortoken__idtoken__idsentence__idtext__errorcheckflag=True) & Q(
+							errortoken__idtoken__idsentence__idtext__idstudent__iduser__lastname=surname) & Q(errortoken__idtoken__idsentence__idtext__idstudent__iduser__firstname=name) & Q(
+							errortoken__idtoken__idsentence__idtext__idstudent__iduser__middlename=patronymic) & Q(
+							errortoken__idtoken__idsentence__idtext__header=text)).annotate(count_data=Count('iderrorlevel__iderrorlevel')))
 				
-			elif surname and name and patronymic and text_type:
+			elif surname and name and patronymic and text_type: 
 				data_errorlevel = list(
 					Error.objects.values('iderrorlevel__iderrorlevel', 'iderrorlevel__errorlevelname', 
 								 'errortoken__idtoken__idsentence__idtext__idtext').filter(
-						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
-							sentence__text_id__user__last_name=surname) & Q(sentence__text_id__user__name=name) & Q(
-							sentence__text_id__user__patronymic=patronymic) & Q(
-							sentence__text_id__text_type=text_type)).annotate(count_data=Count('iderrorlevel__iderrorlevel')))
+						Q(errortoken__idtoken__idsentence__idtext__errorcheckflag=True) & Q(
+							errortoken__idtoken__idsentence__idtext__idstudent__iduser__lastname=surname) & Q(errortoken__idtoken__idsentence__idtext__idstudent__iduser__firstname=name) & Q(
+							errortoken__idtoken__idsentence__idtext__idstudent__iduser__middlename=patronymic) & Q(
+							errortoken__idtoken__idsentence__idtext__idtexttype__texttypename=text_type)).annotate(count_data=Count('iderrorlevel__iderrorlevel')))
 				
 			elif surname and name and patronymic:
 				data_errorlevel = list(
 					Error.objects.values('iderrorlevel__iderrorlevel', 'iderrorlevel__errorlevelname', 
 								 'errortoken__idtoken__idsentence__idtext__idtext').filter(
-						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
-							sentence__text_id__user__last_name=surname) & Q(sentence__text_id__user__name=name) & Q(
-							sentence__text_id__user__patronymic=patronymic)).annotate(
+						Q(errortoken__idtoken__idsentence__idtext__errorcheckflag=True) & Q(
+							errortoken__idtoken__idsentence__idtext__idstudent__iduser__lastname=surname) & Q(errortoken__idtoken__idsentence__idtext__idstudent__iduser__firstname=name) & Q(
+							errortoken__idtoken__idsentence__idtext__idstudent__iduser__middlename=patronymic)).annotate(
 						count_data=Count('iderrorlevel__iderrorlevel')))
 				
 			elif surname and name and text and text_type:
 				data_errorlevel = list(
 					Error.objects.values('iderrorlevel__iderrorlevel', 'iderrorlevel__errorlevelname', 
 								 'errortoken__idtoken__idsentence__idtext__idtext').filter(
-						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
-							sentence__text_id__user__last_name=surname) & Q(sentence__text_id__user__name=name) & Q(
-							sentence__text_id__header=text) & Q(sentence__text_id__text_type=text_type)).annotate(
+						Q(errortoken__idtoken__idsentence__idtext__errorcheckflag=True) & Q(
+							errortoken__idtoken__idsentence__idtext__idstudent__iduser__lastname=surname) & Q(errortoken__idtoken__idsentence__idtext__idstudent__iduser__firstname=name) & Q(
+							errortoken__idtoken__idsentence__idtext__header=text) & Q(errortoken__idtoken__idsentence__idtext__idtexttype__texttypename=text_type)).annotate(
 						count_data=Count('iderrorlevel__iderrorlevel')))
 				
 			elif surname and name and text:
 				data_errorlevel = list(
 					Error.objects.values('iderrorlevel__iderrorlevel', 'iderrorlevel__errorlevelname', 
 								 'errortoken__idtoken__idsentence__idtext__idtext').filter(
-						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
-							sentence__text_id__user__last_name=surname) & Q(sentence__text_id__user__name=name) & Q(
-							sentence__text_id__header=text)).annotate(count_data=Count('iderrorlevel__iderrorlevel')))
+						 Q(errortoken__idtoken__idsentence__idtext__errorcheckflag=True) & Q(
+							errortoken__idtoken__idsentence__idtext__idstudent__iduser__lastname=surname) & Q(errortoken__idtoken__idsentence__idtext__idstudent__iduser__firstname=name) & Q(
+							errortoken__idtoken__idsentence__idtext__header=text)).annotate(count_data=Count('iderrorlevel__iderrorlevel')))
 				
 			elif surname and name and text_type:
 				data_errorlevel = list(
 					Error.objects.values('iderrorlevel__iderrorlevel', 'iderrorlevel__errorlevelname', 
 								 'errortoken__idtoken__idsentence__idtext__idtext').filter(
-						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
-							sentence__text_id__user__last_name=surname) & Q(sentence__text_id__user__name=name) & Q(
-							sentence__text_id__text_type=text_type)).annotate(count_data=Count('iderrorlevel__iderrorlevel')))
+						Q(errortoken__idtoken__idsentence__idtext__errorcheckflag=True) &  Q(
+							errortoken__idtoken__idsentence__idtext__idstudent__iduser__lastname=surname) & Q(
+							errortoken__idtoken__idsentence__idtext__idstudent__iduser__firstname=name) & Q(
+							errortoken__idtoken__idsentence__idtext__idtexttype__texttypename=text_type)).annotate(count_data=Count('iderrorlevel__iderrorlevel')))
 				
 			elif surname and name:
 				data_errorlevel = list(
-					Error.objects.values('iderrorlevel__iderrorlevel', 'iderrorlevel__errorlevelname', 
-								 'errortoken__idtoken__idsentence__idtext__idtext').filter(
-						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
-							sentence__text_id__user__last_name=surname) & Q(
-							sentence__text_id__user__name=name)).annotate(count_data=Count('iderrorlevel__iderrorlevel')))
+					Error.objects.values('iderrorlevel__iderrorlevel', 'iderrorlevel__errorlevelname',
+						   'errortoken__idtoken__idsentence__idtext__idtext').filter(
+						Q(errortoken__idtoken__idsentence__idtext__errorcheckflag=True) & Q(
+							errortoken__idtoken__idsentence__idtext__idstudent__iduser__lastname=surname) & Q(
+							errortoken__idtoken__idsentence__idtext__idstudent__iduser__firstname=name)).annotate(count_data=Count('iderrorlevel__iderrorlevel')))
 				
 			elif course and text_type and text:
 				data_errorlevel = list(
 					Error.objects.values('iderrorlevel__iderrorlevel', 'iderrorlevel__errorlevelname', 
 								 'errortoken__idtoken__idsentence__idtext__idtext').filter(
-						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
-							sentence__text_id__tbltextgroup__group__course_number=course) & Q(
-							sentence__text_id__header=text) & Q(sentence__text_id__text_type=text_type)).annotate(
+						Q(errortoken__idtoken__idsentence__idtext__errorcheckflag=True) & Q(
+							errortoken__idtoken__idsentence__idtext__idstudent__idgroup__studycourse=course) & Q(
+							errortoken__idtoken__idsentence__idtext__header=text) & Q(errortoken__idtoken__idsentence__idtext__idtexttype__texttypename=text_type)).annotate(
 						count_data=Count('iderrorlevel__iderrorlevel')))
 				
 			elif course and text:
 				data_errorlevel = list(
-					Error.objects.values('iderrorlevel__iderrorlevel', 'iderrorlevel__errorlevelname', 
-								 'errortoken__idtoken__idsentence__idtext__idtext').filter(
-						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
-							sentence__text_id__tbltextgroup__group__course_number=course) & Q(
-							sentence__text_id__header=text)).annotate(count_data=Count('iderrorlevel__iderrorlevel')))
+					Error.objects.values('iderrorlevel__iderrorlevel', 'iderrorlevel__errorlevelname',
+						   'errortoken__idtoken__idsentence__idtext__idtext').filter(
+						Q(errortoken__idtoken__idsentence__idtext__errorcheckflag=True) & Q(
+							errortoken__idtoken__idsentence__idtext__idstudent__idgroup__studycourse=course) & Q(
+							errortoken__idtoken__idsentence__idtext__header=text)).annotate(count_data=Count('iderrorlevel__iderrorlevel')))
 				
 			elif course and text_type:
 				data_errorlevel = list(
-					Error.objects.values('iderrorlevel__iderrorlevel', 'iderrorlevel__errorlevelname', 
-								 'errortoken__idtoken__idsentence__idtext__idtext').filter(
-						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
-							sentence__text_id__tbltextgroup__group__course_number=course) & Q(
-							sentence__text_id__text_type=text_type)).annotate(count_data=Count('iderrorlevel__iderrorlevel')))
+					Error.objects.values('iderrorlevel__iderrorlevel', 'iderrorlevel__errorlevelname',
+						   'errortoken__idtoken__idsentence__idtext__idtext').filter(
+						Q(errortoken__idtoken__idsentence__idtext__errorcheckflag=True) & Q(
+							errortoken__idtoken__idsentence__idtext__idstudent__idgroup__studycourse=course) & Q(
+							errortoken__idtoken__idsentence__idtext__idtexttype__texttypename=text_type)).annotate(count_data=Count('iderrorlevel__iderrorlevel')))
 				
 			elif course:
 				data_errorlevel = list(
-					Error.objects.values('iderrorlevel__iderrorlevel', 'iderrorlevel__errorlevelname', 
-								 'errortoken__idtoken__idsentence__idtext__idtext').filter(
-						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
-							sentence__text_id__tbltextgroup__group__course_number=course)).annotate(
-						count_data=Count('iderrorlevel__iderrorlevel')))
+					Error.objects.values( 'iderrorlevel__iderrorlevel', 'iderrorlevel__errorlevelname',
+						   'errortoken__idtoken__idsentence__idtext__idtext').filter(Q(errortoken__idtoken__idsentence__idtext__errorcheckflag=True) & 
+    Q(errortoken__idtoken__idsentence__idtext__idstudent__idgroup__studycourse=course)).annotate(count_data=Count('iderrorlevel__iderrorlevel')))
+
 				
-			elif group and text and text_type:
+			elif group and text and text_type: #!!!!
 				group_date = date[:4] + '-09-01'
 				data_errorlevel = list(
 					Error.objects.values('iderrorlevel__iderrorlevel', 'iderrorlevel__errorlevelname', 
 								 'errortoken__idtoken__idsentence__idtext__idtext').filter(
-						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
-							sentence__text_id__tbltextgroup__group__group_name=group) & Q(
-							sentence__text_id__tbltextgroup__group__enrollment_date=group_date) & Q(
-							sentence__text_id__header=text) & Q(sentence__text_id__text_type=text_type)).annotate(
+						 Q(errortoken__idtoken__idsentence__idtext__errorcheckflag=True) & Q(
+							errortoken__idtoken__idsentence__idtext__idstudent__idgroup__groupname=group) & Q(
+							errortoken__idtoken__idsentence__idtext__idstudent__idgroup__idayear__title=group_date) & Q(
+							sentence__text_id__header=text) & Q(errortoken__idtoken__idsentence__idtext__idtexttype__texttypename=text_type)).annotate(
 						count_data=Count('iderrorlevel__iderrorlevel')))
 				
-			elif group and text:
-				group_date = date[:4] + '-09-01'
+			elif group and text: # !!!!!
+				group_date = date[0:4]+"/"+date[7:]
 				data_errorlevel = list(
 					Error.objects.values('iderrorlevel__iderrorlevel', 'iderrorlevel__errorlevelname', 
 								 'errortoken__idtoken__idsentence__idtext__idtext').filter(
-						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
-							sentence__text_id__tbltextgroup__group__group_name=group) & Q(
-							sentence__text_id__tbltextgroup__group__enrollment_date=group_date) & Q(
-							sentence__text_id__header=text)).annotate(count_data=Count('iderrorlevel__iderrorlevel')))
+						 Q(errortoken__idtoken__idsentence__idtext__errorcheckflag=True) & Q(
+							errortoken__idtoken__idsentence__idtext__idstudent__idgroup__groupname=group) & Q(
+							errortoken__idtoken__idsentence__idtext__idstudent__idgroup__idayear__title=group_date) & Q(
+							errortoken__idtoken__idsentence__idtext__header=text)).annotate(count_data=Count('iderrorlevel__iderrorlevel')))
 				
-			elif group and text_type:
-				group_date = date[:4] + '-09-01'
+			elif group and text_type: # !!!!!!!
+				group_date = date[0:4]+"/"+date[7:]
 				data_errorlevel = list(
 					Error.objects.values('iderrorlevel__iderrorlevel', 'iderrorlevel__errorlevelname', 
 								 'errortoken__idtoken__idsentence__idtext__idtext').filter(
-						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
-							sentence__text_id__tbltextgroup__group__group_name=group) & Q(
-							sentence__text_id__tbltextgroup__group__enrollment_date=group_date) & Q(
-							sentence__text_id__text_type=text_type)).annotate(count_data=Count('iderrorlevel__iderrorlevel')))
+						 Q(errortoken__idtoken__idsentence__idtext__errorcheckflag=True) & Q(
+							errortoken__idtoken__idsentence__idtext__idstudent__idgroup__groupname=group) & Q(
+							errortoken__idtoken__idsentence__idtext__idstudent__idgroup__idayear__title=group_date) & Q(
+							errortoken__idtoken__idsentence__idtext__idtexttype__texttypename=text_type)).annotate(count_data=Count('iderrorlevel__iderrorlevel')))
 				
-			elif group:
-				group_date = date[:4] + '-09-01'
+			elif group: #
+				group_date = date
+				group_date = date[0:4]+"/"+date[7:]
 				data_errorlevel = list(
 					Error.objects.values('iderrorlevel__iderrorlevel', 'iderrorlevel__errorlevelname', 
 								 'errortoken__idtoken__idsentence__idtext__idtext').filter(
-						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
-							sentence__text_id__tbltextgroup__group__group_name=group) & Q(
-							sentence__text_id__tbltextgroup__group__enrollment_date=group_date)).annotate(
+						 Q(errortoken__idtoken__idsentence__idtext__errorcheckflag=True) & Q(
+							errortoken__idtoken__idsentence__idtext__idstudent__idgroup__groupname=group) & Q(
+							errortoken__idtoken__idsentence__idtext__idstudent__idgroup__idayear__title=group_date)).annotate(
 						count_data=Count('iderrorlevel__iderrorlevel')))
 				
-			elif text_type and text:
+			elif text_type and text: 
 				data_errorlevel = list(
 					Error.objects.values('iderrorlevel__iderrorlevel', 'iderrorlevel__errorlevelname', 
 								 'errortoken__idtoken__idsentence__idtext__idtext').filter(
-						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
-							sentence__text_id__text_type=text_type) & Q(sentence__text_id__header=text)).annotate(
+						 Q(errortoken__idtoken__idsentence__idtext__errorcheckflag=True) & Q(
+							errortoken__idtoken__idsentence__idtext__idtexttype__texttypename=text_type) & Q(errortoken__idtoken__idsentence__idtext__header=text)).annotate(
 						count_data=Count('iderrorlevel__iderrorlevel')))
 				
-			elif text_type:
+			elif text_type: 
 				data_errorlevel = list(
 					Error.objects.values('iderrorlevel__iderrorlevel', 'iderrorlevel__errorlevelname', 
 								 'errortoken__idtoken__idsentence__idtext__idtext').filter(
-						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
-							sentence__text_id__text_type=text_type)).annotate(count_data=Count('iderrorlevel__iderrorlevel')))
+						 Q(errortoken__idtoken__idsentence__idtext__errorcheckflag=True) & Q(
+							errortoken__idtoken__idsentence__idtext__idtexttype__texttypename=text_type)).annotate(count_data=Count('iderrorlevel__iderrorlevel')))
 				
-			elif text:
+			elif text: 
 				data_errorlevel = list(
 					Error.objects.values('iderrorlevel__iderrorlevel', 'iderrorlevel__errorlevelname', 
 								 'errortoken__idtoken__idsentence__idtext__idtext').filter(
-						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1) & Q(
-							sentence__text_id__header=text)).annotate(count_data=Count('iderrorlevel__iderrorlevel')))
+						 Q(errortoken__idtoken__idsentence__idtext__errorcheckflag=True) & Q(
+							errortoken__idtoken__idsentence__idtext__header=text)).annotate(count_data=Count('iderrorlevel__iderrorlevel')))
 				
-			else:
+			else: 
 				data_errorlevel = list(
 					Error.objects.values('iderrorlevel__iderrorlevel', 'iderrorlevel__errorlevelname', 
 								 'errortoken__idtoken__idsentence__idtext__idtext').filter(
-						Q(tag__markup_type=1) & Q(sentence__text_id__error_tag_check=1)).annotate(
+						 Q(errortoken__idtoken__idsentence__idtext__errorcheckflag=True)).annotate(
 						count_data=Count('iderrorlevel__iderrorlevel')))
 				
 			data_errorlevel = dashboards.get_data_on_tokens(data_errorlevel, 'iderrorlevel__iderrorlevel',  True,
 								   False)
 			data_errorlevel = dashboards.get_zero_count_grade_errors(data_errorlevel)
 			data_errorlevel = sorted(data_errorlevel, key=lambda d: d['count_data'], reverse=True)
-			
+			print(data_errorlevel, "!!!!")
 			return JsonResponse({'data_grade_errors': data_errorlevel}, status=200)
 
 
@@ -1126,7 +1129,7 @@ def chart_types_grade_errors(request):
 					group_date = date[:4] + '-09-01'
 					base_query = base_query.filter(
 						errortoken__idtoken__idsentence__idtext__idstudent__idgroup__groupname=group,
-						errortoken__idtoken__idsentence__idtext__idstudent__idgroup__idayear__startdate=group_date
+						errortoken__idtoken__idsentence__idtext__idstudent__idgroup__idayear__title=group_date
 					)
 				
 				if text:
@@ -1403,6 +1406,7 @@ def chart_student_dynamics(request):
 		return render(request, 'dashboard_student_dynamics.html', {'right': True, 'languages': languages, 'tags': tags})
 	else:
 		list_filters = json.loads(request.body)
+		print(list_filters, "&&")
 		text_type = list_filters['text_type']
 		surname = list_filters['surname']
 		name = list_filters['name']
